@@ -11,6 +11,7 @@ git checkout "nombre"-"apellido"
 Haz tus cambios y luego:
 
 git add .
+
 git commit -m "Descripción de los cambios"
 
 
