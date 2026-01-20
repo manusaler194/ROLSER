@@ -10,8 +10,10 @@ class Administrador extends Model{
 
     protected $fillable = ['nombre', 'apellidos', 'email','password'];
 
+    // Nombre de la tabla
     public function clientes(){
 
+        //Nombre del modelo
         return $this->hasMany(Cliente::class);
     }
     public function facturas(){
@@ -29,7 +31,7 @@ class Administrador extends Model{
     public function clientesvips(){
         return $this->hasMany(ClienteVip::class);
     }
-    
+
     public function comerciales(){
         return $this->hasMany(Comercial::class);
     }
