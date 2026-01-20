@@ -1,17 +1,44 @@
 # ROLSER
 Repositorio dedicado al proyecto intermodular de ROLSER
 ## Para fusionar las ramas sin liarla
-### PASO 1️⃣ Comprueba si main tiene cambios nuevos
+Trabaja en tu rama y añade cambios
+
+### Asegúrate de estar en tu rama:
+
+git checkout "nombre"-"apellido"
+
+
+Haz tus cambios y luego:
+
+git add .
+
+git commit -m "Descripción de los cambios"
+
+
+Puedes hacer todos los commits que quieras aquí.
+
+### 2️⃣ Actualiza main con tu rama
+
+Cuando tus cambios estén listos y quieras pasarlos a main:
+
+Opción recomendada (flujo normal)
+
 git checkout main
 
 git pull origin main
-### PASO 2️⃣ Lleva main a tu rama (ruben-sanchez)
-git checkout ruben-sanchez
 
-git merge main
-### PASO 3️⃣ Fusiona tu rama en main
-git checkout main
+git merge tu-rama
 
-git merge ruben-sanchez
-### PASO 4️⃣ Sube main actualizado
+
+Si hay conflictos, los resuelves y haces el commit del merge.
+
+Luego subes main:
+
 git push origin main
+
+### 3️⃣ (Opcional) Mantener tu rama actualizada
+
+Después del merge, si quieres seguir trabajando en la misma rama:
+
+git checkout tu-rama
+git merge main
