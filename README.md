@@ -40,5 +40,13 @@ git push origin main
 
 Después del merge, si quieres seguir trabajando en la misma rama:
 
-git checkout "nombre"-"apellido"
-git merge main
+#### Asegúrate de estar en tu rama
+git checkout mi-rama
+
+#### Trae los últimos cambios del repositorio remoto
+git fetch origin
+
+#### Haz merge de main en tu rama
+git merge origin/main
+
+
