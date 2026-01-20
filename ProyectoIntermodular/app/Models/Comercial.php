@@ -22,13 +22,13 @@ class Comercial extends Model{
     public function pedidos(){
         return $this->hasMany(Pedido::class);
     }
-    
+
      public function clientes(){
       return $this->hasMany(Cliente::class);
     }
 
      public function administradores(){
-        return $this->belongsToMany(Administrador::class);
+        return $this->belongsTo(Administrador::class);
     }
 
     public function facturas(){

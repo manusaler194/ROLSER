@@ -12,7 +12,7 @@ class Pedido extends Model{
 
 
     public function comerciales(){
-        return $this->belongsToMany(Comercial::class);
+        return $this->belongsTo(Comercial::class);
     }
 
     public function LineaPedidos(){
@@ -20,14 +20,14 @@ class Pedido extends Model{
     }
 
     public function encargadoAlmacenes(){
-        return $this->belongsToMany(EncargadoAlmacen::class);
+        return $this->belongsTo(EncargadoAlmacen::class);
     }
 
     public function facturas(){
-        return $this->belongsToMany(Factura::class);
+        return $this->belongsTo(Factura::class);
     }
 
     public function clientes(){
-        return $this->belongsToMany(Cliente::class);
+        return $this->belongsTo(Cliente::class);
     }
 }

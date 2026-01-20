@@ -5,7 +5,7 @@ Trabaja en tu rama y añade cambios
 
 ### Asegúrate de estar en tu rama:
 
-git checkout "nombre"-"apellido"
+git checkout mi-rama
 
 
 Haz tus cambios y luego:
@@ -27,7 +27,7 @@ git checkout main
 
 git pull origin main
 
-git merge "nombre"-"apellido"
+git merge mi-rama
 
 
 Si hay conflictos, los resuelves y haces el commit del merge.
