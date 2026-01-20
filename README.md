@@ -49,4 +49,6 @@ git fetch origin
 #### Haz merge de main en tu rama
 git merge origin/main
 
+git push
+
 
