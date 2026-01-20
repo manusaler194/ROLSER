@@ -21,8 +21,11 @@ Puedes hacer todos los commits que quieras aquí.
 Cuando tus cambios estén listos y quieras pasarlos a main:
 
 Opción recomendada (flujo normal)
+
 git checkout main
+
 git pull origin main
+
 git merge tu-rama
 
 
