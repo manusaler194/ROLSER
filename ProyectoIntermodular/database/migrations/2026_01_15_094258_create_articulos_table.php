@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('articulos', function (Blueprint $table) {
             $table->id('id_articulo');
             $table->text('descripcion');
-            $table->float('precio', 8, 2);
-            $table->unsignedInteger('stock_actual');
+            $table->float('precio', 8, 2); // 8 será el máximo de dígitos, y 2 el máximo de decimales (Ejemplo: 123.33€)
+            $table->unsignedInteger('stock_actual'); // Solo se peude poner valores positivos (no se puede poner -1)
             $table->timestamps();
 
             $table->foreignId('id_almacen')->nullable()->constrained('almacenes', 'id_almacen')->nullOnDelete()->cascadeOnUpdate();
