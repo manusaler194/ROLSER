@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreignId('id_encargado')->nullable()->constrained('encargados_de_almacen', 'id_encargado')->nullOnDelete()->cascadeOnUpdate();
+            // Foreign key (id_encargado), nullable = puede estar vacío, nullOnDelete si se borra se pone null, y cascadeOnUpdate si se actualiza se actualiza todo en cascada
         });
     }
 
