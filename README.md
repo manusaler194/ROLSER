@@ -27,7 +27,7 @@ git checkout main
 
 git pull origin main
 
-git merge tu-rama
+git merge "nombre"-"apellido"
 
 
 Si hay conflictos, los resuelves y haces el commit del merge.
@@ -40,5 +40,5 @@ git push origin main
 
 Después del merge, si quieres seguir trabajando en la misma rama:
 
-git checkout tu-rama
+git checkout "nombre"-"apellido"
 git merge main
