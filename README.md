@@ -5,7 +5,7 @@ Trabaja en tu rama y añade cambios
 
 ### Asegúrate de estar en tu rama:
 
-git checkout tu-rama
+git checkout "nombre"-"apellido"
 
 
 Haz tus cambios y luego:
