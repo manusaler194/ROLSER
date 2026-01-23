@@ -36,7 +36,7 @@ Luego subes main:
 
 git push origin main
 
-### 3️⃣ (Opcional) Mantener tu rama actualizada
+### 3️⃣Mantener tu rama actualizada
 
 Después del merge, si quieres seguir trabajando en la misma rama:
 
