@@ -24,7 +24,7 @@ class Pedido extends Model{
     }
 
     public function facturas(){
-        return $this->belongsTo(Factura::class);
+        return $this->belongsTo(Facturas::class);
     }
 
     public function clientes(){

@@ -18,7 +18,7 @@ class Administrador extends Model{
     }
     public function facturas(){
 
-        return $this->hasMany(Factura::class);
+        return $this->hasMany(Facturas::class);
     }
     public function articulos(){
         return $this->hasMany(Articulo::class);
