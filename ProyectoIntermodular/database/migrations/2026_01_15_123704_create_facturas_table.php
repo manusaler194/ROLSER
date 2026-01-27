@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('cantidad');
             $table->date('fecha');
             $table->timestamps();
-
+            $table->decimal('precio',10,2);
             $table->foreignId('id_administrador')->nullable()->constrained('administradores', 'id_administrador')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_comercial')->nullable()->constrained('comerciales', 'id_comercial')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_cliente')->nullable()->constrained('clientes', 'id_cliente')->nullOnDelete()->cascadeOnUpdate();

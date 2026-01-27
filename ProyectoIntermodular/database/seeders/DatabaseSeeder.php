@@ -20,6 +20,12 @@ class DatabaseSeeder extends Seeder
                 ComercialSeeder::class,
                 PedidoSeeder::class,
                 LineaPedidoSeeder::class,
+                ArticuloSeeder::class,
+                ClienteVipSeeder::class,
+                ClienteSeeder::class,
+                FacturaSeeder::class,
+                SeccionSeeder::class,
+                AdministradorSeeder::class,
                         ]);
         // User::factory(10)->create();
 
