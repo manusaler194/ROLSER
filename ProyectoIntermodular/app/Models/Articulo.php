@@ -21,5 +21,4 @@ class Articulo extends Model
     public function lineas_pedidos(){
         return $this->hasMany(Pedido::class);
     }
-
 }
