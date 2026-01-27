@@ -3,14 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
-class Comercial extends Model{
+class Comercial extends Authenticatable{
+
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'comerciales';
 
-    protected $fillable = ['nombre', 'contacto'];
+    protected $fillable = ['nombre', 'contacto','email','password'];
 
+    protected $hidden = ['password','remember_token',];
 
+    protected $casts = ['email_verified_at' => 'datetime',];
+    
     public function clientesvips(){
         return $this->hasMany(ClienteVip::class);
     }

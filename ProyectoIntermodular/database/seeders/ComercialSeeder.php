@@ -9,22 +9,24 @@ use Illuminate\Support\Facades\DB;
 
 class ComercialSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
-    {
-        //
+
+    public function run(): void{
+        $faker = Faker::create('es_ES');
+
+        for ($i = 0; $i < 10; $i++) {
+            DB::table('comerciales')->insert([
+           'nombre' => $faker->name(),
+           'contacto' => $faker->phoneNumber(),
+           'email' => $faker->unique()->safeEmail(),
+           'email_verified_at' => now(),
+           'password' => bcrypt('password'),
+           'remember_token' => $faker->text(),
+           'created_at' => date('Y-m-d'),
+           'updated_at' => date('Y-m-d'),
+           "id_administrador" => rand(1,10)]);
+        }
+
     }
+
 }
 
-$faker = Faker::create('es_ES');
-
-for ($i = 0; $i < 10; $i++) {
-    DB::table('lineas_pedido')->insert([
-   'nombre' => $faker->name(),
-   'contacto' => $faker->phoneNumber(),
-   'created_at' => date('Y-m-d'),
-   'updated_at' => date('Y-m-d'),
-   "id_administrador" => rand(1,10)]);
-}
