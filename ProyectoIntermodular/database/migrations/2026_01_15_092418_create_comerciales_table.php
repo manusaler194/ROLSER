@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id('id_comercial');
             $table->string('nombre',100);
             $table->string('contacto',100);
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
 
             $table->foreignId('id_administrador')->nullable()->constrained('administradores', 'id_administrador')->nullOnDelete()->cascadeOnUpdate();
