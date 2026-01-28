@@ -7,7 +7,8 @@ use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
 
-class ComercialSeeder extends Seeder
+class
+ComercialSeeder extends Seeder
 {
 
     public function run(): void{
@@ -15,15 +16,16 @@ class ComercialSeeder extends Seeder
 
         for ($i = 0; $i < 10; $i++) {
             DB::table('comerciales')->insert([
-           'nombre' => $faker->name(),
-           'contacto' => $faker->phoneNumber(),
-           'email' => $faker->unique()->safeEmail(),
-           'email_verified_at' => now(),
-           'password' => bcrypt('password'),
-           'remember_token' => $faker->text(),
-           'created_at' => date('Y-m-d'),
-           'updated_at' => date('Y-m-d'),
-           "id_administrador" => rand(1,10)]);
+                'nombre' => $faker->name(),
+                'contacto' => $faker->phoneNumber(),
+                'email' => $faker->unique()->safeEmail(),
+                'email_verified_at' => now(),
+                'password' => bcrypt('password'),
+                'remember_token' => $faker->text(100),
+                'created_at' => date('Y-m-d'),
+                'updated_at' => date('Y-m-d'),
+                "id_administrador" => rand(1,10)
+            ]);
         }
 
     }
