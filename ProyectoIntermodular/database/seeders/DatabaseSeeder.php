@@ -18,20 +18,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void{
         $this->call([
+            AdministradorSeeder::class,
+            EncargadoAlmacenSeeder::class,
             AlmacenSeeder::class,
+            ProveedorSeeder::class,
             ComercialSeeder::class,
+            CatalogoSeeder::class,
+            SeccionSeeder::class,
+            ArticuloSeeder::class,
+            ClienteSeeder::class,
+            ClienteVipSeeder::class,
+            FacturaSeeder::class,
             PedidoSeeder::class,
             LineaPedidoSeeder::class,
-            ArticuloSeeder::class,
-            ClienteVipSeeder::class,
-            ClienteSeeder::class,
-            FacturaSeeder::class,
-            SeccionSeeder::class,
-            AdministradorSeeder::class,
-            ProveedorSeeder::class,
-            ArticuloSeeder::class,
-            CatalogoSeeder::class,
-            EncargadoAlmacenSeeder::class,
+            CatalogoComercialSeeder::class,
         ]);
 
         // User::factory(10)->create();
