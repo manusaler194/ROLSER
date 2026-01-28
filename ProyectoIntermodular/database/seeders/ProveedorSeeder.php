@@ -38,6 +38,7 @@ class ProveedorSeeder extends Seeder
                 'cif' => $cif,
                 'created_at' => date('Y-m-d'),
                 'updated_at' => date('Y-m-d'),
+                'id_encargado' => rand(1, 10),
             ]);
         }
     }

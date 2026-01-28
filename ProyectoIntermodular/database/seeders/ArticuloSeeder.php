@@ -23,7 +23,10 @@ class ArticuloSeeder extends Seeder
             'precio' => $faker->randomFloat(2, 1, 1000), // Float random: 2 decimales, minimo 1 maximo 1000
             'stock_actual' => $faker->numberBetween(0, 500),
             'created_at' => date('Y-m-d'),
-            'updated_at' => date('Y-m-d')]);
+            'updated_at' => date('Y-m-d'),
+            'id_almacen' => rand(1, 10),
+            'id_administrador' => rand(1, 10)
+        ]);
         }
 
 

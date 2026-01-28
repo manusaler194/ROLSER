@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Faker\Factory as Faker;
 
-class CatalogoSeeder extends Seeder
+class ArticuloCatalogoSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,13 +18,11 @@ class CatalogoSeeder extends Seeder
         $faker = Faker::create('es_ES');
 
         for ($i = 0; $i < 10; $i++) {
-            DB::table('catalogos')->insert([
-            'nombre_temporada' => $faker->name(),
-            'anyo' => $faker->numberBetween(2000, 2026),
+            DB::table('articulos_catalogos')->insert([
+            'titulo' => $faker->name(),
+            'descripcion' => $faker->city(),
             'created_at' => date('Y-m-d'),
-            'updated_at' => date('Y-m-d'),
-            'id_administrador' => rand(1,10),
-        ]);
+            'updated_at' => date('Y-m-d')]);
         }
     }
 }
