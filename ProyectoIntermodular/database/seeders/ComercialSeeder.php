@@ -14,7 +14,7 @@ ComercialSeeder extends Seeder
     public function run(): void{
         $faker = Faker::create('es_ES');
 
-        for ($i = 1; $i < 11; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             DB::table('comerciales')->insert([
                 'nombre' => $faker->name(),
                 'contacto' => $faker->phoneNumber(),

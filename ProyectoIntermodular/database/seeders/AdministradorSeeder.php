@@ -15,17 +15,17 @@ class AdministradorSeeder extends Seeder
     {
         $faker = Faker::create('es_ES');
 
-
-        for ($i = 1; $i < 11; $i++) {
+       for ($i = 1; $i < 11; $i++) {
             DB::table('administradores')->insert([
                 'nombre' => $faker->name(),
-                'apellidos' => $faker->name(),
+                'apellidos' => $faker->lastName(),
                 'email' => $faker->email(),
                 'password' => bcrypt('password'),
                 'created_at' => $faker->date(),
                 'updated_at' => $faker->date(),
                 // 'id_administrador' => rand(1,10),
                 // 'id_comercial' => rand(1,10),
+
             ]);
         }
     }
