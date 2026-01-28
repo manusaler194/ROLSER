@@ -13,7 +13,7 @@ class PedidoSeeder extends Seeder
     public function run(): void{
         $faker = Faker::create('es_ES');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 1; $i < 11; $i++) {
             DB::table('pedidos')->insert([
            'fecha_pedido' => $faker->dateTimeBetween('-30 days', 'now'),
            'estado' => $faker->randomElement(["En preparación", "Enviado", "En proceso de entrega", "Entregado"]),

@@ -32,6 +32,8 @@ class DatabaseSeeder extends Seeder
             PedidoSeeder::class,
             LineaPedidoSeeder::class,
             CatalogoComercialSeeder::class,
+            ArticuloCatalogoSeeder::class,
+
         ]);
 
         // User::factory(10)->create();

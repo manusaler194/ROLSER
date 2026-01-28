@@ -15,7 +15,7 @@ class LineaPedidoSeeder extends Seeder
     public function run(): void{
         $faker = Faker::create('es_ES');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 1; $i < 11; $i++) {
             DB::table('lineas_pedido')->insert([
            'precio' => $faker->randomFloat(2,10,100),
            'cantidad' => $faker->numberBetween(2,100),

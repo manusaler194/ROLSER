@@ -18,7 +18,7 @@ class AlmacenSeeder extends Seeder{
 
         $faker = Faker::create('es_ES');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 1; $i < 11; $i++) {
             DB::table('almacenes')->insert([
            'direccion' => $faker->name(),
            'capacidad' => rand(100,1000),

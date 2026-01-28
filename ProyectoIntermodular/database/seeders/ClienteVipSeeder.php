@@ -19,7 +19,7 @@ class ClienteVipSeeder extends Seeder
     {
         $faker = Faker::create('es_ES');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 1; $i < 11; $i++) {
             DB::table('clientes_vip')->insert([
 
                 'nombre' => $faker->name(),
