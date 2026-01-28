@@ -1,0 +1,39 @@
+{
+  "blogs": [
+    {
+      "id": "1",
+      "title": "Mi primer blog",
+      "author": "Admin",
+      "url": "http://test.com",
+      "likes": 5
+    },
+    {
+      "id": "87da",
+      "title": "hola",
+      "author": "as",
+      "url": "ass"
+    }
+  ],
+  "users": [
+    {
+      "id": "u1",
+      "username": "admin",
+      "password": "password123",
+      "name": "Super User"
+    }
+  ],
+  "login": [
+    {
+      "username": "admin",
+      "password": "password123",
+      "token": "token-falso-de-prueba",
+      "name": "Super User",
+      "id": "a60c"
+    },
+    {
+      "id": "d767",
+      "username": "admin",
+      "password": "password123"
+    }
+  ]
+}
