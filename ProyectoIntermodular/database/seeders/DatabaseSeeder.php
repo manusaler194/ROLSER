@@ -16,20 +16,24 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
-{
+    public function run(): void{
         $this->call([
-                AlmacenSeeder::class,
-                ComercialSeeder::class,
-                PedidoSeeder::class,
-                LineaPedidoSeeder::class,
-                ArticuloSeeder::class,
-                ClienteVipSeeder::class,
-                ClienteSeeder::class,
-                FacturaSeeder::class,
-                SeccionSeeder::class,
-                AdministradorSeeder::class,
+            AlmacenSeeder::class,
+            ComercialSeeder::class,
+            PedidoSeeder::class,
+            LineaPedidoSeeder::class,
+            ArticuloSeeder::class,
+            ClienteVipSeeder::class,
+            ClienteSeeder::class,
+            FacturaSeeder::class,
+            SeccionSeeder::class,
+            AdministradorSeeder::class,
+            ProveedorSeeder::class,
+            ArticuloSeeder::class,
+            CatalogoSeeder::class,
+            EncargadoAlmacenSeeder::class,
         ]);
+
         // User::factory(10)->create();
 
         // User::factory()->create([

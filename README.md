@@ -30,9 +30,13 @@ git pull origin main
 git merge mi-rama
 
 
-Si hay conflictos, los resuelves y haces el commit del merge.
+**Si hay conflictos, los resuelves y haces el commit del merge.**
 
-Luego subes main:
+git add .
+
+git commit -m "Descripción de los cambios"
+
+**Luego subes main:**
 
 git push origin main
 
