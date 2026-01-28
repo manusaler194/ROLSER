@@ -16,13 +16,16 @@ class EncargadoAlmacenSeeder extends Seeder
     public function run(): void{
         $faker = Faker::create('es_ES');
 
+
         for ($i = 1; $i < 11; $i++) {
-            DB::table('encargado_de_almacen')->insert([
-            'nombre' => $faker->name(),
-            'telefono' => $faker->phoneNumber(),
-            'email' => $faker->email(),
-            'created_at' => date('Y-m-d'),
-            'updated_at' => date('Y-m-d')]);
+            DB::table('encargados_de_almacen')->insert([
+                'nombre' => $faker->name(),
+                'telefono' => $faker->phoneNumber(),
+                'email' => $faker->email(),
+                'created_at' => date('Y-m-d'),
+                'updated_at' => date('Y-m-d')
+            ]);
+
         }
     }
 }

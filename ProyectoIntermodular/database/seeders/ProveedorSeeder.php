@@ -32,7 +32,7 @@ class ProveedorSeeder extends Seeder
 
             $cif = $letraInicial . $numeros . $control;
 
-            DB::table('proovedores')->insert([
+            DB::table('proveedores')->insert([
                 'nombre_empresa' => $faker->company(),
                 'contacto' => $faker->phoneNumber(),
                 'cif' => $cif,
