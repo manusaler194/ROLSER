@@ -14,5 +14,19 @@ class AlmacenController extends Controller{
             echo $dato->capacidad . "<br>";
 
         }
+
+        $valor = 'Calle Falsa 123';
+        $direccion = DB::table('almacenes')->where('direccion', $valor)->get();
+        dump($direccion->toArray());
+
+        $capacidad = 50;
+        $almacenCap = DB::table('almacenes')->where('capacidad', '>', $capacidad)->get();
+        dump($almacenCap->toArray());
+
+
+        $encargado = 1;
+        $almacenEncargado = DB::table('almacenes')->where('id_encargado', $encargado)->get();
+        dump($almacenEncargado->toArray());
+
     }
 }
