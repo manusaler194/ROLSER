@@ -17,7 +17,7 @@ class ArticuloSeeder extends Seeder
     public function run(): void{
         $faker = Faker::create('es_ES');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 1; $i < 11; $i++) {
             DB::table('articulos')->insert([
             'descripcion' => $faker->text(),
             'precio' => $faker->randomFloat(2, 1, 1000), // Float random: 2 decimales, minimo 1 maximo 1000

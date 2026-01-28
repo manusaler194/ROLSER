@@ -19,7 +19,7 @@ class ProveedorSeeder extends Seeder
         $letras = ['A','B','C','D','E','F','G','H','J','N','P','Q','R','S','U','V','W'];
         $letraControl = range('A', 'Z');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 1; $i < 11; $i++) {
 
             $letraInicial = $letras[array_rand($letras)];
 
