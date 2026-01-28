@@ -17,11 +17,11 @@ class FacturaSeeder extends Seeder
 
         for ($i = 1; $i < 11; $i++) {
             DB::table('facturas')->insert([
-
                 'cantidad' => $faker->numberBetween(1,100),
                 'fecha' => $faker->date(),
                 'created_at' => $faker->date(),
                 'updated_at' => $faker->date(),
+                'precio' => $faker->randomFloat(2, 1, 1000),
                 'id_administrador' => rand(1,10),
                 'id_comercial' => rand(1,10),
                 'id_cliente' => rand(1,10),
