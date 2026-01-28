@@ -14,7 +14,3 @@ Route::get('/almacen',[AlmacenController::class,'mostrar'])->name('almacenMostra
 
 // Route::view('/login', 'login')->name('logininicio');
 // Route::post('/login-usuario', [ComercialController::class, 'login'])->name('login');
-
-
-// Route::view('/registrar', 'registrar')->name('registrarinicio');
-// Route::post('/registrar-usuario', [ComercialController::class, 'registro'])->name('registrar');
