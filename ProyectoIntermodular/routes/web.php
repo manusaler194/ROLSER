@@ -15,3 +15,5 @@ Route::post('/login-usuario', [ComercialController::class, 'login'])->name('logi
 
 Route::view('/registrar', 'registrar')->name('registrarinicio');
 Route::post('/registrar-usuario', [ComercialController::class, 'registro'])->name('registrar');
+
+

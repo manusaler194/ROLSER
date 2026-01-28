@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('nombre_empresa',100);
             $table->string('contacto',100);
             $table->string('cif',20);
-            $table->timestamps();
+            $table->timestamps(); // Crea automáticamente dos columnas ("created_at" y "updated_at")
+
 
             $table->foreignId('id_encargado')->nullable()->constrained('encargados_de_almacen', 'id_encargado')->nullOnDelete()->cascadeOnUpdate();
-            // Foreign key (id_encargado), nullable = puede estar vacío, nullOnDelete si se borra se pone null, y cascadeOnUpdate si se actualiza se actualiza todo en cascada
+            // Foreign key (id_encargado), nullable = puede estar vacío,constrained selecciona la clave ajena, nullOnDelete si se borra se pone null, y cascadeOnUpdate se actualiza en cascada
         });
     }
 
