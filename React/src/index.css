@@ -1,11 +1,1 @@
-body{
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  margin: 50px;
-
-  /* background-image: url('./assets/paisaje1.png'); */
-}
-h1{
-  color: blueviolet;
-}
+@import "tailwindcss";
