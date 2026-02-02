@@ -1,6 +1,8 @@
 import Header from "./components/Conjunto/Header"
 import Navbar from "./components/Conjunto/Navbar"
-import Personas from "./components/Conjunto/Users";
+
+import Users from "./components/Conjunto/Users";
+
 import React, { useState, useEffect } from 'react';
 const App = () => {
  
@@ -11,7 +13,7 @@ const App = () => {
 
         <Navbar usuario = "admin"></Navbar>
           <h1>Lista de Administradores</h1>
-          <Personas/>
+          <Users></Users>
         </div>
         
     )
