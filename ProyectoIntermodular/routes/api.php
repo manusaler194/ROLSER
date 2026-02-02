@@ -10,3 +10,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/almacenes', [AlmacenController::class, 'mostrar']);
+
+Route::post('/almacenes/guardar', [AlmacenController::class, 'guardar']);
+
+Route::put('/almacenes/actualizar/{id_almacen}', [AlmacenController::class, 'actualizar']);
+
+Route::delete('/almacenes/borrar/{id_almacen}', [AlmacenController::class, 'eliminar']);
