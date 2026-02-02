@@ -19,8 +19,8 @@ class FacturaSeeder extends Seeder
             DB::table('facturas')->insert([
                 'cantidad' => $faker->numberBetween(1,100),
                 'fecha' => $faker->date(),
-                'created_at' => $faker->date(),
-                'updated_at' => $faker->date(),
+                'created_at' => now(),
+                'updated_at' => now(),
                 'precio' => $faker->randomFloat(2, 1, 1000),
                 'id_administrador' => rand(1,10),
                 'id_comercial' => rand(1,10),

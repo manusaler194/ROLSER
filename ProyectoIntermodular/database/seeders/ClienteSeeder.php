@@ -22,8 +22,8 @@ class ClienteSeeder extends Seeder
                 'telefono' => $faker->phoneNumber(),
                 'correo' => $faker->email(),
                 'direccion' => $faker->address(),
-                'created_at' => $faker->date(),
-                'updated_at' => $faker->date(),
+                'created_at' => now(),
+                'updated_at' => now(),
                 'id_administrador' => rand(1,10),
                 'id_comercial' => rand(1,10),
             ]);

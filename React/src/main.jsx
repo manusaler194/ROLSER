@@ -2,14 +2,16 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
+import { BrowserRouter as Router } from "react-router-dom";
 
+// 1. Creamos la raíz una sola vez
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-
-// axios.get('http://localhost:3009/api/notes')
-//   .then(response => {
-//     const notes = response.data
-//     ReactDOM.createRoot(document.getElementById('root')).render(<App notes={notes} />)
-//   })
-//   .catch( (e) => console.log(e));
-
+// 2. Renderizamos una sola vez envolviendo con Router
+root.render(
+  <React.StrictMode>
+    <Router>
+      <App />
+    </Router>
+  </React.StrictMode>
+);
