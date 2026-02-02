@@ -7,7 +7,7 @@ import iconoDescuento from "/src/assets/Navbar/descuento.svg";
 import iconoEstadistica from "/src/assets/Navbar/estadistica.svg";
 import iconoInforme from "/src/assets/Navbar/informe.svg";
 import iconoPedido from "/src/assets/Navbar/pedido.svg";
-
+import React from 'react';
 const Navbar = ({usuario}) =>{
     const MENU_ITEMS = [
   { label: 'Gestionar usuarios', icon: iconoUsuario , rol: ['admin'] },

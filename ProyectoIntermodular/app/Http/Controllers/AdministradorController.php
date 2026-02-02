@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Administrador;
 use Illuminate\Http\Request;
-
+use App\Models\Cliente;
+use App\Models\ClienteVip;
+use App\Models\EncargadoAlmacen;
+use App\Models\Comercial;
 class AdministradorController extends Controller
 {
     /**
@@ -16,6 +19,23 @@ class AdministradorController extends Controller
         return $task;
         //Esta función nos devolvera todas las tareas que tenemos en nuestra BD
     }
+    public function userIndex() {
+        $modelos = [
+        'admins'      => Administrador::class,
+        'clientes'    => Cliente::class,
+        'vips'        => ClienteVip::class,
+        'encargados'  => EncargadoAlmacen::class,
+        'comerciales' => Comercial::class,
+    ];
+
+    // Transformamos el array de clases en los datos reales
+    $resultado = collect($modelos)->map(function ($clase) {
+        return $clase::all();
+    });
+
+    return response()->json($resultado);
+    }
+
 
     /**
      * Show the form for creating a new resource.

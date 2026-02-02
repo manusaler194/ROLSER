@@ -1,5 +1,6 @@
 import logo from "/src/assets/Header/logo.jpg";
 import signout from "/src/assets/Header/SignOut.svg";
+import React from 'react';
 const Header = () =>{
 return(
 <div className="flex items-center gap-2.5 h-50 w-full bg-[#454545]">

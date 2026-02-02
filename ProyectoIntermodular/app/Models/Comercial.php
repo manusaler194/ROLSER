@@ -10,7 +10,7 @@ use Laravel\Passport\HasApiTokens;
 
 class Comercial extends Authenticatable{
 
-    use HasApiTokens, HasFactory, Notifiable;
+   // use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'comerciales';
 
@@ -19,7 +19,7 @@ class Comercial extends Authenticatable{
     protected $hidden = ['password','remember_token',];
 
     protected $casts = ['email_verified_at' => 'datetime',];
-    
+
     public function clientesvips(){
         return $this->hasMany(ClienteVip::class);
     }

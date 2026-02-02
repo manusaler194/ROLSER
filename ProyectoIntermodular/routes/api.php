@@ -19,7 +19,7 @@ Route::put('/almacenes/actualizar/{id_almacen}', [AlmacenController::class, 'act
 
 Route::delete('/almacenes/borrar/{id_almacen}', [AlmacenController::class, 'eliminar']);
 
-Route::get('/api/almacenes', [AlmacenController::class, 'mostrar']);
+Route::get('/almacenes', [AlmacenController::class, 'mostrar']);
 Route::get('/administradores', [AdministradorController::class, 'index']);
-
+Route::get('/users', [AdministradorController::class, 'userIndex']);
 
