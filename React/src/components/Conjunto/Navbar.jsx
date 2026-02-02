@@ -17,6 +17,10 @@ const Navbar = ({usuario}) =>{
   { label: 'Gestionar almacén', icon: iconoAlmacen, rol: ['admin'] },
   { label: 'Estadísticas', icon: iconoEstadistica, rol: ['admin'] },
   { label: 'Ver facturas', icon: iconoInforme, rol: ['admin', 'cliente', 'clientevip'] },
+  { label: 'Ver catálogos', icon: iconoCatalogo, rol: ['clientevip'] },
+  { label: 'Realizar pedido', icon: iconoPedido, rol: ['clientevip'] },
+
+
 ];
 
 const visibleItems = MENU_ITEMS.filter(item => item.rol.includes(usuario));
