@@ -11,11 +11,10 @@ const App = () => {
         <div>
             <Header></Header>
 
-        <Navbar usuario = "admin"></Navbar>
+        <Navbar usuario={"admin"}></Navbar>
           <h1>Lista de Administradores</h1>
           <Users></Users>
         </div>
-        
     )
 }
 export default App
