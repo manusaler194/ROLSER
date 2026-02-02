@@ -1,5 +1,6 @@
-import Header from "./components/Header"
-import Navbar from "./components/Navbar"
+import Header from "./components/Conjunto/Header"
+import Navbar from "./components/Conjunto/Navbar"
+import React from 'react';
 
 const App = () => {
  

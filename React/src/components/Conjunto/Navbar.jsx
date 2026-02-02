@@ -1,12 +1,12 @@
-import iconoUsuario from '../assets/Navbar/usuario.svg'
-import iconoAlmacen from '../assets/Navbar/almacen.svg'
-import iconoCarrito from '../assets/Navbar/carrito.svg'
-import iconoCatalogo from '../assets/Navbar/catalogo.svg'
-import iconoDatos from '../assets/Navbar/datos.svg'
-import iconoDescuento from '../assets/Navbar/descuento.svg'
-import iconoEstadistica from '../assets/Navbar/estadistica.svg'
-import iconoInforme from '../assets/Navbar/informe.svg'
-import iconoPedido from '../assets/Navbar/pedido.svg'
+import iconoUsuario from "/src/assets/Navbar/usuario.svg";
+import iconoAlmacen from "/src/assets/Navbar/almacen.svg";
+import iconoCarrito from "/src/assets/Navbar/carrito.svg";
+import iconoCatalogo from "/src/assets/Navbar/catalogo.svg";
+import iconoDatos from "/src/assets/Navbar/datos.svg";
+import iconoDescuento from "/src/assets/Navbar/descuento.svg";
+import iconoEstadistica from "/src/assets/Navbar/estadistica.svg";
+import iconoInforme from "/src/assets/Navbar/informe.svg";
+import iconoPedido from "/src/assets/Navbar/pedido.svg";
 
 const Navbar = ({usuario}) =>{
     const MENU_ITEMS = [
