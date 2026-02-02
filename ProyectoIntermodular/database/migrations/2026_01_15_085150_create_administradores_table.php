@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('id_administrador');
             $table->string('nombre', 50);
             $table->string('apellidos', 100);
+            $table->string('telefono', 20);
             $table->string('email',100)->unique();
             $table->string('password');
             $table->timestamps();

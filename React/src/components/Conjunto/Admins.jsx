@@ -1,25 +1,97 @@
 import React from 'react';
-const AdminsTable = ({ lista }) => (
-    <div>
-        <h2>Administradores</h2>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                {lista.map(u => (
-                    <tr key={u.id_administrador}>
-                        <td>{u.id_administrador}</td>
-                        <td>{u.nombre} {u.apellidos}</td>
-                        <td>{u.email}</td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
+
+const AdminsTable = ({ lista }) => {
+  const admin = lista[1];
+
+  if (!admin) return <p>No hay datos de administradores.</p>;
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+      <h2 className="text-2xl font-bold mb-4 text-black">Datos del usuario</h2>
+      
+      <div className="bg-white p-8 rounded-[30px] border border-gray-400 shadow-sm w-full max-w-lg">
+        <div className="space-y-6">
+          
+          {/* Nombre */}
+          <div className="flex items-center justify-between">
+            <label className="text-xl font-normal text-black w-1/3">Nombre</label>
+            <input 
+              type="text" 
+              readOnly
+              value={`${admin.nombre} ${admin.apellidos}`}
+              className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white"
+            />
+          </div>
+
+          {/* Email */}
+          <div className="flex items-center justify-between">
+            <label className="text-xl font-normal text-black w-1/3">Email</label>
+            <input 
+              type="email" 
+              readOnly
+              value={admin.email}
+              className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white"
+            />
+          </div>
+
+          {/* Teléfono */}
+          <div className="flex items-center justify-between">
+            <label className="text-xl font-normal text-black w-1/3">Teléfono</label>
+            <input 
+              type="text" 
+              readOnly
+              value={admin.telefono}
+              className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white"
+            />
+          </div>
+
+          {/* Rol - Estático y Deshabilitado */}
+          <div className="flex items-center justify-between">
+            <label className="text-xl font-normal text-black w-1/3">Rol</label>
+            <div className="relative w-2/3">
+              <select 
+                disabled
+                className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-white opacity-100"
+              >
+                <option>Administrador</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
+                <svg className="h-5 w-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Comercial asignado - No aplica a Admin, bloqueado */}
+          <div className="flex items-center justify-between">
+            <label className="text-xl font-normal text-black w-1/3">Comercial asignado</label>
+            <div className="relative w-2/3">
+              <select 
+                disabled
+                className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-white opacity-100"
+              >
+                <option>N/A</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
+                <svg className="h-5 w-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Botón Volver */}
+          <div className="flex justify-center pt-4">
+            <button className="bg-[#bd0026] text-white font-medium py-2 px-12 rounded-full hover:bg-red-800 transition-colors">
+              Volver
+            </button>
+          </div>
+
+        </div>
+      </div>
     </div>
-);
+  );
+};
+
 export default AdminsTable;

@@ -1,3 +1,4 @@
+import GestionUsuarios from "./components/Conjunto/GestionUsuarios";
 import Header from "./components/Conjunto/Header"
 import Navbar from "./components/Conjunto/Navbar"
 
@@ -13,7 +14,7 @@ const App = () => {
 
         <Navbar usuario = "admin"></Navbar>
           <h1>Lista de Administradores</h1>
-          <Users></Users>
+          <GestionUsuarios></GestionUsuarios>
         </div>
         
     )
