@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Almacen;
+use App\Models\EncargadoAlmacen;
+use Database\Seeders\EncargadoAlmacenSeeder;
 
 class AlmacenController extends Controller{
 
@@ -36,7 +38,13 @@ class AlmacenController extends Controller{
         return $datos;
     }
 
+
     public function actualizar (Request $request){
+
+
+
+
+
         $validatedData = $request->validate([
             'direccion' => 'required|string|max:255',
             'capacidad' => 'required|integer|min:0',
