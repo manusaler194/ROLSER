@@ -6,7 +6,7 @@ import ClientesTable from "./Clientes";
 import VipsTable from "./ClientesVips";
 import EncargadosTable from "./Encargado";
 import ComercialesTable from "./Comercial";
-
+import GestionUsuarios from './GestionUsuarios';
 const Users = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -23,20 +23,20 @@ const Users = () => {
     }, []);
 
     if (loading) return <div>Cargando...</div>;
-
+    console.log(data);
     return (
         <div>
             
             <h1>Panel de Control de Usuarios</h1>
-
+            <GestionUsuarios data={data}/>
             {/* Renderizamos cada componente pasando su lista correspondiente */}
-            <AdminsTable lista={data.admins} />
-            <ClientesTable lista={data.clientes} />
-            <VipsTable lista={data.vips} />
-            <EncargadosTable lista={data.encargados} />
-            <ComercialesTable lista={data.comerciales} />
         </div>
     );
-}
+  }
+  /*<AdminsTable lista={data.admins} />
+  <ClientesTable lista={data.clientes} />
+  <VipsTable lista={data.vips} />
+  <EncargadosTable lista={data.encargados} />
+  <ComercialesTable lista={data.comerciales} />*/
 
 export default Users;
