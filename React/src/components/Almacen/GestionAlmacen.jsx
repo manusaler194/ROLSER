@@ -1,37 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // Importamos el icono
 import iconoDesplegable from '/src/assets/desplegable.svg';
+import axios from 'axios';
 
 const GestionAlmacen = () => {
-  const [openMenu, setOpenMenu] = useState(null);
+  const [abrirMenu, setAbrirMenu] = useState(null);
+  const [almacenes,setAlmacenes] = useState([]);
 
-  const almacenes = [
-    { id: 1, nombre: 'almacén 1' },
-    { id: 2, nombre: 'almacén 2' },
-    { id: 3, nombre: 'almacén 3' },
-    { id: 4, nombre: 'almacén 1' },
-    { id: 5, nombre: 'almacén 2' },
-    { id: 6, nombre: 'almacén 3' },
-    { id: 7, nombre: 'almacén 1' },
-    { id: 8, nombre: 'almacén 2' },
-    { id: 9, nombre: 'almacén 3' },
-  ];
+  useEffect(() =>{
+    axios
+      .get('http://localhost/api/almacenes')
+      .then(response =>{
+        console.log("Cargado")
+        console.log(response.data)
+        setAlmacenes(response.data)
+      })
+  },[]);
 
   return (
     <div className="p-10 flex flex-col h-full">
       <div className="flex flex-col gap-6 w-72">
         {almacenes.map((almacen) => (
-          <div key={almacen.id} className="relative flex items-center">
+          <div key={almacen.id_almacen} className="relative flex items-center">
 
             <button 
-              onClick={() => setOpenMenu(openMenu === almacen.id ? null : almacen.id)}
+              onClick={() => setAbrirMenu(abrirMenu === almacen.id_almacen ? null : almacen.id_almacen)}
               className="flex items-center justify-between w-full bg-[#757575] text-white px-5 py-3 rounded-2xl hover:bg-gray-600 cursor-pointer">
-              <span className="text-xl font-medium">{almacen.nombre}</span>
+              <span className="text-xl font-medium">{almacen.direccion}</span>
               
-              <img src={iconoDesplegable} className={`w-6 h-6 transition-transform duration-500  invert ${openMenu === almacen.id ? 'rotate-180' : 'rotate-0'}`}/>
+              <img src={iconoDesplegable} className={`w-6 h-6 transition-transform duration-500  invert ${abrirMenu === almacen.id_almacen ? 'rotate-180' : 'rotate-0'}`}/>
             </button>
 
-            {openMenu === almacen.id && (
+            {abrirMenu === almacen.id_almacen && (
               <div className="absolute left-full ml-10 bg-white border-2 border-gray-400">
                 <div className="flex flex-col text-xl">
                   <button className="px-6 py-2 border-b-2 border-gray-400 hover:bg-gray-100 text-left cursor-pointer">Modificar</button>
