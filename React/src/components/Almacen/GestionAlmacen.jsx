@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 // Importamos el icono
 import iconoDesplegable from '/src/assets/desplegable.svg';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const GestionAlmacen = () => {
   const [abrirMenu, setAbrirMenu] = useState(null);
   const [almacenes,setAlmacenes] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() =>{
     axios
@@ -45,7 +47,7 @@ const GestionAlmacen = () => {
       </div>
 
       <div className="absolute bottom-20 right-20">
-        <button className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Crear</button>
+        <button onClick={()=> navigate('/CrearAlmacen')} className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Crear</button>
       </div>
     </div>
   );
