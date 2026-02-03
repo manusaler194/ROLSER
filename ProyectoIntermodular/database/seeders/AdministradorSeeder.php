@@ -20,6 +20,7 @@ class AdministradorSeeder extends Seeder
                 'nombre' => $faker->name(),
                 'apellidos' => $faker->lastName(),
                 'email' => $faker->email(),
+                'telefono' => $faker->phoneNumber(),
                 'password' => bcrypt('password'),
                 'created_at' => $faker->date(),
                 'updated_at' => $faker->date(),

@@ -11,6 +11,14 @@ use Illuminate\Http\Request;
 
 use App\Models\Almacen;
 
+
+
+Route::get('/login', function () {
+    return view('login'); // El nombre debe coincidir con el nombre de tu archivo .blade.php
+})->name('login');
+Route::get('/registrar', function () {
+    return view('registrar'); // El nombre debe coincidir con el nombre de tu archivo .blade.php
+})->name('registrar');
 Route::get('/', function () {
     return view('welcome');
 });

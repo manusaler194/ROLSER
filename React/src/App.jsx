@@ -1,6 +1,7 @@
+import GestionUsuarios from "./components/Conjunto/GestionUsuarios";
 import Header from "./components/Conjunto/Header"
 import Navbar from "./components/Conjunto/Navbar"
-
+import Catalogos from "./components/Conjunto/Catalogos";
 import Users from "./components/Conjunto/Users";
 import GestionAlmacen from "./components/Almacen/GestionAlmacen.jsx";
 import React, { useState, useEffect } from 'react';
@@ -12,16 +13,12 @@ const App = () => {
     return (
     <div className="flex flex-col h-screen w-full bg-white overflow-hidden">
       
-      {/* 1. Header (Ocupa todo el ancho arriba) */}
       <Header />
 
-      {/* 2. Contenedor inferior (Ocupa el resto del espacio y es horizontal) */}
       <div className="flex flex-1 overflow-hidden">
         
-        {/* Navbar a la izquierda */}
         <Navbar usuario={rolActual} />
 
-        {/* Contenido principal a la derecha */}
         <main className="flex-1 overflow-auto p-6 bg-gray-50">
           <Routes>
             <Route path="/usuarios" element={<GestionUsuarios />} />
@@ -39,6 +36,6 @@ const App = () => {
       </div>
     </div>
   );
->>>>>>> Stashed changes
 }
-export default App
+
+export default App;
