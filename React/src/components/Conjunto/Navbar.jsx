@@ -16,7 +16,7 @@ const Navbar = ({usuario}) => {
         { label: 'Crear catálogos', icon: iconoCatalogo , rol: ['admin'], path: '/catalogos' },
         { label: 'Definir tarifas', icon: iconoInforme, rol: ['admin'], path: '/tarifas' },
         { label: 'Gestionar pedidos', icon: iconoPedido , rol: ['admin', 'cliente', 'clientevip', 'comercial','encargado_almacen'], path: '/pedidos' },
-        { label: 'Gestionar almacén', icon: iconoAlmacen, rol: ['admin','encargado_almacen'], path: '/almacen' },
+        { label: 'Gestionar almacén', icon: iconoAlmacen, rol: ['admin','encargado_almacen'], path: '/GestionAlmacen' },
         { label: 'Estadísticas', icon: iconoEstadistica, rol: ['admin'], path: '/estadisticas' },
         { label: 'Ver facturas', icon: iconoInforme, rol: ['admin', 'cliente', 'clientevip'], path: '/facturas' },
         { label: 'Ver catálogo', icon: iconoCatalogo, rol: ['clientevip', 'comercial'], path: '/catalogo' },
