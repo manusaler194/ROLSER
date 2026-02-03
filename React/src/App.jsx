@@ -3,28 +3,36 @@ import Header from "./components/Conjunto/Header"
 import Navbar from "./components/Conjunto/Navbar"
 import Catalogos from "./components/Conjunto/Catalogos";
 import Users from "./components/Conjunto/Users";
-
+import GestionAlmacen from "./components/Almacen/GestionAlmacen.jsx";
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
 const App = () => {
- 
+ const rolActual = "encargado_almacen";
 
     return (
-    <div className="flex h-screen w-full bg-white overflow-hidden">
+    <div className="flex flex-col h-screen w-full bg-white overflow-hidden">
       
-      {/* 1. Navbar (Fijo a la izquierda) */}
-      <Navbar usuario={"encargado"} />
+      <Header />
 
-      {/* 2. Columna derecha (Header + Contenido) */}
-      <div className="flex-1 flex flex-col h-screen">
+      <div className="flex flex-1 overflow-hidden">
         
-        {/* Tu Header va aquí arriba */}
-        <Header />
+        <Navbar usuario={rolActual} />
 
-        {/* El contenido cambiante (Catalogos) va aquí y ocupa el resto del espacio */}
-        <main className="flex-1 overflow-auto">
-           <Catalogos />
+        <main className="flex-1 overflow-auto p-6 bg-gray-50">
+          <Routes>
+            <Route path="/usuarios" element={<GestionUsuarios />} />
+            <Route path="/catalogos" element={<Catalogos />} />
+            <Route path="/pedidos" element={<Users />} />
+            <Route path="/" element={<Navigate to="/catalogos" />} />
+
+            <Route path="/GestionAlmacen" element={<GestionAlmacen />} />
+
+            <Route path="/" element={<Navigate to={rolActual === 'encargado_almacen' ? "/almacen" : "/catalogos"} />} 
+            />
+          </Routes>
         </main>
-        
+
       </div>
     </div>
   );
