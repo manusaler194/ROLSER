@@ -30,7 +30,7 @@ const GestionAlmacen = () => {
               
               <img src={iconoDesplegable} className={`w-6 h-6 transition-transform duration-500  invert ${abrirMenu === almacen.id_almacen ? 'rotate-180' : 'rotate-0'}`}/>
             </button>
-
+            
             {abrirMenu === almacen.id_almacen && (
               <div className="absolute left-full ml-10 bg-white border-2 border-gray-400">
                 <div className="flex flex-col text-xl">
