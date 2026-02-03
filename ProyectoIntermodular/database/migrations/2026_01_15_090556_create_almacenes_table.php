@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('direccion',255);
             $table->unsignedInteger('capacidad');
             $table->timestamps();
-
             $table->foreignId('id_encargado')->nullable()->constrained('encargados_de_almacen', 'id_encargado')->nullOnDelete()->cascadeOnUpdate();
 
         });

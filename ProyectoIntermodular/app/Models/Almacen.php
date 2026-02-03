@@ -8,7 +8,6 @@ class Almacen extends Model
 {
     protected $table = 'almacenes';
     protected $primaryKey = 'id_almacen';
-
     protected $fillable = ['direccion', 'capacidad'];
 
 public function secciones() {

@@ -64,7 +64,7 @@ class AlmacenController extends Controller{
         $almacen = Almacen:: destroy($request->id_almacen);
 
         return response()->json([
-            "message" => "ALmacen con id =" . $request->id_almacen . " ha sido borrado con éxito"
+            "message" => "Almacen con id =" . $request->id_almacen . " ha sido borrado con éxito"
 
         ],201);
     }

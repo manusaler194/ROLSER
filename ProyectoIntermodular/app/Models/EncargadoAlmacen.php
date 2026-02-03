@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class EncargadoAlmacen extends Model
 {
     protected $table = 'encargados_de_almacen';
-
+    protected $primaryKey = 'id_encargado';
     protected $fillable = ['nombre', 'telefono', 'email'];
 
     public function proveedores(){
