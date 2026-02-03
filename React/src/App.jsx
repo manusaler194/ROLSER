@@ -4,6 +4,7 @@ import Navbar from "./components/Conjunto/Navbar"
 import Catalogos from "./components/Conjunto/Catalogos";
 import Users from "./components/Conjunto/Users";
 import GestionAlmacen from "./components/Almacen/GestionAlmacen.jsx";
+import CrearAlmacen from "./components/Almacen/CrearAlmacen.jsx";
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
@@ -27,6 +28,7 @@ const App = () => {
             <Route path="/" element={<Navigate to="/catalogos" />} />
 
             <Route path="/GestionAlmacen" element={<GestionAlmacen />} />
+            <Route path="/CrearAlmacen" element={<CrearAlmacen />} />
 
             <Route path="/" element={<Navigate to={rolActual === 'encargado_almacen' ? "/almacen" : "/catalogos"} />} 
             />
