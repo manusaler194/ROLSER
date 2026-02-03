@@ -9,17 +9,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 const App = () => {
  const rolActual = "encargado_almacen";
 
-<<<<<<< Updated upstream
-    return(
-        <div>
-            <Header></Header>
-
-        <Navbar usuario={"admin"}></Navbar>
-          <h1>Lista de Administradores</h1>
-          <Users></Users>
-        </div>
-    )
-=======
     return (
     <div className="flex flex-col h-screen w-full bg-white overflow-hidden">
       
