@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('stock_actual'); // Solo se peude poner valores positivos (no se puede poner -1)
             $table->timestamps();
 
-            $table->foreignId('id_almacen')->nullable()->constrained('almacenes', 'id_almacen')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreignId('id_seccion')->nullable()->constrained('secciones', 'id_seccion')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_administrador')->nullable()->constrained('administradores', 'id_administrador')->nullOnDelete()->cascadeOnUpdate();
 
         });

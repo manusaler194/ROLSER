@@ -24,7 +24,7 @@ class ArticuloSeeder extends Seeder
             'stock_actual' => $faker->numberBetween(0, 500),
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
-            'id_almacen' => rand(1, 10),
+            'id_seccion' => rand(1, 10),
             'id_administrador' => rand(1, 10)
         ]);
         }
