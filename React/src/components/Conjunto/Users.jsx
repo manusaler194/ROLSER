@@ -11,28 +11,35 @@ const Users = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        // Asegúrate de que esta URL sea la de tu API en PHP
-        fetch('http://0.0.0.0/api/users')
-            .then(res => res.json())
+   useEffect(() => {
+        // CAMBIO IMPORTANTE: Usar '127.0.0.1' o 'localhost' en lugar de '0.0.0.0'
+        // para evitar errores de conexión en Windows/Navegadores modernos.
+        fetch('http://127.0.0.1:8008/api/users')
+            .then(res => {
+                if (!res.ok) throw new Error("Error en la respuesta del servidor");
+                return res.json();
+            })
             .then(json => {
+                console.log("Datos cargados correctamente:", json); // Para depurar
                 setData(json);
                 setLoading(false);
             })
-            .catch(err => console.error("Error cargando datos:", err));
+            .catch(err => {
+                console.error("Error cargando datos:", err);
+                setError(err.message);
+                setLoading(false);
+            });
     }, []);
 
-    if (loading) return <div>Cargando...</div>;
-    console.log(data);
+    if (loading) return <div className="p-10 text-center">Cargando datos...</div>;
+
     return (
         <div>
-            
-            <h1>Panel de Control de Usuarios</h1>
-            <GestionUsuarios data={data}/>
-            {/* Renderizamos cada componente pasando su lista correspondiente */}
+            {/* Pasamos 'data' al componente hijo */}
+            <GestionUsuarios data={data} />
         </div>
     );
-  }
+}
   /*<AdminsTable lista={data.admins} />
   <ClientesTable lista={data.clientes} />
   <VipsTable lista={data.vips} />
