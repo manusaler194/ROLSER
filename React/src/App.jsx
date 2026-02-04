@@ -7,6 +7,8 @@ import GestionAlmacen from "./components/Almacen/GestionAlmacen.jsx";
 import CrearAlmacen from "./components/Almacen/CrearAlmacen.jsx";
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import ModificarAlmacen from "./components/Almacen/ModificarAlmacen.jsx";
+import DatosAlmacen from "./components/Almacen/DatosAlmacen.jsx";
 
 const App = () => {
  const rolActual = "encargado_almacen";
@@ -29,6 +31,8 @@ const App = () => {
 
             <Route path="/GestionAlmacen" element={<GestionAlmacen />} />
             <Route path="/CrearAlmacen" element={<CrearAlmacen />} />
+            <Route path="/ModificarAlmacen/:id" element={<ModificarAlmacen />} />
+            <Route path="/DatosAlmacen/:id" element={<DatosAlmacen />} />
 
             <Route path="/" element={<Navigate to={rolActual === 'encargado_almacen' ? "/almacen" : "/catalogos"} />} 
             />

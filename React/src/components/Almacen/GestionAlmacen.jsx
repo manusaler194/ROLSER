@@ -33,9 +33,9 @@ const GestionAlmacen = () => {
             {abrirMenu === almacen.id_almacen && (
               <div className="absolute left-full ml-10 bg-white border-2 border-gray-400">
                 <div className="flex flex-col text-xl">
-                  <button className="px-6 py-2 border-b-2 border-gray-400 hover:bg-gray-100 text-left cursor-pointer">Modificar</button>
+                  <button onClick={()=> navigate(`/ModificarAlmacen/${almacen.id_almacen}`)} className="px-6 py-2 border-b-2 border-gray-400 hover:bg-gray-100 text-left cursor-pointer">Modificar</button>
                   <button className="px-6 py-2 border-b-2 border-gray-400 hover:bg-gray-100 text-left cursor-pointer">Eliminar</button>
-                  <button className="px-6 py-2 hover:bg-gray-100 text-left cursor-pointer">Ver datos</button>
+                  <button onClick={()=> navigate(`/DatosAlmacen/${almacen.id_almacen}`)} className="px-6 py-2 hover:bg-gray-100 text-left cursor-pointer">Ver datos</button>
                 </div>
               </div>
             )}

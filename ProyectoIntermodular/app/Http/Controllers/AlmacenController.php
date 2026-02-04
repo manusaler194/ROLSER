@@ -55,7 +55,28 @@ class AlmacenController extends Controller{
         ], 500);
         }
     }
+    public function mostrarAlmacen(Request $request){
+        try {
+            $almacen = Almacen::findOrFail($request->id_almacen);
 
+            if (!$almacen) {
+                return response()->json([
+                    'message' => 'Almacén no encontrado'
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Datos recogidos',
+                'almacen' => $almacen
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener el almacén.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
     public function actualizar (Request $request){
 

@@ -24,6 +24,7 @@ Route::get('/user', function (Request $request) {
 
 
 Route::get('/almacenes', [AlmacenController::class, 'mostrar']);
+Route::get('/almacenes/{id_almacen}', [AlmacenController::class, 'mostrarAlmacen']);
 Route::post('/almacenes/guardar', [AlmacenController::class, 'guardar']);
 Route::put('/almacenes/actualizar/{id_almacen}', [AlmacenController::class, 'actualizar']);
 Route::delete('/almacenes/borrar/{id_almacen}', [AlmacenController::class, 'eliminar']);
