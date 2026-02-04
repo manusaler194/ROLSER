@@ -11,6 +11,75 @@ use Illuminate\Http\Request;
 use Validator;
 
 class ComercialController extends Controller{
+    public function guardar(Request $request){
+        $validatedData = $request->validate([
+            'nombre'           => 'required|string|max:100',
+            'contacto'         => 'required|string|max:100',
+            'email'            => 'required|email|unique:comerciales,email',
+            'password'         => 'required|string',
+            'id_administrador' => 'nullable|integer',
+        ]);
+
+        try {
+            $comercial = Comercial::create($validatedData);
+
+            return response()->json([
+                'message' => 'Comercial creado con éxito.',
+                'comercial' => $comercial,
+            ], 201); 
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'message' => 'Error al crear el comercial.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function mostrar(Request $request){
+        $datos = Comercial::all();
+        return $datos;
+    }
+
+    public function actualizar (Request $request){
+
+        $validatedData = $request->validate([
+            'nombre'           => 'required|string|max:100',
+            'contacto'         => 'required|string|max:100',
+            'email'            => 'required|email',
+            'password'         => 'required|string',
+            'id_administrador' => 'nullable|integer',
+        ]);
+        
+        try{
+            
+            $comercial = Comercial::findOrFail($request->id_comercial);
+            $comercial->update($validatedData);
+
+            return response()->json([
+                'message' => 'Comercial actualizado con éxito.',
+                'comercial' => $comercial,
+            ], 200);
+
+        }catch (\Exception $e){
+
+            return response()->json ([
+                'message' => 'Error al actualizar el comercial.',
+                'error' => $e->getMessage(),
+            ],500);
+        }
+    }
+
+    public function eliminar(Request $request){
+        
+        $comercial = Comercial::destroy($request->id_comercial);
+
+        return response()->json([
+            "message" => "Comercial con id =" . $request->id_comercial . " ha sido borrado con éxito"
+
+        ],201);
+    }
 /*
 
     public function login(Request $request)

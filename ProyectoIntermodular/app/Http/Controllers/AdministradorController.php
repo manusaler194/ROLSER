@@ -10,100 +10,76 @@ use App\Models\EncargadoAlmacen;
 use App\Models\Comercial;
 class AdministradorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $task = Administrador::all();
-        return $task;
-        //Esta función nos devolvera todas las tareas que tenemos en nuestra BD
-    }
-    public function userIndex() {
-        $modelos = [
-        'admins'      => Administrador::class,
-        'clientes'    => Cliente::class,
-        'vips'        => ClienteVip::class,
-        'encargados'  => EncargadoAlmacen::class,
-        'comerciales' => Comercial::class,
-    ];
-
-    // Transformamos el array de clases en los datos reales
-    $resultado = collect($modelos)->map(function ($clase) {
-        return $clase::all();
-    });
-
-    return response()->json($resultado);
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Request $request)
-    {
-        $task = Administrador::findOrFail($request->id);
-        return $task;
-    }
-    /**
-     * Show the form for editing the specified resource.
-     */
-
-    public function update(Request $request)
-    {
-       $validatedData = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellidos' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+    // Función GUARDAR (Create)
+    public function guardar(Request $request){
+        $validatedData = $request->validate([
+            'nombre'    => 'required|string|max:50',
+            'apellidos' => 'required|string|max:100',
+            'telefono'  => 'required|string|max:20',
+            'email'     => 'required|email|max:100|unique:administradores,email',
+            'password'  => 'required|string', 
         ]);
 
         try {
-            $task = Administrador::findOrFail($request["id"]);
-            $task->update($validatedData);
+            $administrador = Administrador::create($validatedData);
 
             return response()->json([
-                'message' => 'Tarea actualizada con éxito.',
-                'task' => $task,
-            ], 200);
-            //Esta función actualizará la tarea que hayamos seleccionado
+                'message' => 'Administrador creado con éxito.',
+                'administrador' => $administrador,
+            ], 201); 
 
         } catch (\Exception $e) {
 
             return response()->json([
-                'message' => 'Error al actualizar la tarea.',
+                'message' => 'Error al crear el administrador.',
                 'error' => $e->getMessage(),
             ], 500);
         }
-
     }
 
+    // Función MOSTRAR (Read)
+    public function mostrar(Request $request){
+        $datos = Administrador::all();
+        return $datos;
+    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request)
-    {
-        $task = Administrador::destroy($request->id);  //task tienen el id que se ha borrado
+    // Función ACTUALIZAR (Update)
+    public function actualizar (Request $request){
+
+        $validatedData = $request->validate([
+            'nombre'    => 'required|string|max:50',
+            'apellidos' => 'required|string|max:100',
+            'telefono'  => 'required|string|max:20',
+            'email'     => 'required|email|max:100',
+            'password'  => 'required|string', 
+        ]);
+
+        try{
+           
+            $administrador = Administrador::findOrFail($request->id_administrador);
+            
+            $administrador->update($validatedData);
+
+            return response()->json([
+                'message' => 'Administrador actualizado con éxito.',
+                'administrador' => $administrador,
+            ], 200);
+
+        }catch (\Exception $e){
+
+            return response()->json ([
+                'message' => 'Error al actualizar el administrador.',
+                'error' => $e->getMessage(),
+            ],500);
+        }
+    }
+
+    // Función ELIMINAR (Delete)
+    public function eliminar(Request $request){
+        $administrador = Administrador::destroy($request->id_administrador);
 
         return response()->json([
-            "message" => "Tarea con id =" . $task . " ha sido borrado con éxito"
-        ], 201);
-        //Esta función obtendra el id de la tarea que hayamos seleccionado y la borrará de nuestra BD
+            "message" => "Administrador con id =" . $request->id_administrador . " ha sido borrado con éxito"
+        ],201);
     }
 }
