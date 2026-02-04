@@ -9,11 +9,11 @@ class ClienteVip extends Model
     //
 
     protected $table = 'clientes_vip';
-
+    protected $primaryKey = 'id_clientevip';
     protected $fillable = ['nombre', 'telefono','correo','direccion'];
 
     public function pedido() {
-        return $this->belongsToMany(Pedido::class);
+        return $this->belongsTo(Pedido::class);
     }
     public function comercial() {
         return $this->hasMany(Comercial::class);
@@ -22,6 +22,6 @@ class ClienteVip extends Model
         return $this->hasMany(Administrador::class);
     }
     public function factura() {
-        return $this->belongsToMany(Facturas::class);
+        return $this->belongsTo(Facturas::class);
     }
 }

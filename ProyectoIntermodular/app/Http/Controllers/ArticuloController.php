@@ -20,8 +20,6 @@ class ArticuloController extends Controller {
             'id_administrador' => 'required|integer|nullable',
         ]);
 
-
-
         try {
             $articulo = Articulo::create($validatedData);
 

@@ -11,23 +11,26 @@ class Pedido extends Model{
     protected $fillable = ['fecha_pedido', 'estado', 'id_comercial','id_cliente','id_clientevip','id_encargado','id_factura'];
 
 
-    public function comerciales(){
-        return $this->belongsTo(Comercial::class);
+    public function comercial(){
+        return $this->belongsTo(Comercial::class, "id_comercial");
     }
 
     public function LineaPedidos(){
         return $this->hasMany(LineaDePedido::class);
     }
 
-    public function encargadoAlmacenes(){
-        return $this->belongsTo(EncargadoAlmacen::class);
+    public function encargadoAlmacen(){
+        return $this->belongsTo(EncargadoAlmacen::class, "id_encargado");
     }
 
-    public function facturas(){
-        return $this->belongsTo(Facturas::class);
+    public function factura(){
+        return $this->belongsTo(Facturas::class, "id_factura");
     }
 
-    public function clientes(){
-        return $this->belongsTo(Cliente::class);
+    public function cliente(){
+        return $this->belongsTo(Cliente::class, "id_cliente");
+    }
+    public function clienteVip(){
+        return $this->belongsTo(ClienteVip::class, "id_clientevip");
     }
 }

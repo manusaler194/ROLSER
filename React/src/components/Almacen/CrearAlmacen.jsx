@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import iconoDesplegable from '/src/assets/desplegable.svg';
 import axios from "axios";
-import { min } from '../../../../ProyectoIntermodular/node_modules/rxjs/src/internal/operators/min';
 import { useNavigate } from 'react-router-dom';
 
 const CrearAlmacen = () =>{
@@ -32,8 +31,17 @@ const CrearAlmacen = () =>{
       })
     },[])
     const handleSubmit = async (e) =>{
+        console.log("a");
         e.preventDefault();
-
+        try {
+            const response = await axios.post('http://localhost/api/almacenes/guardar', almacen);
+            console.log("Funciona:", response.data);
+            alert("Almacén creado con éxito");
+            navigate('/GestionAlmacen');
+        } catch (error) {
+            console.error("Error al enviar datos:", error.response?.data || error.message);
+            alert("Hubo un error al crear el almacén");
+        }
     }
 
 
@@ -43,14 +51,14 @@ const CrearAlmacen = () =>{
         <div className="flex justify-center items-center min-h-screen bg-gray-50">
             <div className="w-full max-w-150 h-150 p-10 bg-white border border-gray-200 rounded-2rem shadow-lg">
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Crear nuevo Almacén</h2>
-                <form>
-                    <input type="text" name="direccion" placeholder="Dirección" className={inputClasses} onChange={handleDireccion} required/>
-                    <input type="number" name="capacidad" placeholder="Capacidad (m²)" className={inputClasses} onChange={handleCapacidad} min = "1" required/>
+                <form onSubmit={handleSubmit}> 
+                    <input type="text" name="direccion" placeholder="Dirección" value={almacen.direccion} className={inputClasses} onChange={handleDireccion} required/>
+                    <input type="number" name="capacidad" placeholder="Capacidad (m²)" value={almacen.capacidad} className={inputClasses} onChange={handleCapacidad} min = "1" required/>
                     <div className="relative mb-4">
-                        <select name="id_encargado" className={inputClasses} onChange={handleEncargado} onFocus={()=> setMenu(true)} required>
-                            <option value="" disabled>Encargado</option>
+                        <select name="id_encargado" value={almacen.id_encargado} className={inputClasses} onChange={handleEncargado} onFocus={()=> setMenu(true)} required>
+                            <option key="default" value="" disabled>Encargado</option>
                                 {encargados.map((encargado)=>(
-                                    <option key={encargado.id} value={encargado.id}>{encargado.nombre}</option>
+                                    <option key={encargado.id_encargado} value={encargado.id_encargado}>{encargado.nombre}</option>
                                 ))}
                         </select>
                     </div>

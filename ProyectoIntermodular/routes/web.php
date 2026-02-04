@@ -46,4 +46,6 @@ Route::get('/almacen',[AlmacenController::class,'mostrar'])->name('almacenMostra
 Route::get('/administradores', [AdministradorController::class, 'index']);
 Route::get('/encargado', [AlmacenController::class, 'encargado']);
 
+Route::post('/guardarComercial', [ComercialController::class, 'guardar'])->name('guardarComercial');
+
 require __DIR__.'/auth.php';

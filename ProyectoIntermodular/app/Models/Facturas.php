@@ -9,6 +9,8 @@ class Facturas extends Model
 {
     protected $table = 'facturas';
 
+    protected $primaryKey = 'id_factura';
+
     protected $fillable = ['cantidad', 'fecha'];
 
     public function pedidos()

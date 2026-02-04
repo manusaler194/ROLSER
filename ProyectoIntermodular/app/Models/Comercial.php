@@ -14,6 +14,8 @@ class Comercial extends Authenticatable{
 
     protected $table = 'comerciales';
 
+    protected $primaryKey = 'id_comercial';
+
     protected $fillable = ['nombre', 'contacto','email','password'];
 
     protected $hidden = ['password','remember_token',];
@@ -36,7 +38,7 @@ class Comercial extends Authenticatable{
       return $this->hasMany(Cliente::class);
     }
 
-     public function administradores(){
+     public function administrador(){
         return $this->belongsTo(Administrador::class);
     }
 

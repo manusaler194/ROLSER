@@ -17,10 +17,18 @@ class AlmacenController extends Controller{
         ]);
 
         try {
-            $almacen = Almacen::create($validatedData);
+            $encargado = EncargadoAlmacen::findOrFail($validatedData["id_encargado"]);
+
+            $almacen = new Almacen([
+                'direccion' => $validatedData["direccion"],
+                'capacidad' => $validatedData["capacidad"]
+            ]);
+
+            $almacen->encargadoAlmacen()->associate($encargado);
+            $almacen->save();
 
             return response()->json([
-                'message' => 'Almacen creada con éxito.',
+                'message' => 'Almacen creado con éxito.',
                 'almacen' => $almacen,
             ], 201); // Código HTTP 201: Creado
 
@@ -34,8 +42,18 @@ class AlmacenController extends Controller{
     }
 
     public function mostrar(Request $request){
-        $datos = Almacen::all();
-        return $datos;
+        try{
+            $almacen = Almacen::all();
+            return response()->json([
+                'message' => "Datos recogidos",
+                'almacen' => $almacen
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener los almacenes.',
+            'error' => $e->getMessage()
+        ], 500);
+        }
     }
 
 
@@ -65,11 +83,23 @@ class AlmacenController extends Controller{
     }
 
     public function eliminar(Request $request){
-        $almacen = Almacen:: destroy($request->id_almacen);
+        try{
+            $almacen = Almacen::destroy($request->id_almacen);
 
-        return response()->json([
-            "message" => "Almacen con id =" . $request->id_almacen . " ha sido borrado con éxito"
+            if ($almacen === 0) {
+                return response()->json([
+                    "message" => "No se encontró el almacén con ID " . $request->id_almacen
+                ], 404);
+            }
+            return response()->json([
+                "message" => "Almacén con id =" . $request->id_almacen . " ha sido borrado con éxito"
 
-        ],201);
+            ],201);
+        }catch(\Exception $e){
+            return response()->json([
+                "message" => "Error de base de datos al eliminar",
+                "error" => $e->getMessage()
+            ], 500);
+        }
     }
 }

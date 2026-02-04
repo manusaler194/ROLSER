@@ -9,8 +9,39 @@ use App\Models\Comercial;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Validator;
+use App\Models\Administrador;
 
 class ComercialController extends Controller{
+
+    public function guardar(Request $request){
+        $validatedData = $request->validate([
+            "nombre" => "required|string",
+            "contacto" => "required|string",
+            "email" => "required|string",
+            "password" => "required|string",
+            "id_administrador" => "nullable|integer",
+        ]);
+        try{
+            $administrador = Administrador::findOrFail($validatedData["id_administrador"]);
+
+            $comercial = new Comercial([
+                "nombre" => $validatedData["nombre"],
+                "contacto" => $validatedData["contacto"],
+                "email" => $validatedData["email"],
+                "password" => $validatedData["password"],
+            ]);
+            $comercial->administrador()->associate($administrador);
+            $comercial->save();
+
+            return redirect()->route('insertarComercial');
+
+        }catch(\Exception $e){
+            return response()->json ([
+                'message' => 'Error al crear el comercial.',
+                'error' => $e->getMessage(),
+            ],500);
+        }
+    }
 /*
 
     public function login(Request $request)
