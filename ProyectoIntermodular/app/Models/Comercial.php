@@ -39,7 +39,7 @@ class Comercial extends Authenticatable{
     }
 
      public function administrador(){
-        return $this->belongsTo(Administrador::class);
+        return $this->belongsTo(Administrador::class, 'id_administrador');
     }
 
     public function facturas(){

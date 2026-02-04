@@ -39,8 +39,16 @@ class ComercialController extends Controller{
     }
 
     public function mostrar(Request $request){
-        $datos = Comercial::all();
-        return $datos;
+        try{
+            $datos = Comercial::all();
+            return $datos;
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener los comerciales.',
+            'error' => $e->getMessage()
+        ], 500);
+        }    
+    
     }
 
     public function actualizar (Request $request){
@@ -73,13 +81,23 @@ class ComercialController extends Controller{
     }
 
     public function eliminar(Request $request){
-        
-        $comercial = Comercial::destroy($request->id_comercial);
+         try{
+            $comercial = Comercial::destroy($request->id_comercial);
 
-        return response()->json([
-            "message" => "Comercial con id =" . $request->id_comercial . " ha sido borrado con éxito"
-
-        ],201);
+            if ($comercial === 0) {
+                return response()->json([
+                    "message" => "No se encontró el comercial con ID " . $request->id_comercial
+                ], 404);
+            }
+            return response()->json([
+                "message" => "Comercial con id =" . $request->id_comercial . " ha sido borrado con éxito"
+            ],201);
+        }catch(\Exception $e){
+            return response()->json([
+                "message" => "Error de base de datos al eliminar",
+                "error" => $e->getMessage()
+            ], 500);
+        }
     }
 
 /*

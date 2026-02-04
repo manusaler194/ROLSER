@@ -15,6 +15,6 @@ class Almacen extends Model{
         return $this->hasMany(Seccion::class);
     }
     public function encargadoAlmacen() {
-        return $this->belongsTo(EncargadoAlmacen::class);
+        return $this->belongsTo(EncargadoAlmacen::class, 'id_encargado');
     }
 }

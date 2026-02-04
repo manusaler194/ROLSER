@@ -19,6 +19,6 @@ class Catalogo extends Model
     }
 
     public function administradores(){
-        return $this->belongsTo(Administrador::class);
+        return $this->belongsTo(Administrador::class, 'id_administrador');
     }
 }

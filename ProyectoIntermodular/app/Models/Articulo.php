@@ -11,11 +11,11 @@ class Articulo extends Model
     protected $fillable = ['descripcion', 'precio', 'stock_actual', 'id_seccion', 'id_administrador'];
 
     public function secciones(){
-        return $this->belongsTo(Seccion::class);
+        return $this->belongsTo(Seccion::class, 'id_seccion');
     }
 
     public function administradores(){
-        return $this->belongsTo(Administrador::class);
+        return $this->belongsTo(Administrador::class, 'id_administrador');
     }
 
     public function lineas_pedidos(){

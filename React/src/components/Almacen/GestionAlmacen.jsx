@@ -14,7 +14,7 @@ const GestionAlmacen = () => {
       .then(response =>{
         console.log("Cargado")
         console.log(response.data)
-        setAlmacenes(response.data)
+        setAlmacenes(response.data.almacen)
       })
   },[]);
 

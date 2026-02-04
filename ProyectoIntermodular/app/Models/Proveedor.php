@@ -14,6 +14,6 @@ class Proveedor extends Model
 
     // encargador_de_almacen = nombre de la talba en la BD
     public function encargados_de_almacen(){
-        return $this->belongsTo(EncargadoAlmacen::class);
+        return $this->belongsTo(EncargadoAlmacen::class, 'id_encargado');
     }
 }
