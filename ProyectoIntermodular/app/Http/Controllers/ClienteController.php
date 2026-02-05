@@ -10,7 +10,7 @@ class ClienteController extends Controller
         $validatedData = $request->validate([
             'nombre'           => 'required|string|max:50',
             'telefono'         => 'required|string|max:20',
-            'correo'           => 'required|string|max:255', 
+            'correo'           => 'required|string|max:255',
             'direccion'        => 'required|string|max:255',
             'id_administrador' => 'nullable|integer',
             'id_comercial'     => 'nullable|integer',
@@ -22,7 +22,7 @@ class ClienteController extends Controller
             return response()->json([
                 'message' => 'Cliente creado con éxito.',
                 'cliente' => $cliente,
-            ], 201); 
+            ], 201);
 
         } catch (\Exception $e) {
 
@@ -34,10 +34,19 @@ class ClienteController extends Controller
     }
 
     public function mostrar(Request $request){
-        $datos = Cliente::all();
-        return $datos;
+        try{
+            $cliente = Cliente::all();
+            return response()->json([
+                'message' => "Datos recogidos",
+                'almacen' => $cliente
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener los almacenes.',
+            'error' => $e->getMessage()
+        ], 500);
+        }
     }
-
 
     public function actualizar (Request $request){
 
@@ -49,7 +58,7 @@ class ClienteController extends Controller
             'id_administrador' => 'nullable|integer',
             'id_comercial'     => 'nullable|integer',
         ]);
-        
+
         try{
             // Usamos id_cliente según tu migración
             $cliente = Cliente::findOrFail($request->id_cliente);
@@ -70,7 +79,7 @@ class ClienteController extends Controller
     }
 
     public function eliminar(Request $request){
-        
+
         $cliente = Cliente::destroy($request->id_cliente);
 
         return response()->json([

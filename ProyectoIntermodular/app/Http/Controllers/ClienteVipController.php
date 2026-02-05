@@ -34,8 +34,18 @@ class ClienteVipController extends Controller
     }
 
     public function mostrar(Request $request){
-        $datos = ClienteVip::all();
-        return $datos;
+        try{
+            $clienteVip = ClienteVip::all();
+            return response()->json([
+                'message' => "Datos recogidos",
+                'almacen' => $clienteVip
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener los almacenes.',
+            'error' => $e->getMessage()
+        ], 500);
+        }
     }
 
     public function actualizar (Request $request){
@@ -48,9 +58,9 @@ class ClienteVipController extends Controller
             'id_administrador' => 'nullable|integer',
             'id_catalogo'      => 'nullable|integer',
         ]);
-        
+
         try{
-            
+
             $clienteVip = ClienteVip::findOrFail($request->id_clientevip);
             $clienteVip->update($validatedData);
 
@@ -69,7 +79,7 @@ class ClienteVipController extends Controller
     }
 
     public function eliminar(Request $request){
-        
+
         $clienteVip = ClienteVip::destroy($request->id_clientevip);
 
         return response()->json([

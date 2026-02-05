@@ -23,7 +23,7 @@ class FacturaController extends Controller
             return response()->json([
                 'message' => 'Factura creada con éxito.',
                 'factura' => $factura,
-            ], 201); 
+            ], 201);
 
         } catch (\Exception $e) {
 
@@ -35,8 +35,18 @@ class FacturaController extends Controller
     }
 
     public function mostrar(Request $request){
-        $datos = Facturas::all();
-        return $datos;
+        try{
+            $factura = Facturas::all();
+            return response()->json([
+                'message' => "Datos recogidos",
+                'almacen' => $factura
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener los almacenes.',
+            'error' => $e->getMessage()
+        ], 500);
+        }
     }
 
     public function actualizar (Request $request){
@@ -50,9 +60,9 @@ class FacturaController extends Controller
             'id_cliente'       => 'nullable|integer',
             'id_clientevip'    => 'nullable|integer',
         ]);
-        
+
         try{
-            
+
             $factura = Facturas::findOrFail($request->id_factura);
             $factura->update($validatedData);
 
@@ -71,7 +81,7 @@ class FacturaController extends Controller
     }
 
     public function eliminar(Request $request){
-        
+
         $factura = Facturas::destroy($request->id_factura);
 
         return response()->json([

@@ -1,10 +1,9 @@
 import React from 'react';
-const ClientesTable = ({ lista }) => {
-  // Tomamos el primer cliente de la lista para mostrar sus datos
-  // según el JSON de clientes proporcionado
-  const cliente = lista[0];
 
-  if (!cliente) return <p className="text-center p-4">No hay datos de clientes.</p>;
+const EncargadosTable = ({ usuario, onVolver }) => {
+  
+  // Verificación de seguridad
+  if (!usuario) return <p className="text-center p-4">No hay datos del encargado.</p>;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4 font-sans">
@@ -19,18 +18,18 @@ const ClientesTable = ({ lista }) => {
             <input 
               type="text" 
               readOnly
-              value={cliente.nombre}
+              value={`${usuario.nombre} ${usuario.apellidos}`}
               className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white cursor-default"
             />
           </div>
 
-          {/* Email (En el JSON de clientes es 'correo') */}
+          {/* Email */}
           <div className="flex items-center justify-between gap-4">
             <label className="text-xl font-normal text-black w-1/3 text-right pr-4">Email</label>
             <input 
               type="email" 
               readOnly
-              value={cliente.correo}
+              value={usuario.email}
               className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white cursor-default"
             />
           </div>
@@ -41,20 +40,20 @@ const ClientesTable = ({ lista }) => {
             <input 
               type="text" 
               readOnly
-              value={cliente.telefono}
+              value={usuario.telefono}
               className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white cursor-default"
             />
           </div>
 
-          {/* Rol - Bloqueado en 'Cliente' */}
+          {/* Rol - Estático como Encargado */}
           <div className="flex items-center justify-between gap-4">
             <label className="text-xl font-normal text-black w-1/3 text-right pr-4">Rol</label>
             <div className="relative w-2/3">
               <select 
                 disabled
-                className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-white opacity-100 text-black cursor-default"
+                className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-white opacity-100 text-black cursor-default font-bold"
               >
-                <option>Cliente</option>
+                <option>Encargado</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
                 <svg className="h-5 w-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,7 +63,7 @@ const ClientesTable = ({ lista }) => {
             </div>
           </div>
 
-          {/* Comercial asignado - Muestra el ID o podrías pasar el nombre si lo tienes */}
+          {/* Comercial asignado - N/A para Encargados */}
           <div className="flex items-center justify-between gap-4">
             <label className="text-xl font-normal text-black w-1/3 text-right pr-4 leading-tight">Comercial asignado</label>
             <div className="relative w-2/3">
@@ -72,7 +71,7 @@ const ClientesTable = ({ lista }) => {
                 disabled
                 className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-white opacity-100 text-black cursor-default"
               >
-                <option>{`Comercial #${cliente.id_comercial}`}</option>
+                <option>N/A</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
                 <svg className="h-5 w-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,7 +83,10 @@ const ClientesTable = ({ lista }) => {
 
           {/* Botón Volver */}
           <div className="flex justify-center pt-4">
-            <button className="bg-[#bd0026] text-white font-medium py-2 px-14 rounded-full hover:bg-red-800 transition-colors shadow-sm">
+            <button 
+                onClick={onVolver}
+                className="bg-[#bd0026] text-white font-medium py-2 px-14 rounded-full hover:bg-red-800 transition-colors shadow-sm"
+            >
               Volver
             </button>
           </div>
@@ -94,4 +96,4 @@ const ClientesTable = ({ lista }) => {
     </div>
   );
 };
-export default ClientesTable;
+export default EncargadosTable;

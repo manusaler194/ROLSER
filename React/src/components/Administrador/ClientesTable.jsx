@@ -1,7 +1,9 @@
 import React from 'react';
-const ComercialesTable = ({ lista }) => {
-  // Tomamos el primer comercial de la lista proporcionada en el JSON
-  const comercial = lista[0] || {};
+
+const ClientesTable = ({ usuario, onVolver }) => {
+  
+  // Verificación de seguridad
+  if (!usuario) return <p className="text-center p-4">No hay datos de clientes.</p>;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4 font-sans">
@@ -10,13 +12,13 @@ const ComercialesTable = ({ lista }) => {
       <div className="bg-white p-8 rounded-[30px] border border-gray-400 shadow-sm w-full max-w-lg">
         <div className="space-y-6">
           
-          {/* Nombre */}
+          {/* Nombre (Concatenamos nombre y apellidos) */}
           <div className="flex items-center justify-between gap-4">
             <label className="text-xl font-normal text-black w-1/3 text-right pr-4">Nombre</label>
             <input 
               type="text" 
               readOnly
-              value={comercial.nombre || ""}
+              value={`${usuario.nombre} ${usuario.apellidos}`}
               className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white cursor-default"
             />
           </div>
@@ -27,31 +29,31 @@ const ComercialesTable = ({ lista }) => {
             <input 
               type="email" 
               readOnly
-              value={comercial.email || ""}
+              value={usuario.email}
               className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white cursor-default"
             />
           </div>
 
-          {/* Teléfono (Mapeado desde 'contacto' en el JSON) */}
+          {/* Teléfono */}
           <div className="flex items-center justify-between gap-4">
             <label className="text-xl font-normal text-black w-1/3 text-right pr-4">Teléfono</label>
             <input 
               type="text" 
               readOnly
-              value={comercial.contacto || ""}
+              value={usuario.telefono}
               className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white cursor-default"
             />
           </div>
 
-          {/* Rol - Estático como Comercial */}
+          {/* Rol - Bloqueado en 'Cliente' */}
           <div className="flex items-center justify-between gap-4">
             <label className="text-xl font-normal text-black w-1/3 text-right pr-4">Rol</label>
             <div className="relative w-2/3">
               <select 
                 disabled
-                className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-white opacity-100 text-black cursor-default"
+                className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-white opacity-100 text-black cursor-default font-bold"
               >
-                <option>Comercial</option>
+                <option>Cliente</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
                 <svg className="h-5 w-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,15 +63,20 @@ const ComercialesTable = ({ lista }) => {
             </div>
           </div>
 
-          {/* Administrador asignado (Mapeado desde 'id_administrador') */}
+          {/* Comercial asignado */}
           <div className="flex items-center justify-between gap-4">
-            <label className="text-xl font-normal text-black w-1/3 text-right pr-4 leading-tight">Admin. responsable</label>
+            <label className="text-xl font-normal text-black w-1/3 text-right pr-4 leading-tight">Comercial asignado</label>
             <div className="relative w-2/3">
               <select 
                 disabled
                 className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-white opacity-100 text-black cursor-default"
               >
-                <option>{comercial.id_administrador ? `Admin #${comercial.id_administrador}` : "N/A"}</option>
+                {/* Accedemos al dato original para sacar el ID específico */}
+                <option>
+                    {usuario.original?.id_comercial 
+                        ? `Comercial #${usuario.original.id_comercial}` 
+                        : 'Sin asignar'}
+                </option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
                 <svg className="h-5 w-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,7 +88,10 @@ const ComercialesTable = ({ lista }) => {
 
           {/* Botón Volver */}
           <div className="flex justify-center pt-4">
-            <button className="bg-[#bd0026] text-white font-medium py-2 px-14 rounded-full hover:bg-red-800 transition-colors shadow-sm">
+            <button 
+                onClick={onVolver}
+                className="bg-[#bd0026] text-white font-medium py-2 px-14 rounded-full hover:bg-red-800 transition-colors shadow-sm"
+            >
               Volver
             </button>
           </div>
@@ -91,4 +101,5 @@ const ComercialesTable = ({ lista }) => {
     </div>
   );
 };
-export default ComercialesTable;
+
+export default ClientesTable;

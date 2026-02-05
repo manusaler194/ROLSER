@@ -33,6 +33,7 @@ Route::delete('/almacenes/borrar/{id_almacen}', [AlmacenController::class, 'elim
 /* ADMINISTRADORES                                 */
 /* -------------------------------------------------------------------------- */
 Route::get('/administradores', [AdministradorController::class, 'mostrar']);
+Route::get('/administradores/{id_administrador}', [AdministradorController::class, 'mostrarAdministrador']);
 Route::post('/administradores/guardar', [AdministradorController::class, 'guardar']);
 Route::put('/administradores/actualizar/{id_administrador}', [AdministradorController::class, 'actualizar']);
 Route::delete('/administradores/borrar/{id_administrador}', [AdministradorController::class, 'eliminar']);

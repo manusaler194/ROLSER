@@ -26,15 +26,7 @@ Route::middleware('auth')->group(function () {
 //1 Crear la tabla 2Creaar el model 3 La ruta 4 el controlador 5 vista
 //Laravel extension pack
 
-Route::get('/login', function () {
-    return view('login'); // El nombre debe coincidir con el nombre de tu archivo .blade.php
-})->name('login');
-Route::get('/registrar', function () {
-    return view('registrar'); // El nombre debe coincidir con el nombre de tu archivo .blade.php
-})->name('registrar');
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::get('/almacen',[AlmacenController::class,'mostrar'])->name('almacenMostrar');
 

@@ -20,7 +20,7 @@ class LineaPedidoController extends Controller
             return response()->json([
                 'message' => 'Línea de pedido creada con éxito.',
                 'lineaPedido' => $lineaPedido,
-            ], 201); 
+            ], 201);
 
         } catch (\Exception $e) {
 
@@ -32,8 +32,18 @@ class LineaPedidoController extends Controller
     }
 
     public function mostrar(Request $request){
-        $datos = LineaDePedido::all();
-        return $datos;
+        try{
+            $lineaPedido = LineaDePedido::all();
+            return response()->json([
+                'message' => "Datos recogidos",
+                'almacen' => $lineaPedido
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener los almacenes.',
+            'error' => $e->getMessage()
+        ], 500);
+        }
     }
 
     public function actualizar (Request $request){
@@ -44,9 +54,9 @@ class LineaPedidoController extends Controller
             'id_pedido'   => 'nullable|integer',
             'id_articulo' => 'nullable|integer',
         ]);
-        
+
         try{
-            
+
             $lineaPedido = LineaDePedido::findOrFail($request->id_linea);
             $lineaPedido->update($validatedData);
 
@@ -65,7 +75,7 @@ class LineaPedidoController extends Controller
     }
 
     public function eliminar(Request $request){
-        
+
         $lineaPedido = LineaDePedido::destroy($request->id_linea);
 
         return response()->json([
