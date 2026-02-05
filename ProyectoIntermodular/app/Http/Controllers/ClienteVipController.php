@@ -78,6 +78,29 @@ class ClienteVipController extends Controller
         }
     }
 
+    public function mostrarClienteVip($id_clientevip)
+    {
+        try {
+            // Usamos 'findOrFail': si no existe, salta directo al catch
+            $clientevip = ClienteVip::findOrFail($id_clientevip);
+
+            return response()->json($clientevip, 200);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            
+            return response()->json([
+                'message' => 'Cliente no encontrado'
+            ], 404);
+
+        } catch (\Exception $e) {
+            
+            return response()->json([
+                'message' => 'Error al obtener el Cliente',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function eliminar(Request $request){
 
         $clienteVip = ClienteVip::destroy($request->id_clientevip);

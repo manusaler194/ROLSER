@@ -61,11 +61,11 @@ Route::post('/articulo/guardar', [ArticuloController::class, 'articuloNuevo']);
 Route::put('/articulo/actualizar/{id_articulo}', [ArticuloController::class, 'articuloActualizar']);
 Route::delete('/articulo/borrar/{id_articulo}', [ArticuloController::class, 'eliminarArticulo']);
 
-Route::get('/encargadoAlmacen', [EncargadoAlmacenController::class, 'mostrarEncargadoAlmacen']);
+Route::get('/encargadoAlmacen', [EncargadoAlmacenController::class, 'mostrar']);
 Route::post('/encargadoAlmacen/guardar', [EncargadoAlmacenController::class, 'encargadoAlmacenNuevo']);
 Route::put('/encargadoAlmacen/actualizar/{id_encargado}', [EncargadoAlmacenController::class, 'encargadoAlmacenActualizar']);
 Route::delete('/encargadoAlmacen/borrar/{id_encargado}', [EncargadoAlmacenController::class, 'eliminarEncargadoAlmacen']);
-
+Route::get('/encargadoAlmacen/{id_cliente}', [EncargadoAlmacenController::class, 'mostrarEncargadoAlmacen']);
 /* -------------------------------------------------------------------------- */
 /* CLIENTES                                 */
 /* -------------------------------------------------------------------------- */
@@ -73,7 +73,7 @@ Route::get('/clientes', [ClienteController::class, 'mostrar']);
 Route::post('/clientes/guardar', [ClienteController::class, 'guardar']);
 Route::put('/clientes/actualizar/{id_cliente}', [ClienteController::class, 'actualizar']);
 Route::delete('/clientes/borrar/{id_cliente}', [ClienteController::class, 'eliminar']);
-
+Route::get('/clientes/{id_cliente}', [ClienteController::class, 'mostrarCliente']);
 /* -------------------------------------------------------------------------- */
 /* CLIENTES VIP                                */
 /* -------------------------------------------------------------------------- */
@@ -81,7 +81,7 @@ Route::get('/clientesVip', [ClienteVipController::class, 'mostrar']);
 Route::post('/clientesVip/guardar', [ClienteVipController::class, 'guardar']);
 Route::put('/clientesVip/actualizar/{id_clientevip}', [ClienteVipController::class, 'actualizar']);
 Route::delete('/clientesVip/borrar/{id_clientevip}', [ClienteVipController::class, 'eliminar']);
-
+Route::get('/clientesVip/{id_cliente}', [ClienteVipController::class, 'mostrarClienteVip']);
 /* -------------------------------------------------------------------------- */
 /* FACTURAS                                  */
 /* -------------------------------------------------------------------------- */
@@ -113,4 +113,4 @@ Route::get('/comerciales', [ComercialController::class, 'mostrar']);
 Route::post('/comerciales/guardar', [ComercialController::class, 'guardar']);
 Route::put('/comerciales/actualizar/{id_comercial}', [ComercialController::class, 'actualizar']);
 Route::delete('/comerciales/borrar/{id_comercial}', [ComercialController::class, 'eliminar']);
-
+Route::get('/comerciales/{id_cliente}', [ComercialController::class, 'mostrarComercial']);

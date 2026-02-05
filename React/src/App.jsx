@@ -11,6 +11,10 @@ import ModificarAlmacen from "./components/Almacen/ModificarAlmacen.jsx";
 import DatosAlmacen from "./components/Almacen/DatosAlmacen.jsx";
 import ModificarAdministrador from "./components/Administrador/ModificarAdministrador";
 import GestionarPedidos from "./components/Pedido/GestionarPedidos.jsx";
+import ModificarCliente from "./components/Administrador/ModificarCliente.jsx";
+import ModificarClienteVip from "./components/Administrador/ModificarClienteVip.jsx";
+import ModificarComercial from "./components/Administrador/ModificarComercial.jsx";
+import ModificarEncargado from "./components/Administrador/ModificarEncargado.jsx";
 
 const App = () => {
  const rolActual = "admin";
@@ -26,6 +30,10 @@ const App = () => {
 
         <main className="flex-1 overflow-auto p-6 bg-gray-50">
           <Routes>
+            <Route path="/modificar-encargado/:id" element={<ModificarEncargado />} />
+            <Route path="/modificar-comercial/:id" element={<ModificarComercial />} />
+            <Route path="/modificar-clientevip/:id" element={<ModificarClienteVip />} />
+            <Route path="/modificar-cliente/:id" element={<ModificarCliente />} />
             <Route path="/modificar-admin/:id" element={<ModificarAdministrador />} />
             <Route path="/usuarios" element={<GestionUsuarios />} />
             <Route path="/catalogos" element={<Catalogos />} />
