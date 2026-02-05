@@ -11,8 +11,8 @@ const DatosAlmacen = () =>{
     axios
     .get(`http://localhost/api/almacenes/${id}`)
     .then(response =>{
-      console.log(response.data.almacen)
-      setAlmacen(response.data.almacen);
+      console.log(response.data.almacen[0])
+      setAlmacen(response.data.almacen[0]);
     })
   },[id])
 
@@ -20,26 +20,49 @@ const DatosAlmacen = () =>{
 const inputClasses = "w-full px-5 py-3 mb-10 border border-gray-400 rounded-full focus:outline-none bg-gray-50 text-gray-700 cursor-default appearance-none";
 
 return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50">
-        <div className="w-full max-w-150 h-150 p-10 bg-white border border-gray-200 rounded-2rem shadow-lg">
-            <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Datos del Almacén</h2>
-            
-            <form> 
-                <input type="text" value={almacen.direccion} className={inputClasses} readOnly />
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 py-10">
+      {/* Cambié h-150 por min-h-fit y pb-10 para que crezca según el contenido */}
+      <div className="w-full max-w-2xl min-h-fit p-10 bg-white border border-gray-200 rounded-[2rem] shadow-lg relative">
+        
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Datos del Almacén</h2>
 
-                <input type="text" value={`${almacen.capacidad} unidades`} className={inputClasses} readOnly />
+        <form onSubmit={(e) => e.preventDefault()}>
+          
+          <label className="block ml-4 mb-1 text-sm font-bold text-gray-600">Dirección</label>
+          <input type="text" value={almacen.direccion || ''} className={inputClasses} readOnly />
 
-                <div className="relative mb-4">
-                    <input type="text" value={almacen.encargado_almacen?.nombre || "Sin encargado"} className={inputClasses} readOnly />
-                </div>
+          <label className="block ml-4 mb-1 text-sm font-bold text-gray-600">Capacidad Total</label>
+          <input type="text" value={`${almacen.capacidad || 0} unidades`} className={inputClasses} readOnly />
 
-                <div onClick={() => navigate('/GestionAlmacen')} className="w-full py-4 mt-2 bg-[#bc002d] text-white font-bold rounded-full text-center shadow-inner cursor-pointer">Volver</div>
-            </form>
-        </div>
+          <label className="block ml-4 mb-1 text-sm font-bold text-gray-600">Encargado</label>
+          <div className="relative mb-6">
+            <input type="text" value={almacen.encargado_almacen?.nombre || "Sin encargado asignado"} className={inputClasses} readOnly />
+          </div>
 
-        <div className="absolute bottom-20 right-20">
-            <button  onClick={() => navigate(`/ModificarAlmacen/${id}`)}  className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Modificar</button>
-        </div>
+          <div className="mb-8">
+            <label className="block ml-4 mb-2 text-sm font-bold text-gray-600">Secciones del Almacén</label>
+            <div className="w-full border border-gray-400 rounded-3xl bg-gray-50 overflow-hidden">
+              {almacen.secciones && almacen.secciones.length > 0 ? (
+                <ul className="divide-y divide-gray-300">
+                  {almacen.secciones.map((seccion) => (
+                    <li key={seccion.id_seccion} className="px-6 py-3 hover:bg-gray-100 flex justify-between items-center">
+                      <span className="font-medium text-gray-700">  {/* Ajusta 'nombre' si tu campo se llama distinto, ej: codigo */}{seccion.stock || `Sección ${seccion.id_seccion}`} </span>
+                     
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="p-5 text-gray-500 text-center italic">No hay secciones registradas</div>
+              )}
+            </div>
+          </div>
+          <div onClick={() => navigate('/GestionAlmacen')} className="w-full py-4 bg-[#bc002d] text-white font-bold rounded-full text-center shadow-md hover:bg-red-800 transition-colors cursor-pointer" > Volver</div>
+        </form>
+      </div>
+
+      <div className="absolute bottom-10 right-10 lg:bottom-20 lg:right-20">
+        <button onClick={() => navigate(`/ModificarAlmacen/${id}`)} className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Modificar </button>
+      </div>
     </div>
 );
 

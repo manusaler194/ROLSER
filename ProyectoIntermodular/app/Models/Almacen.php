@@ -12,7 +12,7 @@ class Almacen extends Model{
     protected $fillable = ['direccion', 'capacidad', 'id_encargado'];
 
     public function secciones() {
-        return $this->hasMany(Seccion::class);
+        return $this->hasMany(Seccion::class, 'id_seccion');
     }
     public function encargadoAlmacen() {
         return $this->belongsTo(EncargadoAlmacen::class, 'id_encargado');

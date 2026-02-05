@@ -5,6 +5,7 @@ const GestionarPedidos = () => {
     const [pedidos, setPedidos] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
+    const [filtro, setFiltro] = useState('Todos');
 
     useEffect(() => {
         obtenerPedidos();
@@ -27,18 +28,19 @@ const GestionarPedidos = () => {
                 setCargando(false);
             });
     };
-
-    if (cargando) return <div className="p-8">Cargando pedidos...</div>;
-    if (error) return <div className="p-8 text-red-500">{error}</div>;
-
+    const pedidosFiltrados = pedidos.filter(pedido =>{
+        if(filtro == "Todos") return true;
+        return pedido.estado == filtro;
+    })
     return (
         <div className="p-8 flex flex-col gap-6 max-w-4xl">
             <div className="flex flex-col gap-1">
                 <label className="text-sm font-medium text-gray-700">Filtrar por:</label>
-                <select className="w-40 p-1 border border-gray-300 rounded bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
-                    <option>Todos los Almacenes</option>
-                    <option>Almacén A</option>
-                    <option>Almacén B</option>
+                <select value={filtro} onChange={(e) => setFiltro(e.target.value)} className="w-48 p-1 border border-gray-300 rounded bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    <option value="Todos">Todos los Estados</option>
+                    <option value="En preparación">En preparación</option>
+                    <option value="En proceso de entrega">En proceso de entrega</option>
+                    <option value="Entregado">Entregado</option>
                 </select>
             </div>
 
@@ -53,8 +55,8 @@ const GestionarPedidos = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {pedidos.length > 0 ? (
-                            pedidos.map((pedido) => (
+                        {pedidosFiltrados.length > 0 ? (
+                            pedidosFiltrados.map((pedido) => (
                                 <tr key={pedido.id_pedido} className="bg-gray-100 hover:bg-white transition-colors">
                                     <td className="border border-gray-400 px-4 py-2 text-center">{pedido.id_pedido}</td>
                                     
