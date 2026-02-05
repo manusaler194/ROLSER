@@ -1,311 +1,387 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // <--- 1. IMPORTAR ESTO
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
+// --- IMPORTACIONES ---
 import AdminsTable from "./AdminsTable";
-import ClientesTable from './ClientesTable';
-import VipsTable from './ClientesVips';
-import EncargadosTable from './Encargado';
-import ComercialesTable from './Comercial';
+import ClientesTable from "./ClientesTable";
+import VipsTable from "./ClientesVips";
+import EncargadosTable from "./Encargado";
+import ComercialesTable from "./Comercial";
 
 const GestionUsuarios = () => {
-    // Configuración
-    const API_URL = 'http://127.0.0.1/api/users';
-    
-    // Hook para navegación
-    const navigate = useNavigate(); // <--- 2. INICIALIZAR EL HOOK
+  // Configuración
+  const URL_API = "http://192.168.0.14:8008/api/users";
 
-    // Estados
-    const [vista, setVista] = useState('MENU'); 
-    const [categoriaActiva, setCategoriaActiva] = useState(null);
-    const [busqueda, setBusqueda] = useState('');
-    
-    const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
-    const [formulario, setFormulario] = useState(null); 
-    
-    const [datos, setDatos] = useState(null);
-    const [cargando, setCargando] = useState(true);
-    const [error, setError] = useState(null);
+  // Hook para navegación
+  const navegar = useNavigate();
 
-    const categorias = [
-        { id: 'admins', titulo: 'Administradores' },
-        { id: 'clientes', titulo: 'Clientes' },
-        { id: 'vips', titulo: 'Clientes VIP' },
-        { id: 'encargados', titulo: 'Encargados' },
-        { id: 'comerciales', titulo: 'Comerciales' }
-    ];
+  // Estados con nombres en español
+  const [vistaActual, setVistaActual] = useState("MENU");
+  const [categoriaActiva, setCategoriaActiva] = useState(null);
+  const [textoBusqueda, setTextoBusqueda] = useState("");
 
-    useEffect(() => {
-        const fetchUsuarios = async () => {
-            try {
-                const response = await fetch(API_URL);
-                if (!response.ok) throw new Error("Error de conexión");
-                const result = await response.json();
-                setDatos(result);
-            } catch (err) {
-                console.error(err);
-                setError("No se pudo conectar con el servidor.");
-            } finally {
-                setCargando(false);
-            }
-        };
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
+  const [datosFormulario, setDatosFormulario] = useState(null);
 
-        fetchUsuarios();
-    }, []);
+  const [datosGlobales, setDatosGlobales] = useState(null);
+  const [estaCargando, setEstaCargando] = useState(true);
+  const [errorConexion, setErrorConexion] = useState(null);
 
-    const parsearUsuario = (u) => ({
-        id: u.id, // Asegúrate de que tu API devuelve el ID aquí
-        nombre: u.nombre || '',
-        apellidos: u.apellidos || '',
-        email: u.email || u.correo || '',
-        telefono: u.telefono || u.tel || u.contacto || '',
-        direccion: u.direccion || '', 
-        original: u 
+  const listaCategorias = [
+    { id: "admins", titulo: "Administradores" },
+    { id: "clientes", titulo: "Clientes" },
+    { id: "vips", titulo: "Clientes VIP" },
+    { id: "encargados", titulo: "Encargados" },
+    { id: "comerciales", titulo: "Comerciales" },
+  ];
+
+  useEffect(() => {
+    const cargarUsuarios = async () => {
+      try {
+        const respuesta = await fetch(URL_API);
+        if (!respuesta.ok) throw new Error("Error de conexión");
+        const resultado = await respuesta.json();
+        setDatosGlobales(resultado);
+      } catch (err) {
+        console.error(err);
+        setErrorConexion("No se pudo conectar con el servidor.");
+      } finally {
+        setEstaCargando(false);
+      }
+    };
+
+    cargarUsuarios();
+  }, []);
+
+  const formatearUsuario = (usuario) => ({
+    id:
+      usuario.id_cliente ||
+      usuario.id_clientevip ||
+      usuario.id_encargado ||
+      usuario.id_comercial ||
+      usuario.id_administrador ||
+      usuario.id,
+
+    nombre: usuario.nombre || "",
+    apellidos: usuario.apellidos || "",
+    email: usuario.email || usuario.correo || "", // Añadido mapeo para correo
+    telefono: usuario.telefono || usuario.contacto || "",
+    direccion: usuario.direccion || "",
+    original: usuario,
+  });
+  const manejarCambioInput = (evento) => {
+    setDatosFormulario({
+      ...datosFormulario,
+      [evento.target.name]: evento.target.value,
     });
+  };
 
-    // Lógica para el formulario genérico (para los que no son Admins todavía)
-    const handleChange = (e) => {
-        setFormulario({
-            ...formulario,
-            [e.target.name]: e.target.value
-        });
-    };
+  const manejarGuardadoSimulado = () => {
+    console.log("Guardando datos...", datosFormulario);
+    alert("Datos guardados (Simulación)");
+    setVistaActual("LISTA");
+  };
 
-    const handleGuardar = () => {
-        console.log("Guardando datos...", formulario);
-        alert("Datos guardados (Simulación)");
-        setVista('LISTA');
-    };
+  if (estaCargando)
+    return (
+      <div className="min-h-screen flex items-center justify-center font-bold text-gray-600">
+        Cargando recursos...
+      </div>
+    );
+  if (errorConexion)
+    return (
+      <div className="min-h-screen flex items-center justify-center text-red-600 font-bold">
+        {errorConexion}
+      </div>
+    );
 
-    if (cargando) return <div className="min-h-screen flex items-center justify-center font-bold text-gray-600">Cargando recursos...</div>;
-    if (error) return <div className="min-h-screen flex items-center justify-center text-red-600 font-bold">{error}</div>;
+  // --- VISTAS ---
 
-    // --- VISTAS ---
+  // 1. MENU PRINCIPAL
+  if (vistaActual === "MENU") {
+    return (
+      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6 font-sans">
+        <header className="mb-12 text-center">
+          <h1 className="text-4xl font-bold text-gray-900 uppercase tracking-widest">
+            Gestión de Usuarios
+          </h1>
+          <div className="h-1 w-24 bg-[#bd0026] mx-auto mt-4"></div>
+        </header>
 
-    // 1. MENU
-    if (vista === 'MENU') {
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
+          {listaCategorias.map((categoria) => (
+            <BotonCategoria
+              key={categoria.id}
+              categoria={categoria}
+              cantidad={datosGlobales?.[categoria.id]?.length || 0}
+              alHacerClick={() => {
+                if (datosGlobales?.[categoria.id]) {
+                  setCategoriaActiva(categoria.id);
+                  setVistaActual("LISTA");
+                  setTextoBusqueda("");
+                } else {
+                  alert(`Sin datos para ${categoria.titulo}`);
+                }
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // 2. VISTA DE LISTA
+  if (vistaActual === "LISTA") {
+    const listaSinFiltrar = datosGlobales[categoriaActiva] || [];
+
+    const usuariosFiltrados = listaSinFiltrar
+      .map(formatearUsuario)
+      .filter((usuario) => {
+        const termino = textoBusqueda.toLowerCase();
         return (
-            <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6 font-sans">
-                <header className="mb-12 text-center">
-                    <h1 className="text-4xl font-bold text-gray-900 uppercase tracking-widest">Gestión de Usuarios</h1>
-                    <div className="h-1 w-24 bg-[#bd0026] mx-auto mt-4"></div>
-                </header>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
-                    {categorias.map((cat) => (
-                        <BotonCategoria 
-                            key={cat.id} 
-                            categoria={cat} 
-                            cantidad={datos?.[cat.id]?.length || 0}
-                            onClick={() => {
-                                if (datos?.[cat.id]) {
-                                    setCategoriaActiva(cat.id);
-                                    setVista('LISTA');
-                                    setBusqueda('');
-                                } else {
-                                    alert(`Sin datos para ${cat.titulo}`);
-                                }
-                            }}
-                        />
-                    ))}
-                </div>
-            </div>
+          usuario.nombre.toLowerCase().includes(termino) ||
+          usuario.apellidos.toLowerCase().includes(termino) ||
+          usuario.email.toLowerCase().includes(termino)
         );
+      });
+
+    const tituloSeccion = listaCategorias.find(
+      (c) => c.id === categoriaActiva,
+    )?.titulo;
+
+    return (
+      <div className="min-h-screen bg-gray-100 p-8 font-sans">
+        <div className="max-w-4xl mx-auto">
+          <button
+            onClick={() => setVistaActual("MENU")}
+            className="text-[#bd0026] font-bold mb-8 hover:underline flex items-center gap-2"
+          >
+            ← VOLVER AL MENÚ
+          </button>
+
+          <div className="flex justify-between items-end mb-6">
+            <h2 className="text-3xl font-bold text-black uppercase">
+              {tituloSeccion}
+            </h2>
+            <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold">
+              Total: {usuariosFiltrados.length}
+            </span>
+          </div>
+
+          <input
+            type="text"
+            placeholder="Buscar usuario..."
+            className="w-full mb-8 p-4 rounded-full border border-gray-400 px-6 focus:ring-2 focus:ring-[#bd0026] outline-none shadow-sm bg-white"
+            value={textoBusqueda}
+            onChange={(e) => setTextoBusqueda(e.target.value)}
+          />
+
+          <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
+            {usuariosFiltrados.length > 0 ? (
+              usuariosFiltrados.map((usuario, index) => (
+                <ItemLista
+                  key={index}
+                  usuario={usuario}
+                  alVer={() => {
+                    setUsuarioSeleccionado(usuario);
+                    setVistaActual("FICHA");
+                  }}
+                  alEditar={() => {
+                    if (categoriaActiva === "admins") {
+                      navegar(`/modificar-admin/${usuario.id}`);
+                    } else if (categoriaActiva === "clientes") {
+                      navegar(`/modificar-cliente/${usuario.id}`);
+                    } else if (categoriaActiva === "vips") {
+                      navegar(`/modificar-clientevip/${usuario.id}`);
+                    } else if (categoriaActiva === "comerciales") {
+                      navegar(`/modificar-comercial/${usuario.id}`);
+                    } else if (categoriaActiva === "encargados") {
+                      navegar(`/modificar-encargado/${usuario.id}`);
+                    } else {
+                      setUsuarioSeleccionado(usuario);
+                      setDatosFormulario(usuario);
+                      setVistaActual("EDITAR");
+                    }
+                  }}
+                />
+              ))
+            ) : (
+              <div className="p-10 text-center text-gray-400">
+                No hay resultados.
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. VISTA DE FICHA (Detalle)
+  if (vistaActual === "FICHA" && usuarioSeleccionado) {
+    if (categoriaActiva === "admins") {
+      return (
+        <AdminsTable
+          usuario={usuarioSeleccionado}
+          onVolver={() => setVistaActual("LISTA")}
+        />
+      );
+    } else if (categoriaActiva === "clientes") {
+      return (
+        <ClientesTable
+          usuario={usuarioSeleccionado}
+          onVolver={() => setVistaActual("LISTA")}
+        />
+      );
+    } else if (categoriaActiva === "vips") {
+      return (
+        <VipsTable
+          usuario={usuarioSeleccionado}
+          onVolver={() => setVistaActual("LISTA")}
+        />
+      );
+    } else if (categoriaActiva === "encargados") {
+      return (
+        <EncargadosTable
+          usuario={usuarioSeleccionado}
+          onVolver={() => setVistaActual("LISTA")}
+        />
+      );
+    } else if (categoriaActiva === "comerciales") {
+      return (
+        <ComercialesTable
+          usuario={usuarioSeleccionado}
+          onVolver={() => setVistaActual("LISTA")}
+        />
+      );
     }
 
-    // 2. LISTA
-    if (vista === 'LISTA') {
-        const listaRaw = datos[categoriaActiva] || [];
-        const usuarios = listaRaw.map(parsearUsuario).filter(u => {
-            const term = busqueda.toLowerCase();
-            return u.nombre.toLowerCase().includes(term) || 
-                   u.apellidos.toLowerCase().includes(term) ||
-                   u.email.toLowerCase().includes(term);
-        });
+    return (
+      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
+        <p>Cargando ficha...</p>
+      </div>
+    );
+  }
 
-        const tituloSeccion = categorias.find(c => c.id === categoriaActiva)?.titulo;
+  // 4. VISTA DE EDITAR (Genérico para no admins)
+  if (vistaActual === "EDITAR" && datosFormulario) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
+        <div className="w-full max-w-lg bg-white p-10 shadow-2xl rounded-sm border-t-4 border-black">
+          <h2 className="text-2xl font-bold mb-8 text-center text-black uppercase tracking-wider border-b pb-4">
+            Modificar Usuario (Genérico)
+          </h2>
 
-        return (
-            <div className="min-h-screen bg-gray-100 p-8 font-sans">
-                <div className="max-w-4xl mx-auto">
-                    <button onClick={() => setVista('MENU')} className="text-[#bd0026] font-bold mb-8 hover:underline flex items-center gap-2">
-                        ← VOLVER AL MENÚ
-                    </button>
-
-                    <div className="flex justify-between items-end mb-6">
-                        <h2 className="text-3xl font-bold text-black uppercase">{tituloSeccion}</h2>
-                        <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold">Total: {usuarios.length}</span>
-                    </div>
-
-                    <input
-                        type="text"
-                        placeholder="Buscar usuario..."
-                        className="w-full mb-8 p-4 rounded-full border border-gray-400 px-6 focus:ring-2 focus:ring-[#bd0026] outline-none shadow-sm bg-white"
-                        value={busqueda}
-                        onChange={(e) => setBusqueda(e.target.value)}
-                    />
-
-                    <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
-                        {usuarios.length > 0 ? (
-                            usuarios.map((u, i) => (
-                                <ItemLista 
-                                    key={i} 
-                                    usuario={u} 
-                                    onVer={() => { setUsuarioSeleccionado(u); setVista('FICHA'); }} 
-                                    
-                                    // 3. AQUÍ ESTÁ EL CAMBIO IMPORTANTE:
-                                    onEditar={() => { 
-                                        if (categoriaActiva === 'admins') {
-                                            // Si es admin, vamos a la NUEVA RUTA que creamos antes
-                                            navigate(`/modificar-admin/${u.id}`);
-                                        } else {
-                                            // Si es otro, usamos el formulario genérico antiguo
-                                            setUsuarioSeleccionado(u); 
-                                            setFormulario(u); 
-                                            setVista('EDITAR'); 
-                                        }
-                                    }}
-                                />
-                            ))
-                        ) : (
-                            <div className="p-10 text-center text-gray-400">No hay resultados.</div>
-                        )}
-                    </div>
-                </div>
+          <div className="space-y-5">
+            <div className="grid grid-cols-2 gap-4">
+              <InputEditable
+                label="Nombre"
+                name="nombre"
+                value={datosFormulario.nombre}
+                onChange={manejarCambioInput}
+              />
+              <InputEditable
+                label="Apellidos"
+                name="apellidos"
+                value={datosFormulario.apellidos}
+                onChange={manejarCambioInput}
+              />
             </div>
-        );
-    }
 
-    // 3. FICHA
-    if (vista === 'FICHA' && usuarioSeleccionado) {
-        
-        if (categoriaActiva === 'admins') {
-            return <AdminsTable usuario={usuarioSeleccionado} onVolver={() => setVista('LISTA')} />;
-        }
-        else if (categoriaActiva === 'clientes') {
-             return <ClientesTable usuario={usuarioSeleccionado} onVolver={() => setVista('LISTA')} />;
-        }
-        else if (categoriaActiva === 'vips') { 
-            return <VipsTable usuario={usuarioSeleccionado} onVolver={() => setVista('LISTA')} />;
-        }
-        else if (categoriaActiva === 'encargados') {
-            return <EncargadosTable usuario={usuarioSeleccionado} onVolver={() => setVista('LISTA')} />;
-        }
-        else if (categoriaActiva === 'comerciales') {
-            return <ComercialesTable usuario={usuarioSeleccionado} onVolver={() => setVista('LISTA')} />;
-        }
+            <InputEditable
+              label="Email"
+              name="email"
+              value={datosFormulario.email}
+              onChange={manejarCambioInput}
+              type="email"
+            />
+            <InputEditable
+              label="Teléfono"
+              name="telefono"
+              value={datosFormulario.telefono}
+              onChange={manejarCambioInput}
+            />
+            <InputEditable
+              label="Dirección"
+              name="direccion"
+              value={datosFormulario.direccion}
+              onChange={manejarCambioInput}
+            />
 
-        // Fallback genérico
-        return (
-            <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
-                {/* ... tu ficha genérica antigua ... */}
+            <div className="flex justify-center pt-8 gap-3">
+              <button
+                onClick={() => setVistaActual("LISTA")}
+                className="w-1/2 border border-gray-400 text-gray-600 font-bold py-3 px-4 rounded shadow hover:bg-gray-50 transition duration-300 uppercase"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={manejarGuardadoSimulado}
+                className="w-1/2 bg-black text-white font-bold py-3 px-4 rounded shadow-lg hover:bg-gray-800 transition duration-300 uppercase"
+              >
+                Guardar (Simulado)
+              </button>
             </div>
-        );
-    }
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-    // 4. EDITAR GENÉRICO (Solo se usará para usuarios que NO sean Admins por ahora)
-    if (vista === 'EDITAR' && formulario) {
-        return (
-            <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
-                <div className="w-full max-w-lg bg-white p-10 shadow-2xl rounded-sm border-t-4 border-black">
-                    <h2 className="text-2xl font-bold mb-8 text-center text-black uppercase tracking-wider border-b pb-4">
-                        Modificar Usuario (Genérico)
-                    </h2>
-
-                    <div className="space-y-5">
-                        <div className="grid grid-cols-2 gap-4">
-                            <InputEditable label="Nombre" name="nombre" value={formulario.nombre} onChange={handleChange} />
-                            <InputEditable label="Apellidos" name="apellidos" value={formulario.apellidos} onChange={handleChange} />
-                        </div>
-                        
-                        <InputEditable label="Email" name="email" value={formulario.email} onChange={handleChange} type="email" />
-                        <InputEditable label="Teléfono" name="telefono" value={formulario.telefono} onChange={handleChange} />
-                        <InputEditable label="Dirección" name="direccion" value={formulario.direccion} onChange={handleChange} />
-
-                        <div className="flex justify-center pt-8 gap-3">
-                            <button
-                                onClick={() => setVista('LISTA')}
-                                className="w-1/2 border border-gray-400 text-gray-600 font-bold py-3 px-4 rounded shadow hover:bg-gray-50 transition duration-300 uppercase"
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                onClick={handleGuardar}
-                                className="w-1/2 bg-black text-white font-bold py-3 px-4 rounded shadow-lg hover:bg-gray-800 transition duration-300 uppercase"
-                            >
-                                Guardar (Simulado)
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    return null;
+  return null;
 };
 
-// --- Componentes Auxiliares ---
-const BotonCategoria = ({ categoria, cantidad, onClick }) => (
-    <button
-        onClick={onClick}
-        className="bg-white group p-8 rounded-xl border border-gray-300 shadow-sm hover:border-[#bd0026] hover:shadow-xl transition-all duration-300 flex flex-col items-center"
-    >
-        <span className="text-xl font-bold text-gray-700 group-hover:text-[#bd0026] uppercase tracking-wide">
-            {categoria.titulo}
-        </span>
-        <span className="text-sm text-gray-400 mt-2">
-            {cantidad} Registros
-        </span>
-    </button>
+// --- Componentes Auxiliares (Props renombrados) ---
+
+const BotonCategoria = ({ categoria, cantidad, alHacerClick }) => (
+  <button
+    onClick={alHacerClick}
+    className="bg-white group p-8 rounded-xl border border-gray-300 shadow-sm hover:border-[#bd0026] hover:shadow-xl transition-all duration-300 flex flex-col items-center"
+  >
+    <span className="text-xl font-bold text-gray-700 group-hover:text-[#bd0026] uppercase tracking-wide">
+      {categoria.titulo}
+    </span>
+    <span className="text-sm text-gray-400 mt-2">{cantidad} Registros</span>
+  </button>
 );
 
-const ItemLista = ({ usuario, onVer, onEditar }) => (
-    <div className="flex justify-between items-center p-5 border-b border-gray-100 last:border-none hover:bg-gray-50 transition-colors group">
-        <div className='flex flex-col'>
-            <span className="text-lg font-bold text-gray-800 group-hover:text-[#bd0026] transition-colors">
-                {usuario.nombre} {usuario.apellidos}
-            </span>
-            <span className="text-sm text-gray-500">{usuario.email}</span>
-        </div>
-        <div className="flex gap-2">
-            <button
-                onClick={onEditar}
-                className="bg-black text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-gray-800 transition-all shadow-sm uppercase tracking-wider"
-            >
-                Modificar
-            </button>
-            <button
-                onClick={onVer}
-                className="bg-white border border-[#bd0026] text-[#bd0026] px-4 py-2 rounded-full text-xs font-bold hover:bg-[#bd0026] hover:text-white transition-all shadow-sm uppercase tracking-wider"
-            >
-                Ver Ficha
-            </button>
-        </div>
+const ItemLista = ({ usuario, alVer, alEditar }) => (
+  <div className="flex justify-between items-center p-5 border-b border-gray-100 last:border-none hover:bg-gray-50 transition-colors group">
+    <div className="flex flex-col">
+      <span className="text-lg font-bold text-gray-800 group-hover:text-[#bd0026] transition-colors">
+        {usuario.nombre} {usuario.apellidos}
+      </span>
+      <span className="text-sm text-gray-500">{usuario.email}</span>
     </div>
-);
-
-const InputSoloLectura = ({ label, value }) => (
-    <div>
-        <label className="block text-xs font-bold text-gray-500 uppercase mb-1 ml-1">{label}</label>
-        <input 
-            readOnly 
-            value={value} 
-            className="w-full bg-[#f2f2f2] border border-gray-400 p-3 text-gray-800 text-center font-medium focus:outline-none cursor-default" 
-        />
+    <div className="flex gap-2">
+      <button
+        onClick={alEditar}
+        className="bg-black text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-gray-800 transition-all shadow-sm uppercase tracking-wider"
+      >
+        Modificar
+      </button>
+      <button
+        onClick={alVer}
+        className="bg-white border border-[#bd0026] text-[#bd0026] px-4 py-2 rounded-full text-xs font-bold hover:bg-[#bd0026] hover:text-white transition-all shadow-sm uppercase tracking-wider"
+      >
+        Ver Ficha
+      </button>
     </div>
+  </div>
 );
 
 const InputEditable = ({ label, name, value, onChange, type = "text" }) => (
-    <div>
-        <label className="block text-xs font-bold text-gray-500 uppercase mb-1 ml-1">{label}</label>
-        <input 
-            type={type}
-            name={name}
-            value={value} 
-            onChange={onChange}
-            className="w-full bg-white border border-gray-400 p-3 text-gray-800 font-medium focus:outline-none focus:border-[#bd0026] focus:ring-1 focus:ring-[#bd0026] transition-all rounded-sm" 
-        />
-    </div>
+  <div>
+    <label className="block text-xs font-bold text-gray-500 uppercase mb-1 ml-1">
+      {label}
+    </label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      className="w-full bg-white border border-gray-400 p-3 text-gray-800 font-medium focus:outline-none focus:border-[#bd0026] focus:ring-1 focus:ring-[#bd0026] transition-all rounded-sm"
+    />
+  </div>
 );
 
 export default GestionUsuarios;

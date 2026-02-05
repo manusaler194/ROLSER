@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Administrador extends Model{
 
     protected $table = 'administradores';
-
-    protected $fillable = ['nombre', 'apellidos', 'email','password'];
+    protected $primaryKey = 'id_administrador';
+    protected $fillable = ['nombre', 'apellidos','telefono', 'email','password'];
 
     // Nombre de la tabla
     public function clientes(){

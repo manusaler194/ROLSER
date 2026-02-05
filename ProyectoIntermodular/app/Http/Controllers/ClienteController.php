@@ -77,7 +77,28 @@ class ClienteController extends Controller
             ],500);
         }
     }
+    public function mostrarCliente($id_cliente)
+    {
+        try {
+            // Usamos 'findOrFail': si no existe, salta directo al catch
+            $cliente = Cliente::findOrFail($id_cliente);
 
+            return response()->json($cliente, 200);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            
+            return response()->json([
+                'message' => 'Cliente no encontrado'
+            ], 404);
+
+        } catch (\Exception $e) {
+            
+            return response()->json([
+                'message' => 'Error al obtener el Cliente',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     public function eliminar(Request $request){
 
         $cliente = Cliente::destroy($request->id_cliente);

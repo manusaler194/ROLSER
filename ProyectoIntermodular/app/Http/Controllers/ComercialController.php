@@ -12,6 +12,30 @@ use Validator;
 use App\Models\Administrador;
 
 class ComercialController extends Controller{
+
+    public function mostrarComercial($id_comercial)
+    {
+        try {
+            // Usamos 'findOrFail': si no existe, salta directo al catch
+            $comercial = Comercial::findOrFail($id_comercial);
+
+            return response()->json($comercial, 200);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            
+            return response()->json([
+                'message' => 'Comercial no encontrado'
+            ], 404);
+
+        } catch (\Exception $e) {
+            
+            return response()->json([
+                'message' => 'Error al obtener el Comercial',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function guardar(Request $request){
         $validatedData = $request->validate([
             'nombre'           => 'required|string|max:100',
@@ -57,7 +81,7 @@ class ComercialController extends Controller{
             'nombre'           => 'required|string|max:100',
             'contacto'         => 'required|string|max:100',
             'email'            => 'required|email',
-            'password'         => 'required|string',
+            'password'         => 'nullable|string',
             'id_administrador' => 'nullable|integer',
         ]);
         

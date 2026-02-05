@@ -3,6 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
 
 const ModificarAdministrador = () => {
+    const navigate = useNavigate();
+    const { id } = useParams(); 
+    console.log("ID RECIBIDO EN LA URL:", id);
     // 1. Estado inicial
     const [admin, setAdmin] = useState({
         nombre: '',
@@ -10,32 +13,44 @@ const ModificarAdministrador = () => {
         email: '',
         telefono: ''
     });
+    
+    const [cargando, setCargando] = useState(true);
 
-    const navigate = useNavigate();
-    const { id } = useParams(); 
-
-    // 2. Cargar datos del administrador (GET)
+    // 2. Cargar datos del administrador (GET) al iniciar
     useEffect(() => {
-        // CORRECCIÓN: URL limpia y apuntando a la ruta que acabamos de crear en Laravel
-        // Asumo que tu Laravel corre en /api/administradores/{id}
-        axios.get(`http://127.0.0.1/api/administradores/${id}`)
-            .then(response => {
-                console.log("Datos recibidos:", response.data); 
+        const cargarAdmin = async () => {
+            try {
+                const response = await fetch(`http://192.168.0.14:8008/api/administradores/${id}`);
                 
-                const data = response.data; 
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
 
-                // Rellenamos el estado
+                const data = await response.json();
+                console.log("Datos recibidos:", data);
+
+                // IMPORTANTE: Manejo seguro por si la API devuelve un array o un objeto
+                // Si 'data' es un array (ej: [{nombre: 'Juan'}]), cogemos el primero. Si es objeto, lo usamos directo.
+                const usuario = Array.isArray(data) ? data[0] : data;
+
                 setAdmin({
-                    nombre: data.nombre || '',
-                    apellidos: data.apellidos || '',
-                    email: data.email || data.correo || '',
-                    telefono: data.telefono || data.contacto || ''
+                    nombre: usuario.nombre || '',
+                    apellidos: usuario.apellidos || '',
+                    email: usuario.email || '',
+                    telefono: usuario.telefono || ''
                 });
-            })
-            .catch(error => {
-                console.error("Error cargando admin:", error);
-                // alert("No se pudo cargar la información. Revisa que el ID exista.");
-            });
+
+            } catch (error) {
+                console.error("Error al cargar:", error);
+                alert("No se pudieron cargar los datos del usuario.");
+            } finally {
+                setCargando(false);
+            }
+        };
+
+        if (id) {
+            cargarAdmin();
+        }
     }, [id]);
 
     const handleChange = (e) => {
@@ -49,12 +64,9 @@ const ModificarAdministrador = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // CORRECCIÓN: URL correcta para actualizar
-            await axios.put(`http://127.0.0.1/api/administradores/actualizar/${id}`, admin); 
-            
+            await axios.put(`http://192.168.0.14:8008/api/administradores/actualizar/${id}`, admin); 
             alert("Administrador modificado con éxito");
-            // Asegúrate de que esta ruta existe en tu React Router
-            navigate('/usuarios'); // O la ruta donde tengas la lista
+            navigate('/usuarios'); // Asegúrate que esta ruta lleva a tu menú principal
         } catch (error) {
             console.error("Error al actualizar:", error);
             alert("Hubo un error al guardar los cambios.");
@@ -62,6 +74,10 @@ const ModificarAdministrador = () => {
     }
 
     const inputClasses = "w-full px-5 py-3 mb-6 border border-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-[#bd0026] appearance-none bg-white text-gray-700 placeholder-gray-500 font-medium";
+
+    if (cargando) {
+        return <div className="flex h-screen justify-center items-center">Cargando datos del administrador...</div>;
+    }
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-50 font-sans">
@@ -74,19 +90,47 @@ const ModificarAdministrador = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">Nombre</label>
-                            <input type="text" name="nombre" value={admin.nombre} onChange={handleChange} className={inputClasses} required />
+                            <input 
+                                type="text" 
+                                name="nombre" 
+                                value={admin.nombre} // El valor viene del estado
+                                onChange={handleChange} 
+                                className={inputClasses} 
+                                required 
+                            />
                         </div>
                         <div>
                             <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">Apellidos</label>
-                            <input type="text" name="apellidos" value={admin.apellidos} onChange={handleChange} className={inputClasses} required />
+                            <input 
+                                type="text" 
+                                name="apellidos" 
+                                value={admin.apellidos} 
+                                onChange={handleChange} 
+                                className={inputClasses} 
+                                required 
+                            />
                         </div>
                     </div>
 
                     <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">Correo Electrónico</label>
-                    <input type="email" name="email" value={admin.email} onChange={handleChange} className={inputClasses} required />
+                    <input 
+                        type="email" 
+                        name="email" 
+                        value={admin.email} 
+                        onChange={handleChange} 
+                        className={inputClasses} 
+                        required 
+                    />
 
                     <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">Teléfono</label>
-                    <input type="text" name="telefono" value={admin.telefono} onChange={handleChange} className={inputClasses} required />
+                    <input 
+                        type="text" 
+                        name="telefono" 
+                        value={admin.telefono} 
+                        onChange={handleChange} 
+                        className={inputClasses} 
+                        required 
+                    />
 
                     <button type="submit" className="w-full py-4 mt-4 text-white font-bold bg-[#bd0026] rounded-full hover:bg-red-800 transition-all transform active:scale-95 shadow-lg uppercase tracking-wider"> 
                         Guardar Cambios 
