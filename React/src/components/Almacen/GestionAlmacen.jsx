@@ -7,17 +7,34 @@ const GestionAlmacen = () => {
   const [abrirMenu, setAbrirMenu] = useState(null);
   const [almacenes,setAlmacenes] = useState([]);
   const navigate = useNavigate();
-
+  
+  const cargarAlmacenes = () => {
+      axios
+        .get('http://localhost/api/almacenes')
+        .then(response => {
+          
+          console.log(response.data)
+          setAlmacenes(response.data.almacen);
+        })
+        .catch(error => console.error("Error al cargar:", error));
+  };
   useEffect(() =>{
-    axios
-      .get('http://localhost/api/almacenes')
-      .then(response =>{
-        console.log("Cargado")
-        console.log(response.data)
-        setAlmacenes(response.data.almacen)
-      })
+    cargarAlmacenes()
   },[]);
 
+  const handleEliminar = (id) =>{
+    axios
+    .delete(`http://localhost/api/almacenes/borrar/${id}`)
+    .then(()=>{
+      setAbrirMenu(null);
+      alert("Almacén eliminado");
+      cargarAlmacenes();
+    })
+    .catch((error) =>{
+      console.error("Error al eliminar:", error);
+      alert("No se pudo eliminar el almacén.");
+    })
+  }
   return (
     <div className="p-10 flex flex-col h-full">
       <div className="flex flex-col gap-6 w-72">
@@ -34,7 +51,7 @@ const GestionAlmacen = () => {
               <div className="absolute left-full ml-10 bg-white border-2 border-gray-400">
                 <div className="flex flex-col text-xl">
                   <button onClick={()=> navigate(`/ModificarAlmacen/${almacen.id_almacen}`)} className="px-6 py-2 border-b-2 border-gray-400 hover:bg-gray-100 text-left cursor-pointer">Modificar</button>
-                  <button className="px-6 py-2 border-b-2 border-gray-400 hover:bg-gray-100 text-left cursor-pointer">Eliminar</button>
+                  <button onClick={() => handleEliminar(almacen.id_almacen)} className="px-6 py-2 border-b-2 border-gray-400 hover:bg-gray-100 text-left cursor-pointer">Eliminar</button>
                   <button onClick={()=> navigate(`/DatosAlmacen/${almacen.id_almacen}`)} className="px-6 py-2 hover:bg-gray-100 text-left cursor-pointer">Ver datos</button>
                 </div>
               </div>

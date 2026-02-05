@@ -16,7 +16,7 @@ class PedidoSeeder extends Seeder
         for ($i = 1; $i < 11; $i++) {
             DB::table('pedidos')->insert([
            'fecha_pedido' => $faker->dateTimeBetween('-30 days', 'now'),
-           'estado' => $faker->randomElement(["En preparación", "Enviado", "En proceso de entrega", "Entregado"]),
+           'estado' => $faker->randomElement(["En preparación", "En proceso de entrega", "Entregado"]),
            'created_at' => now(),
            'updated_at' => now(),
            "id_comercial" => rand(1,10),

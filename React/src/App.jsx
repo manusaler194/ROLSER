@@ -9,9 +9,10 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ModificarAlmacen from "./components/Almacen/ModificarAlmacen.jsx";
 import DatosAlmacen from "./components/Almacen/DatosAlmacen.jsx";
+import GestionarPedidos from "./components/Pedido/GestionarPedidos.jsx";
 
 const App = () => {
- const rolActual = "encargado_almacen";
+ const rolActual = "admin";
 
     return (
     <div className="flex flex-col h-screen w-full bg-white overflow-hidden">
@@ -26,13 +27,16 @@ const App = () => {
           <Routes>
             <Route path="/usuarios" element={<GestionUsuarios />} />
             <Route path="/catalogos" element={<Catalogos />} />
-            <Route path="/pedidos" element={<Users />} />
+            {/* //<Route path="/pedidos" element={<Users />} /> */}
             <Route path="/" element={<Navigate to="/catalogos" />} />
 
             <Route path="/GestionAlmacen" element={<GestionAlmacen />} />
             <Route path="/CrearAlmacen" element={<CrearAlmacen />} />
             <Route path="/ModificarAlmacen/:id" element={<ModificarAlmacen />} />
             <Route path="/DatosAlmacen/:id" element={<DatosAlmacen />} />
+
+
+            <Route path="/pedidos" element={<GestionarPedidos/>} />
 
             <Route path="/" element={<Navigate to={rolActual === 'encargado_almacen' ? "/almacen" : "/catalogos"} />} 
             />
