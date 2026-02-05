@@ -57,7 +57,7 @@ class AlmacenController extends Controller{
     }
     public function mostrarAlmacen(Request $request){
         try {
-            $almacen = Almacen::findOrFail($request->id_almacen);
+            $almacen = Almacen::with('encargadoAlmacen')->findOrFail($request->id_almacen);
 
             if (!$almacen) {
                 return response()->json([

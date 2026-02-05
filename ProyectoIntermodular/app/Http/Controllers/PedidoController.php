@@ -46,7 +46,7 @@ class PedidoController extends Controller{
 
             return response()->json([
                 'message' => 'Pedido creado con éxito.',
-                'pedido' => $pedido,
+                'pedidos' => $pedido,
             ], 201); // Código HTTP 201: Creado
         } catch (\Exception $e) {
             return response()->json([
@@ -58,10 +58,10 @@ class PedidoController extends Controller{
 
     public function mostrar(Request $request){
         try{
-            $pedido = Pedido::all();
+            $pedidos = Pedido::with(['cliente', 'encargadoAlmacen'])->get();
             return response()->json([
                 'message' => "Datos recogidos",
-                'pedido' => $pedido
+                'pedidos' => $pedidos
             ], 200);
         }catch(\Exception $e){
             return response()->json([

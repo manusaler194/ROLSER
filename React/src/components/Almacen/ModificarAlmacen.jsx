@@ -49,11 +49,11 @@ const ModificarAlmacen = () =>{
         try {
             const response = await axios.put(`http://localhost/api/almacenes/actualizar/${id}`, almacen);
             console.log("Funciona:", response.data);
-            alert("Almacén creado con éxito");
+            alert("Almacén actualizado con éxito");
             navigate('/GestionAlmacen');
         } catch (error) {
             console.error("Error al enviar datos:", error.response?.data || error.message);
-            alert("Hubo un error al crear el almacén");
+            alert("Hubo un error al modificar el almacén");
         }
     }
 
