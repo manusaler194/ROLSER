@@ -8,11 +8,9 @@ class Administrador extends Model{
 
     protected $table = 'administradores';
     protected $primaryKey = 'id_administrador';
-<<<<<<< HEAD
-    protected $fillable = ['nombre', 'apellidos', 'email','password'];
-=======
     protected $fillable = ['nombre', 'apellidos','telefono', 'email','password'];
->>>>>>> origin/main
+
+
 
     // Nombre de la tabla
     public function clientes(){
