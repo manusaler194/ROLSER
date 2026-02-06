@@ -7,18 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class Catalogo extends Model
 {
     protected $table = 'catalogos';
-    protected $fillable = ['nombre_temporada', 'anyo', 'id_administrador'];
     protected $primaryKey = 'id_catalogo';
+    protected $fillable = ['nombre_temporada', 'anyo', 'id_administrador'];
 
     public function articulos(){
-        return $this->belongsToMany(Articulo::class);
+        return $this->belongsToMany(Articulo::class, 'id_articulo');
     }
 
     public function comerciales(){
-        return $this->belongsToMany(Comercial::class);
+        return $this->belongsToMany(Comercial::class, 'id_comercial');
     }
 
     public function administradores(){
-        return $this->belongsTo(Administrador::class);
+        return $this->belongsTo(Administrador::class, 'id_administrador');
     }
 }

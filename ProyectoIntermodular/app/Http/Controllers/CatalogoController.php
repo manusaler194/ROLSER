@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Catalogo;
+use App\Models\Administrador;
 use Illuminate\Http\Request;
 
 class CatalogoController extends Controller{
@@ -18,18 +19,23 @@ class CatalogoController extends Controller{
             'id_administrador' => 'nullable|integer',
         ]);
 
-
-
         try {
-            $catalogo = Catalogo::create($validatedData);
+            $administrador = Administrador::findOrFail($validatedData['id_administrador']);
+
+            $catalogo = new Catalogo([
+                'nombre_temporada' => $validatedData['nombre_temporada'],
+                'anyo' => $validatedData['anyo'],
+            ]);
+
+            $catalogo->administradores()->associate($administrador);
+            $catalogo->save();
 
             return response()->json([
                 'mensaje' => 'Catálogo creado con éxito.',
-                'task' => $catalogo,
+                'catalogo' => $catalogo,
             ], 201);
 
         } catch (\Exception $e) {
-
             return response()->json([
                 'mensaje' => 'Error al crear el catálogo.',
                 'error' => $e->getMessage(),

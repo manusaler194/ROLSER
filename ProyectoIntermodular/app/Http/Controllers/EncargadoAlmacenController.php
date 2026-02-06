@@ -15,21 +15,27 @@ class EncargadoAlmacenController extends Controller{
        $validatedData = $request->validate([
             'nombre' => 'required|string|max: 50',
             'telefono' => 'required|string|max: 20',
-            'email' => 'required|string|min: 255',
+            'email' => 'required|string|max: 255',
         ]);
 
         try {
-            $encargadoAlmacen = EncargadoAlmacen::create($validatedData);
+
+            $encargadoAlmacen = new EncargadoAlmacen([
+                'nombre' => $validatedData['nombre'],
+                'telefono' => $validatedData['telefono'],
+                'email' => $validatedData['email'],
+            ]);
+
+            $encargadoAlmacen->save();
 
             return response()->json([
-                'mensaje' => 'Encargado de almacén creado con éxito.',
-                'task' => $encargadoAlmacen,
+                'mensaje' => 'Encargado almacén creado con éxito.',
+                'encargadoAlmacen' => $encargadoAlmacen,
             ], 201);
 
         } catch (\Exception $e) {
-
             return response()->json([
-                'mensaje' => 'Error al crear el encargado de almacén.',
+                'mensaje' => 'Error al crear el encargado almacén.',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -39,7 +45,7 @@ class EncargadoAlmacenController extends Controller{
         $validatedData = $request->validate([
             'nombre' => 'required|string|max: 50',
             'telefono' => 'required|string|max: 20',
-            'email' => 'required|string|min: 255',
+            'email' => 'required|string|max: 255',
         ]);
         try{
             $encargadoAlmacen= EncargadoAlmacen::findOrFail($request->id_encargado);

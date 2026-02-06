@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Administrador extends Model{
 
     protected $table = 'administradores';
-
+    protected $primaryKey = 'id_administrador';
     protected $fillable = ['nombre', 'apellidos', 'email','password'];
 
     // Nombre de la tabla
     public function clientes(){
 
         //Nombre del modelo
-        return $this->hasMany(Cliente::class);
+        return $this->hasMany(Cliente::class,);
     }
     public function facturas(){
 
