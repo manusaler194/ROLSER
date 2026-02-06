@@ -16,19 +16,18 @@ class ComercialController extends Controller{
     public function mostrarComercial($id_comercial)
     {
         try {
-            // Usamos 'findOrFail': si no existe, salta directo al catch
             $comercial = Comercial::findOrFail($id_comercial);
 
             return response()->json($comercial, 200);
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            
+
             return response()->json([
                 'message' => 'Comercial no encontrado'
             ], 404);
 
         } catch (\Exception $e) {
-            
+
             return response()->json([
                 'message' => 'Error al obtener el Comercial',
                 'error' => $e->getMessage()
@@ -51,7 +50,7 @@ class ComercialController extends Controller{
             return response()->json([
                 'message' => 'Comercial creado con éxito.',
                 'comercial' => $comercial,
-            ], 201); 
+            ], 201);
 
         } catch (\Exception $e) {
 
@@ -71,8 +70,8 @@ class ComercialController extends Controller{
             'message' => 'Error al obtener los comerciales.',
             'error' => $e->getMessage()
         ], 500);
-        }    
-    
+        }
+
     }
 
     public function actualizar (Request $request){
@@ -84,9 +83,9 @@ class ComercialController extends Controller{
             'password'         => 'nullable|string',
             'id_administrador' => 'nullable|integer',
         ]);
-        
+
         try{
-            
+
             $comercial = Comercial::findOrFail($request->id_comercial);
             $comercial->update($validatedData);
 

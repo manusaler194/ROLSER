@@ -25,7 +25,7 @@ const Navbar = ({usuario}) => {
         { label: 'Aplicar descuento', icon: iconoDescuento, rol: ['comercial'], path: '/aplicar-descuento' },
         { label: 'Solicitar bajas,altas..', icon: iconoDatos, rol: ['clientevip', 'comercial'], path: '/solicitar-bajas-altas' },
         { label: 'Stock', icon: iconoCarrito, rol: ['encargado_almacen'], path: '/stock' },
-        { label: 'Crear pedido', icon: iconoPedido, rol: ['encargado_almacen'], path: '/crear-pedido' },
+        { label: 'Crear pedido reabastecimiento', icon: iconoPedido, rol: ['encargado_almacen', 'admin'], path: '/crear-pedido' },
     ];
 
 const individual = menu.filter(item => item.rol.includes(usuario));

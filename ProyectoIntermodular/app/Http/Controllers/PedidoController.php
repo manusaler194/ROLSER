@@ -71,7 +71,7 @@ class PedidoController extends Controller{
     }
     public function mostrarPedido(Request $request){
         try{
-            $pedido = Pedido::with(['cliente', 'encargadoAlmacen'])->where("id_pedido", $request->id_pedido)->get();
+            $pedido = Pedido::with(['LineaPedidos.articulo'])->where("id_pedido", $request->id_pedido)->get();
              if (!$pedido) {
                 return response()->json([
                     'message' => 'Pedido no encontrado'

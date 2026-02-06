@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedInteger('cantidad');
             $table->timestamps();
 
-            $table->foreignId('id_pedido')->nullable()->constrained('pedidos', 'id_pedido')->nullOnDelete()->cascadeOnUpdate();
-            $table->foreignId('id_articulo')->nullable()->constrained('articulos', 'id_articulo')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreignId('id_pedido')->nullable()->constrained('pedidos', 'id_pedido')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('id_articulo')->nullable()->constrained('articulos', 'id_articulo')->cascadeOnDelete()->cascadeOnUpdate();
 
         });
     }
