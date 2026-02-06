@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliente;
+use App\Models\Administrador;
+use App\Models\Comercial;
+
 class ClienteController extends Controller
 {
-    public function guardar(Request $request){
+
+    public function guardar(Request $request)
+    {
         $validatedData = $request->validate([
             'nombre'           => 'required|string|max:50',
             'telefono'         => 'required|string|max:20',
@@ -17,15 +22,26 @@ class ClienteController extends Controller
         ]);
 
         try {
-            $cliente = Cliente::create($validatedData);
+            $administrador = Administrador::findOrFail($validatedData["id_administrador"]);
+            $comercial = Comercial::findOrFail($validatedData["id_comercial"]);
+
+            $cliente = new Cliente([
+                'nombre'    => $validatedData["nombre"],
+                'telefono'  => $validatedData["telefono"],
+                'correo'    => $validatedData["correo"],
+                'direccion' => $validatedData["direccion"]
+            ]);
+
+
+            $cliente->comercial()->associate($comercial);
+            $cliente->administrador()->associate($administrador);
+            $cliente->save();
 
             return response()->json([
                 'message' => 'Cliente creado con éxito.',
                 'cliente' => $cliente,
             ], 201);
-
         } catch (\Exception $e) {
-
             return response()->json([
                 'message' => 'Error al crear el cliente.',
                 'error' => $e->getMessage(),
@@ -33,23 +49,56 @@ class ClienteController extends Controller
         }
     }
 
-    public function mostrar(Request $request){
-        try{
-            $cliente = Cliente::all();
+
+    public function mostrar(Request $request)
+    {
+        try {
+
+            $clientes = Cliente::with(['administrador', 'comercial'])->get();
+
             return response()->json([
                 'message' => "Datos recogidos",
-                'almacen' => $cliente
+                'clientes' => $clientes
             ], 200);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
-            'message' => 'Error al obtener los almacenes.',
-            'error' => $e->getMessage()
-        ], 500);
+                'message' => 'Error al obtener los clientes.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
-    public function actualizar (Request $request){
 
+    public function mostrarCliente(Request $request)
+    {
+        try {
+
+            $cliente = Cliente::with(['administrador', 'comercial'])
+                ->where("id_cliente", $request->id_cliente)
+                ->get();
+
+
+            if ($cliente->isEmpty()) {
+                return response()->json([
+                    'message' => 'Cliente no encontrado'
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => "Cliente recogido",
+                'cliente' => $cliente
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener el cliente.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function actualizar(Request $request)
+    {
         $validatedData = $request->validate([
             'nombre'           => 'required|string|max:50',
             'telefono'         => 'required|string|max:20',
@@ -59,8 +108,7 @@ class ClienteController extends Controller
             'id_comercial'     => 'nullable|integer',
         ]);
 
-        try{
-            // Usamos id_cliente según tu migración
+        try {
             $cliente = Cliente::findOrFail($request->id_cliente);
             $cliente->update($validatedData);
 
@@ -68,44 +116,34 @@ class ClienteController extends Controller
                 'message' => 'Cliente actualizado con éxito.',
                 'cliente' => $cliente,
             ], 200);
-
-        }catch (\Exception $e){
-
-            return response()->json ([
+        } catch (\Exception $e) {
+            return response()->json([
                 'message' => 'Error al actualizar el cliente.',
                 'error' => $e->getMessage(),
-            ],500);
-        }
-    }
-    public function mostrarCliente($id_cliente)
-    {
-        try {
-            // Usamos 'findOrFail': si no existe, salta directo al catch
-            $cliente = Cliente::findOrFail($id_cliente);
-
-            return response()->json($cliente, 200);
-
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            
-            return response()->json([
-                'message' => 'Cliente no encontrado'
-            ], 404);
-
-        } catch (\Exception $e) {
-            
-            return response()->json([
-                'message' => 'Error al obtener el Cliente',
-                'error' => $e->getMessage()
             ], 500);
         }
     }
-    public function eliminar(Request $request){
 
-        $cliente = Cliente::destroy($request->id_cliente);
 
-        return response()->json([
-            "message" => "Cliente con id =" . $request->id_cliente . " ha sido borrado con éxito"
+    public function eliminar(Request $request)
+    {
+        try {
+            $cliente = Cliente::destroy($request->id_cliente);
 
-        ],201);
+            if ($cliente === 0) {
+                return response()->json([
+                    "message" => "No se encontró el cliente con ID " . $request->id_cliente
+                ], 404);
+            }
+
+            return response()->json([
+                "message" => "Cliente con id =" . $request->id_cliente . " ha sido borrado con éxito"
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => "Error de base de datos al eliminar",
+                "error" => $e->getMessage()
+            ], 500);
+        }
     }
 }

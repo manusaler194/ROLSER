@@ -2,40 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
-use App\Models\Comercial;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Validator;
+use App\Models\Comercial;
 use App\Models\Administrador;
+use Illuminate\Support\Facades\Hash; // Necesario si vas a encriptar la contraseña
 
-class ComercialController extends Controller{
-
-    public function mostrarComercial($id_comercial)
-    {
-        try {
-            // Usamos 'findOrFail': si no existe, salta directo al catch
-            $comercial = Comercial::findOrFail($id_comercial);
-
-            return response()->json($comercial, 200);
-
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            
-            return response()->json([
-                'message' => 'Comercial no encontrado'
-            ], 404);
-
-        } catch (\Exception $e) {
-            
-            return response()->json([
-                'message' => 'Error al obtener el Comercial',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
-
+class ComercialController extends Controller
+{
+    // ==========================================
+    // GUARDAR (CREAR)
+    // ==========================================
     public function guardar(Request $request){
         $validatedData = $request->validate([
             'nombre'           => 'required|string|max:100',
@@ -46,37 +23,92 @@ class ComercialController extends Controller{
         ]);
 
         try {
-            $comercial = Comercial::create($validatedData);
+            // 1. Busamos la entidad relacionada
+            $administrador = Administrador::findOrFail($validatedData["id_administrador"]);
+
+            // 2. Instanciamos el objeto con los datos básicos
+            // Nota: Es recomendable encriptar la contraseña aquí
+            $comercial = new Comercial([
+                'nombre'   => $validatedData["nombre"],
+                'contacto' => $validatedData["contacto"],
+                'email'    => $validatedData["email"],
+                'password' => Hash::make($validatedData["password"]),
+            ]);
+
+            // 3. Asociamos la relación
+            $comercial->administrador()->associate($administrador);
+
+            // 4. Guardamos
+            $comercial->save();
 
             return response()->json([
-                'message' => 'Comercial creado con éxito.',
+                'message'   => 'Comercial creado con éxito.',
                 'comercial' => $comercial,
-            ], 201); 
+            ], 201);
 
         } catch (\Exception $e) {
-
             return response()->json([
                 'message' => 'Error al crear el comercial.',
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ], 500);
         }
     }
 
+    // ==========================================
+    // MOSTRAR TODOS
+    // ==========================================
     public function mostrar(Request $request){
         try{
-            $datos = Comercial::all();
-            return $datos;
-        }catch(\Exception $e){
+            // Usamos eager loading para traer al administrador responsable
+            $comerciales = Comercial::with(['administrador'])->get();
+
             return response()->json([
-            'message' => 'Error al obtener los comerciales.',
-            'error' => $e->getMessage()
-        ], 500);
-        }    
-    
+                'message'     => "Datos recogidos",
+                'comerciales' => $comerciales
+            ], 200);
+
+        } catch(\Exception $e){
+            return response()->json([
+                'message' => 'Error al obtener los comerciales.',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function actualizar (Request $request){
+    // ==========================================
+    // MOSTRAR UNO (POR ID EN REQUEST)
+    // ==========================================
+    public function mostrarComercial(Request $request)
+    {
+        try {
+            // Adaptado al patrón: Request -> where -> get -> isEmpty
+            $comercial = Comercial::with(['administrador'])
+                            ->where("id_comercial", $request->id_comercial)
+                            ->get();
 
+            if ($comercial->isEmpty()) {
+                return response()->json([
+                    'message' => 'Comercial no encontrado'
+                ], 404);
+            }
+
+            return response()->json([
+                'message'   => "Comercial recogido",
+                'comercial' => $comercial
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener el Comercial',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // ==========================================
+    // ACTUALIZAR
+    // ==========================================
+    public function actualizar(Request $request){
         $validatedData = $request->validate([
             'nombre'           => 'required|string|max:100',
             'contacto'         => 'required|string|max:100',
@@ -84,26 +116,33 @@ class ComercialController extends Controller{
             'password'         => 'nullable|string',
             'id_administrador' => 'nullable|integer',
         ]);
-        
+
         try{
-            
             $comercial = Comercial::findOrFail($request->id_comercial);
+
+            // Si viene contraseña nueva, idealmente habría que hashearla de nuevo
+            if(isset($validatedData['password'])){
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            }
+
             $comercial->update($validatedData);
 
             return response()->json([
-                'message' => 'Comercial actualizado con éxito.',
+                'message'   => 'Comercial actualizado con éxito.',
                 'comercial' => $comercial,
             ], 200);
 
-        }catch (\Exception $e){
-
+        } catch (\Exception $e){
             return response()->json ([
                 'message' => 'Error al actualizar el comercial.',
-                'error' => $e->getMessage(),
-            ],500);
+                'error'   => $e->getMessage(),
+            ], 500);
         }
     }
 
+    // ==========================================
+    // ELIMINAR
+    // ==========================================
     public function eliminar(Request $request){
          try{
             $comercial = Comercial::destroy($request->id_comercial);
@@ -113,62 +152,16 @@ class ComercialController extends Controller{
                     "message" => "No se encontró el comercial con ID " . $request->id_comercial
                 ], 404);
             }
+
             return response()->json([
                 "message" => "Comercial con id =" . $request->id_comercial . " ha sido borrado con éxito"
-            ],201);
-        }catch(\Exception $e){
+            ], 201);
+
+        } catch(\Exception $e){
             return response()->json([
                 "message" => "Error de base de datos al eliminar",
-                "error" => $e->getMessage()
+                "error"   => $e->getMessage()
             ], 500);
         }
     }
-
-/*
-
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required'
-        ]);
-
-        $credentials = $request->except(['_token']);
-
-        if (Auth::attempt($credentials)) {  //comprobación de autenticación
-
-            return redirect()->route('admin');  //nos redirije a la ruta 'admin'
-
-        } else {
-            session()->flash('message', 'Invalid credentials');
-            return redirect()->back();
-        }
-    }
-
-    public function getAuthPassword(){
-        return $this->password;
-    }
-
-    public function registro(Request $request){
-             $request->validate([
-                 'name' => 'required',
-                 'email' => 'required',
-                 'password' => 'required'
-             ]);
-
-             $user = Comercial::create([
-                 'name' => trim($request->input('name')),
-                 'email' => strtolower($request->input('email')),
-                 'password' => bcrypt($request->input('password')),
-             ]);
-
-             return redirect()->route('admin');
-         }
-
-         public function logout(Request $request){
-             //Session::flush();
-             Auth::logout();
-             return redirect('login');
-         }
-*/
 }

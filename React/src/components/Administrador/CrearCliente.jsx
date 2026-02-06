@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
 const CrearCliente = () => {
-    // Estado del formulario
+    
     const [cliente, setCliente] = useState({
         nombre: '',
         telefono: '',
@@ -13,13 +13,13 @@ const CrearCliente = () => {
         id_comercial: ''      
     });
 
-    // Estados para las listas desplegables
+    
     const [administradores, setAdministradores] = useState([]);
     const [comerciales, setComerciales] = useState([]);
     
     const navigate = useNavigate();
 
-    // Cargar listas de Admins y Comerciales al iniciar
+    
     useEffect(() => {
         const cargarDatos = async () => {
             try {
@@ -52,7 +52,7 @@ const CrearCliente = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Preparación de datos (convertir IDs a enteros)
+            
             const datosEnviados = {
                 ...cliente,
                 id_administrador: cliente.id_administrador ? parseInt(cliente.id_administrador) : null,
@@ -62,10 +62,10 @@ const CrearCliente = () => {
             const response = await axios.post('http://localhost/api/clientes/guardar', datosEnviados);
             console.log("Funciona:", response.data);
             
-            // 1. Mensaje de éxito
+           
             alert("Cliente creado con éxito");
             
-            // 2. CAMBIO REALIZADO AQUÍ: Redirección a /usuarios
+            
             navigate('/usuarios'); 
 
         } catch (error) {
