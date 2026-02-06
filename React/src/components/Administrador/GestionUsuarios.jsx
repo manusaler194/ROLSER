@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// --- IMPORTACIONES ---
+
 import AdminsTable from "./AdminsTable";
 import ClientesTable from "./ClientesTable";
 import VipsTable from "./ClientesVips";
@@ -9,7 +9,7 @@ import EncargadosTable from "./Encargado";
 import ComercialesTable from "./Comercial";
 
 const GestionUsuarios = () => {
-  // Configuración
+  
   const URL_API = "http://localhost/api/users";
 
   

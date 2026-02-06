@@ -5,38 +5,36 @@ import { useNavigate } from 'react-router-dom';
 const CrearClienteVip = () => {
     const navigate = useNavigate();
 
-    // 1. Estado inicial EXACTO según tu validación de Laravel
+    
     const [clienteVip, setClienteVip] = useState({
         nombre: '',
         telefono: '',
         correo: '',
         direccion: '',
-        id_administrador: '', // Se enviará como integer o null
-        id_catalogo: ''       // Se enviará como integer o null
+        id_administrador: '', 
+        id_catalogo: ''       
     });
 
-    // Estados para llenar los selects
+    
     const [administradores, setAdministradores] = useState([]);
     const [catalogos, setCatalogos] = useState([]);
 
-    // 2. Cargar datos al montar el componente
+    
     useEffect(() => {
         const cargarDatos = async () => {
             try {
-                // Ajusta estas URLs si tu backend tiene rutas distintas
+                
                 const resAdmins = await axios.get('http://localhost/api/administradores');
                 const resCatalogos = await axios.get('http://localhost/api/catalogos');
 
                 console.log("Datos Admins:", resAdmins.data);
                 console.log("Datos Catalogos:", resCatalogos.data);
 
-                // Lógica para extraer el array de administradores
-                // (Intenta buscar .admin, si no usa la data directa)
+                
                 const listaAdmins = resAdmins.data.admin || resAdmins.data || [];
                 setAdministradores(listaAdmins);
 
-                // Lógica para extraer el array de catálogos
-                // (Intenta buscar .catalogo, si no usa la data directa)
+                
                 const listaCatalogos = resCatalogos.data.catalogo || resCatalogos.data || [];
                 setCatalogos(listaCatalogos);
 
@@ -48,7 +46,7 @@ const CrearClienteVip = () => {
         cargarDatos();
     }, []);
 
-    // 3. Manejar cambios en los inputs
+    
     const handleChange = (e) => {
         setClienteVip({
             ...clienteVip,
@@ -56,13 +54,12 @@ const CrearClienteVip = () => {
         });
     };
 
-    // 4. Enviar formulario
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            // PREPARACIÓN DE DATOS (CRÍTICO)
-            // Laravel espera 'integer' o 'null'. Si el string está vacío "", enviamos null.
+            
             const datosEnviados = {
                 nombre: clienteVip.nombre,
                 telefono: clienteVip.telefono,
@@ -74,7 +71,7 @@ const CrearClienteVip = () => {
 
             console.log("Enviando al servidor:", datosEnviados);
 
-            // Asegúrate que esta URL es correcta en tu api.php
+            
             const url = 'http://localhost/api/clientesVip/guardar'; 
             
             const response = await axios.post(url, datosEnviados);
@@ -82,21 +79,21 @@ const CrearClienteVip = () => {
             console.log("Respuesta Exitosa:", response.data);
             alert("Cliente VIP creado con éxito");
             
-            // Redirección a usuarios
+            
             navigate('/usuarios');
 
         } catch (error) {
             console.error("Error completo:", error);
             
-            // Extracción segura del mensaje de error
+            
             let mensaje = "Error desconocido";
             let detalles = "";
 
             if (error.response) {
-                // El servidor respondió con un código de error (ej: 422 o 500)
+                
                 mensaje = error.response.data.message || error.response.statusText;
                 
-                // Si hay errores de validación (422)
+                
                 if (error.response.data.errors) {
                     detalles = JSON.stringify(error.response.data.errors, null, 2);
                 }
@@ -110,7 +107,7 @@ const CrearClienteVip = () => {
         }
     };
 
-    // Estilos CSS (Reutilizados para mantener diseño)
+    
     const inputClasses = "w-full px-5 py-3 mb-6 border border-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-red-800 appearance-none bg-white text-gray-700";
 
     return (
@@ -197,7 +194,7 @@ const CrearClienteVip = () => {
                             <option value="">Seleccionar Catálogo (Opcional)</option>
                             {catalogos.map((cat) => (
                                 <option key={cat.id} value={cat.id}>
-                                    {/* Intentamos mostrar 'nombre', si no existe mostramos ID para depurar */}
+                                    
                                     {cat.nombre ? cat.nombre : `Catálogo #${cat.id}`}
                                 </option>
                             ))}
