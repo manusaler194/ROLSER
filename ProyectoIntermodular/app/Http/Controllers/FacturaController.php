@@ -1,64 +1,92 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Facturas;
 use Illuminate\Http\Request;
 
 class FacturaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function guardar(Request $request){
+        $validatedData = $request->validate([
+            'cantidad'         => 'required|integer|min:0',
+            'fecha'            => 'required|date',
+            'precio'           => 'required|numeric|min:0',
+            'id_administrador' => 'nullable|integer',
+            'id_comercial'     => 'nullable|integer',
+            'id_cliente'       => 'nullable|integer',
+            'id_clientevip'    => 'nullable|integer',
+        ]);
+
+        try {
+            $factura = Facturas::create($validatedData);
+
+            return response()->json([
+                'message' => 'Factura creada con éxito.',
+                'factura' => $factura,
+            ], 201);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'message' => 'Error al crear la factura.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function mostrar(Request $request){
+        try{
+            $factura = Facturas::all();
+            return response()->json([
+                'message' => "Datos recogidos",
+                'almacen' => $factura
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener los almacenes.',
+            'error' => $e->getMessage()
+        ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function actualizar (Request $request){
+
+        $validatedData = $request->validate([
+            'cantidad'         => 'required|integer|min:0',
+            'fecha'            => 'required|date',
+            'precio'           => 'required|numeric|min:0',
+            'id_administrador' => 'nullable|integer',
+            'id_comercial'     => 'nullable|integer',
+            'id_cliente'       => 'nullable|integer',
+            'id_clientevip'    => 'nullable|integer',
+        ]);
+
+        try{
+
+            $factura = Facturas::findOrFail($request->id_factura);
+            $factura->update($validatedData);
+
+            return response()->json([
+                'message' => 'Factura actualizada con éxito.',
+                'factura' => $factura,
+            ], 200);
+
+        }catch (\Exception $e){
+
+            return response()->json ([
+                'message' => 'Error al actualizar la factura.',
+                'error' => $e->getMessage(),
+            ],500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+    public function eliminar(Request $request){
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $factura = Facturas::destroy($request->id_factura);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        return response()->json([
+            "message" => "Factura con id =" . $request->id_factura . " ha sido borrada con éxito"
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        ],201);
     }
 }

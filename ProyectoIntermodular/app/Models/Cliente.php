@@ -8,6 +8,8 @@ class Cliente extends Model
 {
     protected $table = 'clientes';
 
+    protected $primaryKey = 'id_cliente';
+
     protected $fillable = ['nombre','direccion', 'capacidad','telefono','correo'];
 
     public function facturas() {
@@ -17,10 +19,10 @@ class Cliente extends Model
     return $this->hasMany(Pedido::class);
 }
     public function comercial() {
-    return $this->belongsToMany(Comercial::class);
+    return $this->belongsTo(Comercial::class, 'id_comercial');
 }
     public function administrador() {
-    return $this->belongsToMany(Administrador::class);
+    return $this->belongsTo(Administrador::class, 'id_administrador');
 }
 
 }

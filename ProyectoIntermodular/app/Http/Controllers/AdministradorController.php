@@ -9,101 +9,134 @@ use App\Models\ClienteVip;
 use App\Models\EncargadoAlmacen;
 use App\Models\Comercial;
 class AdministradorController extends Controller
+
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $task = Administrador::all();
-        return $task;
-        //Esta función nos devolvera todas las tareas que tenemos en nuestra BD
-    }
-    public function userIndex() {
-        $modelos = [
-        'admins'      => Administrador::class,
-        'clientes'    => Cliente::class,
-        'vips'        => ClienteVip::class,
-        'encargados'  => EncargadoAlmacen::class,
-        'comerciales' => Comercial::class,
-    ];
-
-    // Transformamos el array de clases en los datos reales
-    $resultado = collect($modelos)->map(function ($clase) {
-        return $clase::all();
-    });
-
-    return response()->json($resultado);
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Request $request)
-    {
-        $task = Administrador::findOrFail($request->id);
-        return $task;
-    }
-    /**
-     * Show the form for editing the specified resource.
-     */
-
-    public function update(Request $request)
-    {
-       $validatedData = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellidos' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+    // Función GUARDAR (Create)
+    public function guardar(Request $request){
+        $validatedData = $request->validate([
+            'nombre'    => 'required|string|max:50',
+            'apellidos' => 'required|string|max:100',
+            'telefono'  => 'required|string|max:20',
+            'email'     => 'required|email|max:100|unique:administradores,email',
+            'password'  => 'required|string',
         ]);
 
         try {
-            $task = Administrador::findOrFail($request["id"]);
-            $task->update($validatedData);
+            $administrador = Administrador::create($validatedData);
 
             return response()->json([
-                'message' => 'Tarea actualizada con éxito.',
-                'task' => $task,
-            ], 200);
-            //Esta función actualizará la tarea que hayamos seleccionado
+                'message' => 'Administrador creado con éxito.',
+                'administrador' => $administrador,
+            ], 201);
 
         } catch (\Exception $e) {
 
             return response()->json([
-                'message' => 'Error al actualizar la tarea.',
+                'message' => 'Error al crear el administrador.',
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+    public function mostrarAdministrador($id_administrador)
+    {
+        try {
+            // Usamos 'findOrFail': si no existe, salta directo al catch
+            $administrador = Administrador::findOrFail($id_administrador);
 
+            return response()->json($administrador, 200);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Capturamos específicamente cuando el ID no existe
+            return response()->json([
+                'message' => 'Administrador no encontrado'
+            ], 404);
+
+        } catch (\Exception $e) {
+            // Capturamos cualquier otro error (BD caída, errores de sintaxis, etc.)
+            return response()->json([
+                'message' => 'Error al obtener el administrador',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function userIndex()
+    {
+        // 1. Recopilamos los datos de todos los modelos que ya tienes
+        $datos = [
+            'admins'   => Administrador::all(),
+            'clientes'          => Cliente::all(),
+            'vips'      => ClienteVip::all(),
+            'encargados'        => EncargadoAlmacen::all(),
+            'comerciales'       => Comercial::all(),
+        ];
+
+        // 2. Devolvemos todo junto en un JSON
+        return response()->json($datos, 200);
     }
 
+    // Función MOSTRAR (Read)
+    public function mostrar(Request $request){
+        try{
+            $administrador = Administrador::all();
+            return response()->json([
+                'message' => "Datos recogidos",
+                'admin' => $administrador
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener los almacenes.',
+            'error' => $e->getMessage()
+        ], 500);
+        }
+    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request)
-    {
-        $task = Administrador::destroy($request->id);  //task tienen el id que se ha borrado
+    // Función ACTUALIZAR (Update)
+    public function actualizar(Request $request, $id_administrador) { 
+
+    // 1. Validamos. NOTA: Quitamos 'password' de required y lo hacemos 'nullable'
+    $validatedData = $request->validate([
+        'nombre'    => 'required|string|max:50',
+        'apellidos' => 'required|string|max:100',
+        'telefono'  => 'required|string|max:20',
+        'email' => 'required|email|max:100|unique:administradores,email,' . $id_administrador . ',id_administrador', 
+        'password'  => 'nullable|string', // Cambiado a nullable
+    ]);
+
+    try {
+        $administrador = Administrador::findOrFail($id_administrador);
+
+        // 2. Lógica para la contraseña:
+        // Si el usuario NO envió contraseña nueva, eliminamos ese campo del array
+        // para que no se sobrescriba con null o vacío.
+        if (empty($request->password)) {
+            unset($validatedData['password']);
+        } else {
+            // Si envió contraseña, recuerda encriptarla si usas Hash en el modelo, 
+            // o Laravel lo hará si tienes 'casts' o mutators. 
+            // $validatedData['password'] = bcrypt($request->password); 
+        }
+
+        $administrador->update($validatedData);
 
         return response()->json([
-            "message" => "Tarea con id =" . $task . " ha sido borrado con éxito"
-        ], 201);
-        //Esta función obtendra el id de la tarea que hayamos seleccionado y la borrará de nuestra BD
+            'message' => 'Administrador actualizado con éxito.',
+            'administrador' => $administrador,
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Error al actualizar el administrador.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+    // Función ELIMINAR (Delete)
+    public function eliminar(Request $request){
+        $administrador = Administrador::destroy($request->id_administrador);
+
+        return response()->json([
+            "message" => "Administrador con id =" . $request->id_administrador . " ha sido borrado con éxito"
+        ],201);
     }
 }

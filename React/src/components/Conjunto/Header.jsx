@@ -3,7 +3,7 @@ import signout from "/src/assets/Header/SignOut.svg";
 import React from 'react';
 const Header = () =>{
 return(
-<div className="flex items-center gap-2.5 h-50 w-full bg-[#454545]">
+<div className="flex items-center gap-2.5 h-30 w-full bg-[#454545]">
 
     <img src={logo} alt="Logo" height={50} width={50} className="m-2.5 rounded-[60%] h-17 w-17"/>
     

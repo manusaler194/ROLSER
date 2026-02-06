@@ -11,7 +11,7 @@ class Seccion extends Model
     protected $fillable = ['stock'];
 
     public function almacen(){
-        return $this->belongsToMany(Almacen::class);
+        return $this->belongsTo(Almacen::class, 'id_almacen');
     }
     public function articulo(){
         return $this->hasMany(Articulo::class);

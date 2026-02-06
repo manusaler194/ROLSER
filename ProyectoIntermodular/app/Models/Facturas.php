@@ -9,6 +9,8 @@ class Facturas extends Model
 {
     protected $table = 'facturas';
 
+    protected $primaryKey = 'id_factura';
+
     protected $fillable = ['cantidad', 'fecha'];
 
     public function pedidos()
@@ -17,14 +19,14 @@ class Facturas extends Model
     }
     public function clientes()
     {
-        return $this->belongsToMany(Cliente::class);
+        return $this->belongsTo(Cliente::class, 'id_cliente');
     }
     public function administrador()
     {
-        return $this->belongsToMany(Administrador::class);
+        return $this->belongsTo(Administrador::class, 'id_administrador');
     }
     public function clienteVip()
     {
-        return $this->belongsToMany(ClienteVip::class);
+        return $this->belongsTo(ClienteVip::class, 'id_clientevip');
     }
 }

@@ -23,8 +23,6 @@ class ArticuloController extends Controller {
             'id_administrador' => 'required|integer|nullable',
         ]);
 
-
-
         try {
             $seccion = Seccion::findOrFail($validatedData['id_seccion']);
             $administrador = Administrador::findOrFail($validatedData['id_administrador']);
