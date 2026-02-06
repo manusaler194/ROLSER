@@ -21,7 +21,7 @@ const ModificarClienteVip = () => {
         const cargarClienteVip = async () => {
             try {
                 // Fíjate que la ruta coincida con tu api.php (clientesVip o clientes_vip)
-                const respuesta = await fetch(`http://192.168.0.14:8008/api/clientesVip/${id}`);
+                const respuesta = await fetch(`http://localhost/api/clientesVip/${id}`);
                 
                 if (!respuesta.ok) {
                     throw new Error(`Error HTTP: ${respuesta.status}`);
@@ -63,7 +63,7 @@ const ModificarClienteVip = () => {
     const manejarEnvio = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://192.168.0.14:8008/api/clientesVip/actualizar/${id}`, clienteVip); 
+            await axios.put(`http://localhost/api/clientesVip/actualizar/${id}`, clienteVip); 
             alert("Cliente VIP modificado con éxito");
             navegar('/usuarios'); 
         } catch (error) {

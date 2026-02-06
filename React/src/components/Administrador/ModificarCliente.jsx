@@ -21,7 +21,7 @@ const ModificarCliente = () => {
         const cargarCliente = async () => {
             try {
                 // Asegúrate de que esta ruta coincida con tu backend (Route::get('/clientes/{id}'))
-                const respuesta = await fetch(`http://192.168.0.14:8008/api/clientes/${id}`);
+                const respuesta = await fetch(`http://localhost/api/clientes/${id}`);
                 
                 if (!respuesta.ok) {
                     throw new Error(`Error HTTP: ${respuesta.status}`);
@@ -65,7 +65,7 @@ const ModificarCliente = () => {
         e.preventDefault();
         try {
             // Asegúrate de que la ruta backend sea correcta
-            await axios.put(`http://192.168.0.14:8008/api/clientes/actualizar/${id}`, cliente); 
+            await axios.put(`http://localhost/api/clientes/actualizar/${id}`, cliente); 
             alert("Cliente modificado con éxito");
             navegar('/usuarios'); // Vuelta al menú
         } catch (error) {

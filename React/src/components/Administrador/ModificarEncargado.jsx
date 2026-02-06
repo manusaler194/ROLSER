@@ -20,7 +20,7 @@ const ModificarEncargado = () => {
         const cargarEncargado = async () => {
             try {
                 // Ajusta la ruta si tu backend usa otra (ej: /api/encargadoAlmacen)
-                const respuesta = await fetch(`http://192.168.0.14:8008/api/encargadoAlmacen/${id}`);
+                const respuesta = await fetch(`http://localhost/api/encargadoAlmacen/${id}`);
                 
                 if (!respuesta.ok) {
                     throw new Error(`Error HTTP: ${respuesta.status}`);
@@ -61,7 +61,7 @@ const ModificarEncargado = () => {
         e.preventDefault();
         try {
             // Ajusta la ruta de actualización
-            await axios.put(`http://192.168.0.14:8008/api/encargadoAlmacen/actualizar/${id}`, encargado); 
+            await axios.put(`http://localhost/api/encargadoAlmacen/actualizar/${id}`, encargado); 
             alert("Encargado modificado con éxito");
             navegar('/usuarios'); 
         } catch (error) {
