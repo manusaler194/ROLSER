@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\Models\Articulo;
+use App\Models\Seccion;
+use App\Models\Administrador;
 use Illuminate\Http\Request;
+
 
 class ArticuloController extends Controller {
 
@@ -21,15 +24,25 @@ class ArticuloController extends Controller {
         ]);
 
         try {
-            $articulo = Articulo::create($validatedData);
+            $seccion = Seccion::findOrFail($validatedData['id_seccion']);
+            $administrador = Administrador::findOrFail($validatedData['id_administrador']);
+
+            $articulo = new Articulo([
+                'descripcion' => $validatedData['descripcion'],
+                'precio' => $validatedData['precio'],
+                'stock_actual' => $validatedData['stock_actual'],
+            ]);
+
+            $articulo->secciones()->associate($seccion);
+            $articulo->administradores()->associate($administrador);
+            $articulo->save();
 
             return response()->json([
                 'mensaje' => 'Articulo creado con éxito.',
-                'task' => $articulo,
+                'articulo' => $articulo,
             ], 201);
 
         } catch (\Exception $e) {
-
             return response()->json([
                 'mensaje' => 'Error al crear el artículo.',
                 'error' => $e->getMessage(),

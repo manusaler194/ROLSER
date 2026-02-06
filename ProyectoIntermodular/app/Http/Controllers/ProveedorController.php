@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\EncargadoAlmacen;
 use App\Models\Proveedor; // Añadimos el modelo al controlador
 use Illuminate\Http\Request;
 
@@ -23,17 +25,25 @@ class ProveedorController extends Controller {
 
 
         try {
-            $proveedores = Proveedor::create($validatedData);
+            $encargado = EncargadoAlmacen::findOrFail($validatedData['id_encargado']);
+
+            $proveedor = new Proveedor([
+                'nombre_empresa' => $validatedData['nombre_empresa'],
+                'contacto' => $validatedData['contacto'],
+                'cif' => $validatedData['cif'],
+            ]);
+
+            $proveedor->encargados_de_almacen()->associate($encargado);
+            $proveedor->save();
 
             return response()->json([
-                'mensaje' => 'Proveedor creado con éxito.',
-                'task' => $proveedores,
+                'mensaje' => 'Encargado creado con éxito.',
+                'encargado' => $encargado,
             ], 201);
 
         } catch (\Exception $e) {
-
             return response()->json([
-                'mensaje' => 'Error al crear el proveedor.',
+                'mensaje' => 'Error al crear el Encargado.',
                 'error' => $e->getMessage(),
             ], 500);
         }
