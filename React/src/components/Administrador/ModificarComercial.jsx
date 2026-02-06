@@ -20,7 +20,7 @@ const ModificarComercial = () => {
         const cargarComercial = async () => {
             try {
                 // Ajusta la ruta si tu backend usa 'comerciales'
-                const respuesta = await fetch(`http://192.168.0.14:8008/api/comerciales/${id}`);
+                const respuesta = await fetch(`http://localhost/api/comerciales/${id}`);
                 
                 if (!respuesta.ok) {
                     throw new Error(`Error HTTP: ${respuesta.status}`);
@@ -60,7 +60,7 @@ const ModificarComercial = () => {
     const manejarEnvio = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://192.168.0.14:8008/api/comerciales/actualizar/${id}`, comercial); 
+            await axios.put(`http://localhost/api/comerciales/actualizar/${id}`, comercial); 
             alert("Comercial modificado con éxito");
             navegar('/usuarios'); 
         } catch (error) {
