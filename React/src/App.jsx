@@ -15,6 +15,7 @@ import ModificarCliente from "./components/Administrador/ModificarCliente.jsx";
 import ModificarClienteVip from "./components/Administrador/ModificarClienteVip.jsx";
 import ModificarComercial from "./components/Administrador/ModificarComercial.jsx";
 import ModificarEncargado from "./components/Administrador/ModificarEncargado.jsx";
+import DetallesPedido from "./components/Pedido/DetallesPedido.jsx";
 
 const App = () => {
  const rolActual = "admin";
@@ -37,7 +38,6 @@ const App = () => {
             <Route path="/modificar-admin/:id" element={<ModificarAdministrador />} />
             <Route path="/usuarios" element={<GestionUsuarios />} />
             <Route path="/catalogos" element={<Catalogos />} />
-            {/* //<Route path="/pedidos" element={<Users />} /> */}
             <Route path="/" element={<Navigate to="/catalogos" />} />
             
             <Route path="/GestionAlmacen" element={<GestionAlmacen />} />
@@ -47,6 +47,7 @@ const App = () => {
 
 
             <Route path="/pedidos" element={<GestionarPedidos/>} />
+            <Route path="/DetallesPedido/:id" element={<DetallesPedido />} />
 
             <Route path="/" element={<Navigate to={rolActual === 'encargado_almacen' ? "/almacen" : "/catalogos"} />} 
             />

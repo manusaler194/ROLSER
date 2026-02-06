@@ -22,37 +22,55 @@ const ModificarAlmacen = () =>{
     const handleEncargado = (e) =>{
         setAlmacen({...almacen, id_encargado : e.target.value})
     }
-    useEffect (()=>{
-        axios
-      .get('http://localhost/api/encargadoAlmacen')
-      .then(response =>{
-        console.log(response.data);
-        setEncargados(response.data);
-      })
-    },[])
 
     useEffect(() => {
-        axios.get(`http://localhost/api/almacenes/${id}`)
-        .then(response => {
+        const obtenerAlmacen = async () => {
+            const response = await fetch(`http://localhost/api/almacenes/${id}`);
+            const data = await response.json();
+            
+            const almacenRecibido = data.almacen[0];
+            
             setAlmacen({
-            direccion: response.data.almacen.direccion,
-            capacidad: response.data.almacen.capacidad,
-            id_encargado: response.data.almacen.id_encargado
+                direccion: almacenRecibido.direccion,
+                capacidad: almacenRecibido.capacidad,
+                id_encargado: almacenRecibido.id_encargado
             });
-            console.log(almacen)
-        });
-    }, [id]);
+            
+        };
+
+       const obtenerEncargados = async () => {
+        try {
+            const response = await fetch('http://localhost/api/encargadoAlmacen');
+            const data = await response.json();
+            setEncargados(data);
+        } catch (error) {
+            console.error("Error al obtener encargados:", error);
+        }
+        };
+
+        obtenerAlmacen();
+        obtenerEncargados();
+        },[id]);
 
     const handleSubmit = async (e) =>{
         console.log("a");
         e.preventDefault();
         try {
-            const response = await axios.put(`http://localhost/api/almacenes/actualizar/${id}`, almacen);
-            console.log("Funciona:", response.data);
-            alert("Almacén actualizado con éxito");
-            navigate('/GestionAlmacen');
+            const response = await fetch(`http://localhost/api/almacenes/actualizar/${id}`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(almacen)
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Funciona:", data);
+                alert("Almacén actualizado con éxito");
+                navigate('/GestionAlmacen');
+            } else {
+                alert("Hubo un error al modificar el almacén");
+            }
         } catch (error) {
-            console.error("Error al enviar datos:", error.response?.data || error.message);
+            console.error("Error al enviar datos:", error);
             alert("Hubo un error al modificar el almacén");
         }
     }
@@ -61,6 +79,7 @@ const ModificarAlmacen = () =>{
     const inputClasses = "w-full px-5 py-3 mb-10 border border-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-red-800 appearance-none bg-white text-gray-700";
     
     return(
+    
         <div className="flex justify-center items-center min-h-screen bg-gray-50">
             <div className="w-full max-w-150 h-150 p-10 bg-white border border-gray-200 rounded-2rem shadow-lg">
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Modificar Almacén</h2>

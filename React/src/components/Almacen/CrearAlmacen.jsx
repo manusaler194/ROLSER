@@ -22,14 +22,19 @@ const CrearAlmacen = () =>{
     const handleEncargado = (e) =>{
         setAlmacen({...almacen, id_encargado : e.target.value})
     }
-    useEffect (()=>{
-        axios
-      .get('http://localhost/api/encargadoAlmacen')
-      .then(response =>{
-        console.log(response.data);
-        setEncargados(response.data);
-      })
-    },[])
+    useEffect(() => {
+        const cargarEncargados = async () => {
+            try {
+                const response = await fetch('http://localhost/api/encargadoAlmacen');
+                const data = await response.json();
+                setEncargados(data);
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        };
+        cargarEncargados();
+    }, []);
+    
     const handleSubmit = async (e) =>{
         console.log("a");
         e.preventDefault();

@@ -8,33 +8,42 @@ const GestionAlmacen = () => {
   const [almacenes,setAlmacenes] = useState([]);
   const navigate = useNavigate();
   
-  const cargarAlmacenes = () => {
-      axios
-        .get('http://localhost/api/almacenes')
-        .then(response => {
-          
-          console.log(response.data)
-          setAlmacenes(response.data.almacen);
-        })
-        .catch(error => console.error("Error al cargar:", error));
+  const cargarAlmacenes = async () => {
+    try {
+        const response = await fetch('http://localhost/api/almacenes');
+        const data = await response.json();
+        
+        console.log(data);
+        // Accedemos a .almacen tal como hacías con axios
+        setAlmacenes(data.almacen); 
+    } catch (error) {
+        console.error("Error al cargar:", error);
+    }
   };
-  useEffect(() =>{
-    cargarAlmacenes()
-  },[]);
 
-  const handleEliminar = (id) =>{
-    axios
-    .delete(`http://localhost/api/almacenes/borrar/${id}`)
-    .then(()=>{
-      setAbrirMenu(null);
-      alert("Almacén eliminado");
+  useEffect(() => {
       cargarAlmacenes();
-    })
-    .catch((error) =>{
-      console.error("Error al eliminar:", error);
-      alert("No se pudo eliminar el almacén.");
-    })
-  }
+  }, []);
+
+  const handleEliminar = async (id) => {
+    try {
+        const response = await fetch(`http://localhost/api/almacenes/borrar/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            setAbrirMenu(null);
+            alert("Almacén eliminado");
+            cargarAlmacenes();
+        } else {
+            alert("No se pudo eliminar el almacén.");
+        }
+    } catch (error) {
+        console.error("Error al eliminar:", error);
+        alert("Ocurrió un error de red al intentar eliminar.");
+    }
+  };
+  
   return (
     <div className="p-10 flex flex-col h-full">
       <div className="flex flex-col gap-6 w-72">

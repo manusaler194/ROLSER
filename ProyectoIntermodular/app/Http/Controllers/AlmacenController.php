@@ -39,7 +39,7 @@ class AlmacenController extends Controller{
                 'error' => $e->getMessage(),
             ], 500);
         }
-    }
+    } 
 
     public function mostrar(Request $request){
         try{
@@ -57,7 +57,7 @@ class AlmacenController extends Controller{
     }
     public function mostrarAlmacen(Request $request){
         try {
-            $almacen = Almacen::with(['secciones', 'encargadoAlmacen'])->where("id_almacen", $request->id_almacen)->get();
+            $almacen = Almacen::with( 'encargadoAlmacen')->where("id_almacen", $request->id_almacen)->get();
 
             if (!$almacen) {
                 return response()->json([

@@ -8,12 +8,12 @@ const DatosAlmacen = () =>{
   const navigate = useNavigate();
   
   useEffect(()=>{
-    axios
-    .get(`http://localhost/api/almacenes/${id}`)
-    .then(response =>{
-      console.log(response.data.almacen[0])
-      setAlmacen(response.data.almacen[0]);
-    })
+    const cargarAlmacen = async () =>{
+      const response = await fetch(`http://localhost/api/almacenes/${id}`);
+      const data = await response.json();
+      setAlmacen(data.almacen[0]);
+    }
+    cargarAlmacen();
   },[id])
 
 
@@ -22,7 +22,7 @@ const inputClasses = "w-full px-5 py-3 mb-10 border border-gray-400 rounded-full
 return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 py-10">
       {/* Cambié h-150 por min-h-fit y pb-10 para que crezca según el contenido */}
-      <div className="w-full max-w-2xl min-h-fit p-10 bg-white border border-gray-200 rounded-[2rem] shadow-lg relative">
+      <div className="w-full max-w-2xl min-h-fit p-10 bg-white border border-gray-200 rounded-2rem shadow-lg relative">
         
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Datos del Almacén</h2>
 
@@ -38,24 +38,7 @@ return (
           <div className="relative mb-6">
             <input type="text" value={almacen.encargado_almacen?.nombre || "Sin encargado asignado"} className={inputClasses} readOnly />
           </div>
-
-          <div className="mb-8">
-            <label className="block ml-4 mb-2 text-sm font-bold text-gray-600">Secciones del Almacén</label>
-            <div className="w-full border border-gray-400 rounded-3xl bg-gray-50 overflow-hidden">
-              {almacen.secciones && almacen.secciones.length > 0 ? (
-                <ul className="divide-y divide-gray-300">
-                  {almacen.secciones.map((seccion) => (
-                    <li key={seccion.id_seccion} className="px-6 py-3 hover:bg-gray-100 flex justify-between items-center">
-                      <span className="font-medium text-gray-700">  {/* Ajusta 'nombre' si tu campo se llama distinto, ej: codigo */}{seccion.stock || `Sección ${seccion.id_seccion}`} </span>
-                     
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="p-5 text-gray-500 text-center italic">No hay secciones registradas</div>
-              )}
-            </div>
-          </div>
+          
           <div onClick={() => navigate('/GestionAlmacen')} className="w-full py-4 bg-[#bc002d] text-white font-bold rounded-full text-center shadow-md hover:bg-red-800 transition-colors cursor-pointer" > Volver</div>
         </form>
       </div>

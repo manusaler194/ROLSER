@@ -1,50 +1,84 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 const GestionarPedidos = () => {
     const [pedidos, setPedidos] = useState([]);
-    const [cargando, setCargando] = useState(true);
-    const [error, setError] = useState(null);
     const [filtro, setFiltro] = useState('Todos');
+    const [abrirMenu, setAbrirMenu] = useState(null);
+    const [busquedaCliente, setBusquedaCliente] = useState('');
+    const [busquedaEncargado, setBusquedaEncargado] = useState('');
 
+    const navigate = useNavigate();
     useEffect(() => {
         obtenerPedidos();
     }, []);
 
-    const obtenerPedidos = () => {
-        setCargando(true);
-        axios
-            .get('http://localhost/api/pedidos')
-            .then(response => {
-                // Importante: El backend devuelve 'pedidos' segun el fix anterior
-                // Si tu backend devuelve 'pedido', usa response.data.pedido
-                const datos = response.data.pedidos || response.data.pedido || [];
-                setPedidos(datos);
-                setCargando(false);
-            })
-            .catch(err => {
-                console.error("Error al cargar:", err);
-                setError("No se pudieron cargar los pedidos. Revisa la consola.");
-                setCargando(false);
-            });
-    };
+   const obtenerPedidos = async () => {
+    try {
+        const response = await fetch('http://localhost/api/pedidos');
+        const data = await response.json();
+        console.log(data);
+        setPedidos(data.pedidos || []);
+    } catch (err) {
+        console.error("Error al cargar:", err);
+    }
+};
     const pedidosFiltrados = pedidos.filter(pedido =>{
-        if(filtro == "Todos") return true;
-        return pedido.estado == filtro;
+        const coincideEstado = filtro === "Todos" || pedido.estado === filtro;
+        const nombreCliente = pedido.cliente ? pedido.cliente.nombre.toLowerCase() : "";
+        const coincideNombre = nombreCliente.includes(busquedaCliente.toLowerCase());
+
+        const nombreEncargado = pedido.encargado_almacen ? pedido.encargado_almacen.nombre.toLowerCase() : "";
+        const coincideEncargado = nombreEncargado.includes(busquedaEncargado.toLowerCase());
+        return coincideEstado && coincideNombre && coincideEncargado;
     })
+
+    const handleEliminar = async (id) => {
+    try {
+        const response = await fetch(`http://localhost/api/pedidos/borrar/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            setAbrirMenu(null);
+            alert("Pedido eliminado");
+            obtenerPedidos();
+        } else {
+            alert("No se pudo eliminar el pedido.");
+        }
+    } catch (error) {
+        console.error("Error al eliminar:", error);
+        alert("Ocurrió un error de red al intentar eliminar.");
+    }
+  };
     return (
         <div className="p-8 flex flex-col gap-6 max-w-4xl">
+            <div className="flex flex-row flex-wrap items-end gap-4 bg-gray-50 p-4 border border-gray-200 rounded-lg">
+            
             <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">Filtrar por:</label>
-                <select value={filtro} onChange={(e) => setFiltro(e.target.value)} className="w-48 p-1 border border-gray-300 rounded bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
-                    <option value="Todos">Todos los Estados</option>
+                <label className="text-xs font-bold text-gray-600 uppercase">Estado:</label>
+                <select value={filtro} onChange={(e) => setFiltro(e.target.value)} className="w-44 p-2 border border-gray-300 rounded bg-white text-sm focus:ring-2 focus:ring-red-800 outline-none">
+                    <option value="Todos">Todos</option>
                     <option value="En preparación">En preparación</option>
                     <option value="En proceso de entrega">En proceso de entrega</option>
                     <option value="Entregado">Entregado</option>
                 </select>
             </div>
 
-            <div className="overflow-hidden border border-gray-400 rounded-sm shadow-sm">
+            <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-gray-600 uppercase">Cliente:</label>
+                <input type="text"placeholder="Buscar cliente..."value={busquedaCliente}onChange={(e) => setBusquedaCliente(e.target.value)}className="w-56 p-2 border border-gray-300 rounded bg-white text-sm focus:ring-2 focus:ring-red-800 outline-none"/>
+            </div>
+
+            <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-gray-600 uppercase">Encargado:</label>
+                <input type="text"placeholder="Buscar encargado..."value={busquedaEncargado}onChange={(e) => setBusquedaEncargado(e.target.value)}className="w-56 p-2 border border-gray-300 rounded bg-white text-sm focus:ring-2 focus:ring-red-800 outline-none"/>
+            </div>
+
+            <button onClick={() => {setFiltro('Todos'); setBusquedaCliente(''); setBusquedaEncargado('');}}className="ml-auto text-xs text-gray-500 hover:text-red-700 font-semibold underline">Limpiar filtros</button>
+        </div>
+            <div className="border border-gray-400 rounded-sm shadow-sm">
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="bg-gray-200 text-gray-800">
@@ -52,6 +86,8 @@ const GestionarPedidos = () => {
                             <th className="border border-gray-400 px-4 py-2 font-bold">Cliente</th>
                             <th className="border border-gray-400 px-4 py-2 font-bold">Estado</th>
                             <th className="border border-gray-400 px-4 py-2 font-bold">Encargado</th>
+                            <th className="border border-gray-400 px-4 py-2 font-bold">Acciones</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -62,14 +98,29 @@ const GestionarPedidos = () => {
                                     
                                     <td className="border border-gray-400 px-4 py-2">{pedido.cliente ? pedido.cliente.nombre : 'Sin asignar'}</td>
 
-                                    <td className="border border-gray-400 px-4 py-2"> <span className={`px-2 py-1 rounded text-xs font-bold ${
-                                            pedido.estado === 'En preparación' ? 'bg-red-200' : pedido.estado ===  'En proceso de entrega' ? 'bg-orange-200' : 'bg-green-200'}`}>
+                                    <td className="border border-gray-400 px-4 py-2"> 
+                                        <span className={`px-2 py-1 rounded text-xs font-bold ${pedido.estado === 'En preparación' ? 'bg-red-200' : pedido.estado ===  'En proceso de entrega' ? 'bg-orange-200' : 'bg-green-200'}`}>
                                             {pedido.estado}
                                         </span>
                                     </td>
                                     <td className="border border-gray-400 px-4 py-2">
                                         {pedido.encargado_almacen ? pedido.encargado_almacen.nombre : 'N/A'}
                                     </td>
+                                    <td className="border border-gray-400 px-4 py-2 relative">
+                                    <button onClick={() => {
+                                                                const idActual = pedido.id_pedido;
+                                                                setAbrirMenu(prevId => (prevId == idActual ? null : idActual));
+                                                            }}  className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 cursor-pointer">...</button>
+
+                                    {abrirMenu === pedido.id_pedido && (
+                                        <div className="absolute right-0 mt-2 w-48 bg-white border-2 border-gray-400 z-50 shadow-xl">
+                                            <div className="flex flex-col text-sm">
+                                                <button onClick={() => handleEliminar(pedido.id_pedido)} className="px-4 py-2 border-b border-gray-400 hover:bg-gray-100 text-left cursor-pointer text-red-600">Eliminar</button>
+                                                <button onClick={() => navigate(`/DetallesPedido/${pedido.id_pedido}`)} className="px-4 py-2 hover:bg-gray-100 text-left cursor-pointer">Ver detalles</button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </td>
                                 </tr>
                             ))
                         ) : (
@@ -79,19 +130,6 @@ const GestionarPedidos = () => {
                         )}
                     </tbody>
                 </table>
-            </div>
-
-            {/* Botones de Acción */}
-            <div className="flex gap-4 mt-4">
-                <button 
-                    onClick={obtenerPedidos}
-                    className="bg-[#b3002d] text-white px-6 py-2 rounded-2xl hover:bg-[#8e0024] transition-colors text-sm font-semibold shadow-md"
-                >
-                    Refrescar datos
-                </button>
-                <button className="bg-[#4a4a4a] text-white px-8 py-2 rounded-2xl hover:bg-[#333333] transition-colors text-sm font-semibold shadow-md">
-                    Cancelar
-                </button>
             </div>
         </div>
     );

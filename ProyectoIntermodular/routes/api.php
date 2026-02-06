@@ -41,6 +41,7 @@ Route::get('/users', [AdministradorController::class, 'userIndex']);
 //-------------------------------------------------------------------------------------------------------------
 Route::post('/pedidos/guardar', [PedidoController::class, 'guardar']);
 Route::get('/pedidos', [PedidoController::class, 'mostrar']);
+Route::get('/pedidos/{id_pedido}', [PedidoController::class, 'mostrarPedido']);
 Route::put('/pedidos/actualizar/{id_pedido}', [PedidoController::class, 'actualizar']);
 Route::delete('/pedidos/borrar/{id_pedido}', [PedidoController::class, 'eliminar']);
 

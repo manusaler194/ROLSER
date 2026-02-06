@@ -36,12 +36,11 @@ class PedidoController extends Controller{
                 'estado' => $validatedData["estado"]
             ]);
 
-            $pedido->comercial()->associate($encargado);
-            $pedido->cliente()->associate($encargado);
-            $pedido->clienteVip()->associate($encargado);
+            $pedido->comercial()->associate($comercial);
+            $pedido->cliente()->associate($cliente);
+            $pedido->clienteVip()->associate($clientevip);
             $pedido->encargadoAlmacen()->associate($encargado);
-            $pedido->factura()->associate($encargado);
-
+            $pedido->factura()->associate($factura);
             $pedido->save();
 
             return response()->json([
@@ -70,7 +69,26 @@ class PedidoController extends Controller{
         ], 500);
         }
     }
+    public function mostrarPedido(Request $request){
+        try{
+            $pedido = Pedido::with(['cliente', 'encargadoAlmacen'])->where("id_pedido", $request->id_pedido)->get();
+             if (!$pedido) {
+                return response()->json([
+                    'message' => 'Pedido no encontrado'
+                ], 404);
+            }
 
+            return response()->json([
+                'message' => "Pedido recogido",
+                'pedido' => $pedido
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener el pedido.',
+            'error' => $e->getMessage()
+        ], 500);
+        }
+    }
     public function actualizar(Request $request){
         $validatedData = $request->validate([
             'fecha_pedido'=> 'required|date',
