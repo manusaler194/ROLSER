@@ -15,7 +15,9 @@ import ModificarCliente from "./components/Administrador/ModificarCliente.jsx";
 import ModificarClienteVip from "./components/Administrador/ModificarClienteVip.jsx";
 import ModificarComercial from "./components/Administrador/ModificarComercial.jsx";
 import ModificarEncargado from "./components/Administrador/ModificarEncargado.jsx";
-
+import CrearAdmin from "./components/Administrador/CrearAdmin.jsx";
+import CrearCliente from "./components/Administrador/CrearCliente.jsx";
+import CrearClienteVip from "./components/Administrador/CrearClienteVip.jsx";
 const App = () => {
  const rolActual = "admin";
 
@@ -31,6 +33,9 @@ const App = () => {
         <main className="flex-1 overflow-auto p-6 bg-gray-50">
           <Routes>
             <Route path="/modificar-encargado/:id" element={<ModificarEncargado />} />
+            <Route path="/crear-admin" element={<CrearAdmin />} />
+            <Route path="/crear-cliente" element={<CrearCliente />} />
+            <Route path="/crear-clientevip" element={<CrearClienteVip />} />
             <Route path="/modificar-comercial/:id" element={<ModificarComercial />} />
             <Route path="/modificar-clientevip/:id" element={<ModificarClienteVip />} />
             <Route path="/modificar-cliente/:id" element={<ModificarCliente />} />

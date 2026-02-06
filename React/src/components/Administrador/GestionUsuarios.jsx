@@ -10,12 +10,12 @@ import ComercialesTable from "./Comercial";
 
 const GestionUsuarios = () => {
   // Configuración
-  const URL_API = "http://192.168.0.14:8008/api/users";
+  const URL_API = "http://localhost/api/users";
 
-  // Hook para navegación
+  
   const navegar = useNavigate();
 
-  // Estados con nombres en español
+  // Estados
   const [vistaActual, setVistaActual] = useState("MENU");
   const [categoriaActiva, setCategoriaActiva] = useState(null);
   const [textoBusqueda, setTextoBusqueda] = useState("");
@@ -64,22 +64,35 @@ const GestionUsuarios = () => {
 
     nombre: usuario.nombre || "",
     apellidos: usuario.apellidos || "",
-    email: usuario.email || usuario.correo || "", // Añadido mapeo para correo
+    email: usuario.email || usuario.correo || "",
     telefono: usuario.telefono || usuario.contacto || "",
     direccion: usuario.direccion || "",
     original: usuario,
   });
-  const manejarCambioInput = (evento) => {
-    setDatosFormulario({
-      ...datosFormulario,
-      [evento.target.name]: evento.target.value,
-    });
-  };
 
-  const manejarGuardadoSimulado = () => {
-    console.log("Guardando datos...", datosFormulario);
-    alert("Datos guardados (Simulación)");
-    setVistaActual("LISTA");
+  
+  const manejarCrearNuevo = () => {
+    if (categoriaActiva === "admins") {
+      navegar("/crear-admin");
+    } else if (categoriaActiva === "clientes") {
+      navegar("/crear-cliente");
+    } else if (categoriaActiva === "vips") {
+      navegar("/crear-clientevip");
+    } else if (categoriaActiva === "comerciales") {
+      navegar("/crear-comercial");
+    } else if (categoriaActiva === "encargados") {
+      navegar("/crear-encargado");
+    } else {
+      
+      setDatosFormulario({
+        nombre: "",
+        apellidos: "",
+        email: "",
+        telefono: "",
+        direccion: "",
+      });
+      setVistaActual("EDITAR"); 
+    }
   };
 
   if (estaCargando)
@@ -95,7 +108,7 @@ const GestionUsuarios = () => {
       </div>
     );
 
-  // --- VISTAS ---
+  // ---------------------------- VISTAS ------------
 
   // 1. MENU PRINCIPAL
   if (vistaActual === "MENU") {
@@ -159,13 +172,25 @@ const GestionUsuarios = () => {
             ← VOLVER AL MENÚ
           </button>
 
-          <div className="flex justify-between items-end mb-6">
-            <h2 className="text-3xl font-bold text-black uppercase">
-              {tituloSeccion}
-            </h2>
-            <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold">
-              Total: {usuariosFiltrados.length}
-            </span>
+          
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div className="text-left w-full md:w-auto">
+              <h2 className="text-3xl font-bold text-black uppercase">
+                {tituloSeccion}
+              </h2>
+              <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold mt-2 inline-block">
+                Total: {usuariosFiltrados.length}
+              </span>
+            </div>
+
+            {/* --- NUEVO BOTÓN AÑADIR --- */}
+            <button
+              onClick={manejarCrearNuevo}
+              className="w-full md:w-auto bg-[#bd0026] text-white px-6 py-3 rounded-lg font-bold shadow-md hover:bg-red-800 hover:shadow-xl transition-all duration-300 uppercase tracking-wider flex items-center justify-center gap-2"
+            >
+              <span className="text-xl leading-none pb-1">+</span> Crear Nuevo
+            </button>
+            {/* --------------------------- */}
           </div>
 
           <input
@@ -216,7 +241,7 @@ const GestionUsuarios = () => {
     );
   }
 
-  // 3. VISTA DE FICHA (Detalle)
+  // 3. VISTA DE FICHA
   if (vistaActual === "FICHA" && usuarioSeleccionado) {
     if (categoriaActiva === "admins") {
       return (
@@ -262,75 +287,11 @@ const GestionUsuarios = () => {
     );
   }
 
-  // 4. VISTA DE EDITAR (Genérico para no admins)
-  if (vistaActual === "EDITAR" && datosFormulario) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
-        <div className="w-full max-w-lg bg-white p-10 shadow-2xl rounded-sm border-t-4 border-black">
-          <h2 className="text-2xl font-bold mb-8 text-center text-black uppercase tracking-wider border-b pb-4">
-            Modificar Usuario (Genérico)
-          </h2>
-
-          <div className="space-y-5">
-            <div className="grid grid-cols-2 gap-4">
-              <InputEditable
-                label="Nombre"
-                name="nombre"
-                value={datosFormulario.nombre}
-                onChange={manejarCambioInput}
-              />
-              <InputEditable
-                label="Apellidos"
-                name="apellidos"
-                value={datosFormulario.apellidos}
-                onChange={manejarCambioInput}
-              />
-            </div>
-
-            <InputEditable
-              label="Email"
-              name="email"
-              value={datosFormulario.email}
-              onChange={manejarCambioInput}
-              type="email"
-            />
-            <InputEditable
-              label="Teléfono"
-              name="telefono"
-              value={datosFormulario.telefono}
-              onChange={manejarCambioInput}
-            />
-            <InputEditable
-              label="Dirección"
-              name="direccion"
-              value={datosFormulario.direccion}
-              onChange={manejarCambioInput}
-            />
-
-            <div className="flex justify-center pt-8 gap-3">
-              <button
-                onClick={() => setVistaActual("LISTA")}
-                className="w-1/2 border border-gray-400 text-gray-600 font-bold py-3 px-4 rounded shadow hover:bg-gray-50 transition duration-300 uppercase"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={manejarGuardadoSimulado}
-                className="w-1/2 bg-black text-white font-bold py-3 px-4 rounded shadow-lg hover:bg-gray-800 transition duration-300 uppercase"
-              >
-                Guardar (Simulado)
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return null;
+  
+  
 };
 
-// --- Componentes Auxiliares (Props renombrados) ---
+
 
 const BotonCategoria = ({ categoria, cantidad, alHacerClick }) => (
   <button

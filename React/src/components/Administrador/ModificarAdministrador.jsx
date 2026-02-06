@@ -6,7 +6,7 @@ const ModificarAdministrador = () => {
     const navigate = useNavigate();
     const { id } = useParams(); 
     console.log("ID RECIBIDO EN LA URL:", id);
-    // 1. Estado inicial
+    
     const [admin, setAdmin] = useState({
         nombre: '',
         apellidos: '',
@@ -16,11 +16,11 @@ const ModificarAdministrador = () => {
     
     const [cargando, setCargando] = useState(true);
 
-    // 2. Cargar datos del administrador (GET) al iniciar
+   
     useEffect(() => {
         const cargarAdmin = async () => {
             try {
-                const response = await fetch(`http://192.168.0.14:8008/api/administradores/${id}`);
+                const response = await fetch(`http://localhost/api/administradores/${id}`);
                 
                 if (!response.ok) {
                     throw new Error(`Error HTTP: ${response.status}`);
@@ -29,8 +29,7 @@ const ModificarAdministrador = () => {
                 const data = await response.json();
                 console.log("Datos recibidos:", data);
 
-                // IMPORTANTE: Manejo seguro por si la API devuelve un array o un objeto
-                // Si 'data' es un array (ej: [{nombre: 'Juan'}]), cogemos el primero. Si es objeto, lo usamos directo.
+               
                 const usuario = Array.isArray(data) ? data[0] : data;
 
                 setAdmin({
@@ -64,7 +63,7 @@ const ModificarAdministrador = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://192.168.0.14:8008/api/administradores/actualizar/${id}`, admin); 
+            await axios.put(`http://localhost/api/administradores/actualizar/${id}`, admin); 
             alert("Administrador modificado con éxito");
             navigate('/usuarios'); // Asegúrate que esta ruta lleva a tu menú principal
         } catch (error) {
