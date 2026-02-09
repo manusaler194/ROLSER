@@ -8,7 +8,7 @@ class Articulo extends Model
 {
     protected $table = 'articulos';
     protected $primaryKey = 'id_articulo';
-    protected $fillable = ['descripcion', 'precio', 'stock_actual', 'id_seccion', 'id_administrador'];
+    protected $fillable = ['nombre','descripcion', 'precio', 'stock_actual', 'id_seccion', 'id_administrador'];
 
     public function secciones(){
         return $this->belongsTo(Seccion::class, 'id_seccion');

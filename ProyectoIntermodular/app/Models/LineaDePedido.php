@@ -14,7 +14,7 @@ class LineaDePedido extends Model
         return $this->belongsTo(Pedido::class, 'id_pedido');
     }
 
-    public function articulos(){
+    public function articulo(){
         return $this->belongsTo(Articulo::class, 'id_articulo');
     }
 }

@@ -19,7 +19,8 @@ import DetallesPedido from "./components/Pedido/DetallesPedido.jsx";
 import CrearAdmin from "./components/Administrador/CrearAdmin.jsx";
 import CrearCliente from "./components/Administrador/CrearCliente.jsx";
 import CrearClienteVip from "./components/Administrador/CrearClienteVip.jsx";
-
+import CrearPedidoRebastecimiento from "./components/Pedido/CrearPedidoRebastecimiento.jsx";
+ 
 const App = () => {
  const rolActual = "admin";
 
@@ -54,6 +55,7 @@ const App = () => {
 
             <Route path="/pedidos" element={<GestionarPedidos/>} />
             <Route path="/DetallesPedido/:id" element={<DetallesPedido />} />
+            <Route path="/crear-pedido" element={<CrearPedidoRebastecimiento/>} />
 
             <Route path="/" element={<Navigate to={rolActual === 'encargado_almacen' ? "/almacen" : "/catalogos"} />} 
             />

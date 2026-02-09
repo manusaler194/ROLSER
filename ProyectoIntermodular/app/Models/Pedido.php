@@ -8,7 +8,7 @@ class Pedido extends Model{
 
     protected $table = 'pedidos';
     protected $primaryKey = 'id_pedido';
-    protected $fillable = ['fecha_pedido', 'estado', 'id_comercial','id_cliente','id_clientevip','id_encargado','id_factura'];
+    protected $fillable = ['estado', 'id_comercial','id_cliente','id_clientevip','id_encargado','id_factura'];
 
 
     public function comercial(){
@@ -16,7 +16,7 @@ class Pedido extends Model{
     }
 
     public function LineaPedidos(){
-        return $this->hasMany(LineaDePedido::class);
+        return $this->hasMany(LineaDePedido::class, 'id_pedido');
     }
 
     public function encargadoAlmacen(){

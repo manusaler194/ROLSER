@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id('id_pedido');
-            $table->date('fecha_pedido');
+            $table->date('fecha_pedido')->default(now());
             $table->string('estado',50);
             $table->timestamps();
 

@@ -8,11 +8,24 @@ use App\Models\Comercial;
 use App\Models\Administrador;
 use Illuminate\Support\Facades\Hash; // Necesario si vas a encriptar la contraseña
 
-class ComercialController extends Controller
-{
-    // ==========================================
-    // GUARDAR (CREAR)
-    // ==========================================
+
+class ComercialController extends Controller{
+
+    public function mostrarComercial($id_comercial){
+        try {
+            $comercial = Comercial::findOrFail($id_comercial);
+
+            return response()->json($comercial, 200);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'message' => 'Error al obtener el Comercial',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function guardar(Request $request){
         $validatedData = $request->validate([
             'nombre'           => 'required|string|max:100',
@@ -23,11 +36,9 @@ class ComercialController extends Controller
         ]);
 
         try {
-            // 1. Busamos la entidad relacionada
             $administrador = Administrador::findOrFail($validatedData["id_administrador"]);
 
-            // 2. Instanciamos el objeto con los datos básicos
-            // Nota: Es recomendable encriptar la contraseña aquí
+
             $comercial = new Comercial([
                 'nombre'   => $validatedData["nombre"],
                 'contacto' => $validatedData["contacto"],
@@ -35,10 +46,7 @@ class ComercialController extends Controller
                 'password' => Hash::make($validatedData["password"]),
             ]);
 
-            // 3. Asociamos la relación
             $comercial->administrador()->associate($administrador);
-
-            // 4. Guardamos
             $comercial->save();
 
             return response()->json([
@@ -54,12 +62,8 @@ class ComercialController extends Controller
         }
     }
 
-    // ==========================================
-    // MOSTRAR TODOS
-    // ==========================================
     public function mostrar(Request $request){
         try{
-            // Usamos eager loading para traer al administrador responsable
             $comerciales = Comercial::with(['administrador'])->get();
 
             return response()->json([
@@ -73,41 +77,9 @@ class ComercialController extends Controller
                 'error'   => $e->getMessage()
             ], 500);
         }
+
     }
 
-    // ==========================================
-    // MOSTRAR UNO (POR ID EN REQUEST)
-    // ==========================================
-    public function mostrarComercial(Request $request)
-    {
-        try {
-            // Adaptado al patrón: Request -> where -> get -> isEmpty
-            $comercial = Comercial::with(['administrador'])
-                            ->where("id_comercial", $request->id_comercial)
-                            ->get();
-
-            if ($comercial->isEmpty()) {
-                return response()->json([
-                    'message' => 'Comercial no encontrado'
-                ], 404);
-            }
-
-            return response()->json([
-                'message'   => "Comercial recogido",
-                'comercial' => $comercial
-            ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error al obtener el Comercial',
-                'error'   => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    // ==========================================
-    // ACTUALIZAR
-    // ==========================================
     public function actualizar(Request $request){
         $validatedData = $request->validate([
             'nombre'           => 'required|string|max:100',
@@ -118,9 +90,9 @@ class ComercialController extends Controller
         ]);
 
         try{
+
             $comercial = Comercial::findOrFail($request->id_comercial);
 
-            // Si viene contraseña nueva, idealmente habría que hashearla de nuevo
             if(isset($validatedData['password'])){
                 $validatedData['password'] = Hash::make($validatedData['password']);
             }
@@ -140,9 +112,7 @@ class ComercialController extends Controller
         }
     }
 
-    // ==========================================
-    // ELIMINAR
-    // ==========================================
+
     public function eliminar(Request $request){
          try{
             $comercial = Comercial::destroy($request->id_comercial);
@@ -164,4 +134,8 @@ class ComercialController extends Controller
             ], 500);
         }
     }
+
+
 }
+
+
