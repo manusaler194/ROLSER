@@ -14,7 +14,7 @@ class CatalogoController extends Controller{
 
     public function catalogoNuevo(Request $request) {
        $validatedData = $request->validate([
-            'nombre_temporada' => 'required|string|max: 100',
+            'nombre_catalogo' => 'required|string|max: 100',
             'anyo' => 'required|numeric',
             'id_administrador' => 'nullable|integer',
         ]);
@@ -23,7 +23,7 @@ class CatalogoController extends Controller{
             $administrador = Administrador::findOrFail($validatedData['id_administrador']);
 
             $catalogo = new Catalogo([
-                'nombre_temporada' => $validatedData['nombre_temporada'],
+                'nombre_catalogo' => $validatedData['nombre_catalogo'],
                 'anyo' => $validatedData['anyo'],
             ]);
 
@@ -45,7 +45,7 @@ class CatalogoController extends Controller{
 
     public function catalogoActualizar(Request $request){
         $validatedData = $request->validate([
-            'nombre_temporada' => 'required|string|max: 100',
+            'nombre_catalogo' => 'required|string|max: 100',
             'anyo' => 'required|numeric',
             'id_administrador' => 'nullable|integer',
         ]);
@@ -76,5 +76,7 @@ class CatalogoController extends Controller{
         ],201);
     }
 
+
+    
 
 }
