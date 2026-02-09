@@ -36,7 +36,7 @@ class FacturaController extends Controller
 
     public function mostrar(Request $request){
         try{
-            $factura = Facturas::all();
+            $factura = Facturas::with(['pedidos', 'clientes', 'administrador', 'clienteVip'])->get();
             return response()->json([
                 'message' => "Datos recogidos",
                 'almacen' => $factura

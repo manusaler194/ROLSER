@@ -8,16 +8,10 @@ class Administrador extends Model{
 
     protected $table = 'administradores';
     protected $primaryKey = 'id_administrador';
-<<<<<<< HEAD
     protected $fillable = ['nombre', 'apellidos','telefono', 'email','password'];
-=======
-    protected $fillable = ['nombre', 'apellidos', 'email','password'];
->>>>>>> alejandro-farinos
 
-    // Nombre de la tabla
     public function clientes(){
 
-        //Nombre del modelo
         return $this->hasMany(Cliente::class,);
     }
     public function facturas(){

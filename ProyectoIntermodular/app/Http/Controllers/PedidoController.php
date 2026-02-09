@@ -57,7 +57,7 @@ class PedidoController extends Controller{
 
     public function mostrar(Request $request){
         try{
-            $pedidos = Pedido::with(['cliente', 'encargadoAlmacen'])->get();
+            $pedidos = Pedido::with(['cliente', 'clienteVip', 'comercial', 'encargadoAlmacen'])->get();
             return response()->json([
                 'message' => "Datos recogidos",
                 'pedidos' => $pedidos

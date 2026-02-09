@@ -25,8 +25,10 @@ const GestionarPedidos = () => {
     }
 };
     const pedidosFiltrados = pedidos.filter(pedido =>{
-        const coincideEstado = filtro === "Todos" || pedido.estado === filtro;
-        const nombreCliente = pedido.cliente ? pedido.cliente.nombre.toLowerCase() : "";
+        const coincideEstado = filtro !== "Todos" ? pedido.estado === filtro : true;
+        
+        const tipoCliente = pedido.cliente_vip || pedido.cliente || pedido.comercial;
+        const nombreCliente = tipoCliente ? tipoCliente.nombre.toLowerCase() : "";
         const coincideNombre = nombreCliente.includes(busquedaCliente.toLowerCase());
 
         const nombreEncargado = pedido.encargado_almacen ? pedido.encargado_almacen.nombre.toLowerCase() : "";
@@ -96,7 +98,13 @@ const GestionarPedidos = () => {
                                 <tr key={pedido.id_pedido} className="bg-gray-100 hover:bg-white transition-colors">
                                     <td className="border border-gray-400 px-4 py-2 text-center">{pedido.id_pedido}</td>
                                     
-                                    <td className="border border-gray-400 px-4 py-2">{pedido.cliente ? pedido.cliente.nombre : 'Sin asignar'}</td>
+                                    <td className="border border-gray-400 px-4 py-2">
+                                        <div className="flex flex-col">
+                                            <span className="font-medium">{pedido.cliente_vip?.nombre || pedido.cliente?.nombre || pedido.comercial?.nombre || 'Sin asignar'}</span>
+                                            {pedido.cliente && pedido.comercial && <span className="text-[10px] text-gray-500 uppercase">Comercial: {pedido.comercial.nombre}</span>}
+                                            {pedido.cliente_vip && <span className="text-[10px] text-yellow-600 font-bold uppercase">Cliente VIP</span>}
+                                        </div>
+                                    </td>
 
                                     <td className="border border-gray-400 px-4 py-2"> 
                                         <span className={`px-2 py-1 rounded text-xs font-bold ${pedido.estado === 'En preparación' ? 'bg-red-200' : pedido.estado ===  'En proceso de entrega' ? 'bg-orange-200' : 'bg-green-200'}`}>

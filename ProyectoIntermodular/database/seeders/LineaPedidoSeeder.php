@@ -18,7 +18,7 @@ class LineaPedidoSeeder extends Seeder
         for ($i = 1; $i < 11; $i++) {
             DB::table('lineas_pedido')->insert([
            'precio' => $faker->randomFloat(2,10,100),
-           'cantidad' => $faker->numberBetween(2,100),
+           'cantidad' => $faker->numberBetween(1,10),
            'created_at' => date('Y-m-d'),
            'updated_at' => date('Y-m-d'),
            "id_pedido" => rand(1,10),

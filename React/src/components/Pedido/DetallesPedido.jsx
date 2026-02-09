@@ -53,6 +53,8 @@ const DetallesPedido = () => {
                   <th className="px-6 py-3 text-sm font-bold text-gray-600">Artículo</th>
                   <th className="px-6 py-3 text-sm font-bold text-gray-600 text-center">Cantidad</th>
                   <th className="px-6 py-3 text-sm font-bold text-gray-600 text-right">Precio Unit.</th>
+                  <th className="px-6 py-3 text-sm font-bold text-gray-600 text-right">Suma total</th>
+                 
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -66,6 +68,9 @@ const DetallesPedido = () => {
                     </td>
                     <td className="px-6 py-4 text-gray-700 text-right">
                       {linea.precio} €
+                    </td>
+                    <td className="px-6 py-4 text-gray-700 text-right">
+                      {linea.precio * linea.cantidad} €
                     </td>
                   </tr>
                 ))}
