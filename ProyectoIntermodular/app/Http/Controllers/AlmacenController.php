@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Almacen;
 use App\Models\EncargadoAlmacen;
 use Database\Seeders\EncargadoAlmacenSeeder;
- 
+
 class AlmacenController extends Controller{
 
     public function guardar(Request $request){

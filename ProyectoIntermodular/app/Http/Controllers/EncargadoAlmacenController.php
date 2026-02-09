@@ -7,8 +7,18 @@ use Illuminate\Http\Request;
 class EncargadoAlmacenController extends Controller{
 
     public function mostrar(Request $request) {
-        $encargadoAlmacen = EncargadoAlmacen::all();
-        return $encargadoAlmacen;
+        try{
+            $encargadoAlmacen = EncargadoAlmacen::all();
+            return response()->json([
+                'message' => "Datos recogidos",
+                'encargadoAlmacen' => $encargadoAlmacen
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener los encargados.',
+            'error' => $e->getMessage()
+        ], 500);
+        }
     }
 
     public function mostrarEncargadoAlmacen($id_encargado)

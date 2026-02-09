@@ -11,7 +11,7 @@ use App\Models\Comercial;
 class AdministradorController extends Controller
 
 {
-    
+
     public function guardar(Request $request){
         $validatedData = $request->validate([
             'nombre'    => 'required|string|max:50',
@@ -79,7 +79,7 @@ class AdministradorController extends Controller
             $administrador = Administrador::all();
             return response()->json([
                 'message' => "Datos recogidos",
-                'admin' => $administrador
+                'administrador' => $administrador
             ], 200);
         }catch(\Exception $e){
             return response()->json([
