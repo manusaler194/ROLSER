@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Articulo;
 use App\Models\LineaDePedido;
 use Illuminate\Http\Request;
+use App\Models\Pedido;
 
 class LineaPedidoController extends Controller
 {
@@ -10,12 +13,22 @@ class LineaPedidoController extends Controller
         $validatedData = $request->validate([
             'precio'      => 'required|numeric|min:0',
             'cantidad'    => 'required|integer|min:0',
-            'id_pedido'   => 'nullable|integer',
-            'id_articulo' => 'nullable|integer',
+            'id_pedido'   => 'required|integer',
+            'id_articulo' => 'required|integer',
         ]);
-
         try {
-            $lineaPedido = LineaDePedido::create($validatedData);
+            $pedido = Pedido::findOrFail($validatedData["id_pedido"]);
+            $articulo = Articulo::findOrFail($validatedData["id_articulo"]);
+
+            $lineaPedido = new LineaDePedido([
+            'precio'   => $validatedData['precio'],
+            'cantidad' => $validatedData['cantidad'],
+            ]);
+
+            $lineaPedido->pedido()->associate($pedido);
+            $lineaPedido->articulo()->associate($articulo);
+
+            $lineaPedido->save();
 
             return response()->json([
                 'message' => 'Línea de pedido creada con éxito.',

@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Administrador;
 use App\Models\Cliente;
 use App\Models\ClienteVip;
 use App\Models\Comercial;
+use App\Models\LineaDePedido;
 use App\Models\EncargadoAlmacen;
 use App\Models\Facturas;
 use App\Models\Pedido;
@@ -24,29 +25,32 @@ class PedidoController extends Controller{
             'id_factura' => 'nullable|integer',
         ]);
         try {
-
-            $comercial = Comercial::findOrFail($validatedData["id_comercial"]);
-            $cliente = Cliente::findOrFail($validatedData["id_cliente"]);
-            $clientevip = ClienteVip::findOrFail($validatedData["id_clientevip"]);
-            $encargado = EncargadoAlmacen::findOrFail($validatedData["id_encargado"]);
-            $factura = Facturas::findOrFail($validatedData["id_factura"]);
-
             $pedido = new Pedido([
                 'fecha_pedido' => $validatedData["fecha_pedido"],
                 'estado' => $validatedData["estado"]
             ]);
-
-            $pedido->comercial()->associate($comercial);
-            $pedido->cliente()->associate($cliente);
-            $pedido->clienteVip()->associate($clientevip);
-            $pedido->encargadoAlmacen()->associate($encargado);
-            $pedido->factura()->associate($factura);
+                if ($request->id_factura) {
+                    $pedido->factura()->associate(Facturas::find($request->id_factura));
+                }
+                if ($request->id_comercial) {
+                    $pedido->comercial()->associate(Comercial::find($request->id_comercial));
+                }
+                if ($request->id_cliente) {
+                    $pedido->cliente()->associate(Cliente::find($request->id_cliente));
+                }
+                if ($request->id_clientevip) {
+                    $pedido->clienteVip()->associate(ClienteVip::find($request->id_clientevip));
+                }
+                if ($request->id_encargado) {
+                    $pedido->encargadoAlmacen()->associate(EncargadoAlmacen::find($request->id_encargado));
+                }
             $pedido->save();
 
             return response()->json([
                 'message' => 'Pedido creado con éxito.',
                 'pedidos' => $pedido,
             ], 201); // Código HTTP 201: Creado
+            
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al crear el pedido.',

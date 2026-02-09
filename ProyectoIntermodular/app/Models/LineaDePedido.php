@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class LineaDePedido extends Model
 {
     protected $table = 'lineas_pedido';
+    protected $primaryKey = 'id_linea';
 
-    protected $fillable = ['precio', 'cantidad'];
+    protected $fillable = ['precio', 'cantidad','id_pedido', 'id_articulo'];
 
-    public function pedidos(){
+    public function pedido(){
         return $this->belongsTo(Pedido::class, 'id_pedido');
     }
 

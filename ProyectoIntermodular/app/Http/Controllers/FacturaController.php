@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 use App\Models\Facturas;
 use Illuminate\Http\Request;
+use App\Models\Administrador;
+use App\Models\Comercial;
+use App\Models\Cliente;
+use App\Models\ClienteVip;
+use App\Models\Pedido;
 
-class FacturaController extends Controller
-{
+class FacturaController extends Controller{
+
     public function guardar(Request $request){
         $validatedData = $request->validate([
             'cantidad'         => 'required|integer|min:0',
@@ -18,7 +23,25 @@ class FacturaController extends Controller
         ]);
 
         try {
-            $factura = Facturas::create($validatedData);
+            $factura = new Facturas([
+                'cantidad' => $validatedData["cantidad"],
+                'fecha'    => $validatedData["fecha"],
+                'precio'   => $validatedData["precio"]
+            ]);
+
+            if ($request->id_administrador) {
+                $factura->administrador()->associate(Administrador::find($request->id_administrador));
+            }
+            if ($request->id_comercial) {
+                $factura->comercial()->associate(Comercial::find($request->id_comercial));
+            }
+            if ($request->id_cliente) {
+                $factura->clientes()->associate(Cliente::find($request->id_cliente));
+            }
+            if ($request->id_clientevip) {
+                $factura->clienteVip()->associate(ClienteVip::find($request->id_clientevip));
+            }
+            $factura->save();
 
             return response()->json([
                 'message' => 'Factura creada con éxito.',
@@ -26,10 +49,9 @@ class FacturaController extends Controller
             ], 201);
 
         } catch (\Exception $e) {
-
             return response()->json([
                 'message' => 'Error al crear la factura.',
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ], 500);
         }
     }
