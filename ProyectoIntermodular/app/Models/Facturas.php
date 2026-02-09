@@ -11,8 +11,7 @@ class Facturas extends Model
 
     protected $primaryKey = 'id_factura';
 
-    protected $fillable = ['cantidad', 'fecha'];
-
+protected $fillable = ['cantidad','fecha','precio','id_administrador','id_comercial','id_cliente','id_clientevip'];
     public function pedidos()
     {
         return $this->hasMany(Pedido::class);

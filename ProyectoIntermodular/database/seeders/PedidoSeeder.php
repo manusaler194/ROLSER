@@ -18,6 +18,7 @@ class PedidoSeeder extends Seeder
             if($opcion == 1){
                 DB::table('pedidos')->insert([
                'estado' => $faker->randomElement(["En preparación", "En proceso de entrega", "Entregado"]),
+               'fecha_pedido' => now(),
                'created_at' => now(),
                'updated_at' => now(),
                "id_comercial" => rand(1,10),
@@ -29,6 +30,7 @@ class PedidoSeeder extends Seeder
 
                 DB::table('pedidos')->insert([
                'estado' => $faker->randomElement(["En preparación", "En proceso de entrega", "Entregado"]),
+               'fecha_pedido' => now(),
                'created_at' => now(),
                'updated_at' => now(),
                "id_comercial" => null,

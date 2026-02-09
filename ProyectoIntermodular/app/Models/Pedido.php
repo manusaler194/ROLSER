@@ -8,7 +8,7 @@ class Pedido extends Model{
 
     protected $table = 'pedidos';
     protected $primaryKey = 'id_pedido';
-    protected $fillable = ['estado', 'id_comercial','id_cliente','id_clientevip','id_encargado','id_factura'];
+    protected $fillable = ['estado','fecha_pedido', 'id_comercial','id_cliente','id_clientevip','id_encargado','id_factura'];
 
 
     public function comercial(){
