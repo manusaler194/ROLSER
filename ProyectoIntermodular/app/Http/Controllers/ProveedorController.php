@@ -9,9 +9,18 @@ use Illuminate\Http\Request;
 class ProveedorController extends Controller {
 
     public function mostrarProveedores(Request $request) {
-        // Cogemos todos los proveedores de la Base Datos
-        $proveedores = Proveedor::all();
-        return $proveedores;
+        try{
+            $proveedor = Proveedor::all();
+            return response()->json([
+                'message' => "Datos recogidos",
+                'proveedor' => $proveedor
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener los almacenes.',
+            'error' => $e->getMessage()
+        ], 500);
+        }
     }
 
     public function proveedorNuevo(Request $request) {

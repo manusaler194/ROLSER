@@ -10,8 +10,18 @@ use Illuminate\Http\Request;
 class ArticuloController extends Controller {
 
     public function mostrarArticulos(Request $request) {
-        $articulos = Articulo::all();
-        return $articulos;
+        try{
+            $articulo = Articulo::all();
+            return response()->json([
+                'message' => "Datos recogidos",
+                'almacen' => $articulo
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener los almacenes.',
+            'error' => $e->getMessage()
+        ], 500);
+        }
     }
 
     public function articuloNuevo(Request $request) {

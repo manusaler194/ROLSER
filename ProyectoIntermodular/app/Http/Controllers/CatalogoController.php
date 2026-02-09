@@ -6,10 +6,20 @@ use App\Models\Administrador;
 use Illuminate\Http\Request;
 
 class CatalogoController extends Controller{
-
+                                              
     public function mostrarCatalogos(Request $request) {
-        $catalogos = Catalogo::all();
-        return $catalogos;
+        try{
+            $catalogo = Catalogo::with("administradores")->get();
+            return response()->json([
+                'message' => "Datos recogidos",
+                'catalogo' => $catalogo
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+            'message' => 'Error al obtener los administradores.',
+            'error' => $e->getMessage()
+        ], 500);
+        }
     }
 
     public function catalogoNuevo(Request $request) {
@@ -77,6 +87,6 @@ class CatalogoController extends Controller{
     }
 
 
-    
+
 
 }
