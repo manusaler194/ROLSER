@@ -63,23 +63,7 @@ const EncargadosTable = ({ usuario, onVolver }) => {
             </div>
           </div>
 
-          {/* Comercial asignado - N/A para Encargados */}
-          <div className="flex items-center justify-between gap-4">
-            <label className="text-xl font-normal text-black w-1/3 text-right pr-4 leading-tight">Comercial asignado</label>
-            <div className="relative w-2/3">
-              <select 
-                disabled
-                className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-white opacity-100 text-black cursor-default"
-              >
-                <option>N/A</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
-                <svg className="h-5 w-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-            </div>
-          </div>
+          
 
           {/* Botón Volver */}
           <div className="flex justify-center pt-4">

@@ -5,9 +5,20 @@ const ComercialesTable = ({ usuario, onVolver }) => {
   // Verificación de seguridad
   if (!usuario) return <p className="text-center p-4">No hay datos del comercial.</p>;
 
+  // 1. NORMALIZACIÓN DE DATOS
+  const datos = usuario.original || usuario;
+
+  // CORRECCIÓN 1: El teléfono en comerciales se llama 'contacto'
+  const telefonoReal = datos.contacto || datos.telefono || "";
+
+  // CORRECCIÓN 2: Mostrar el nombre del jefe (Administrador)
+  const nombreAdmin = datos.administrador 
+    ? `${datos.administrador.nombre} ${datos.administrador.apellidos}` 
+    : "Sin asignar";
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4 font-sans">
-      <h2 className="text-2xl font-bold mb-4 text-black text-center">Datos del usuario</h2>
+      <h2 className="text-2xl font-bold mb-4 text-black text-center">Ficha del Comercial</h2>
       
       <div className="bg-white p-8 rounded-[30px] border border-gray-400 shadow-sm w-full max-w-lg">
         <div className="space-y-6">
@@ -18,7 +29,7 @@ const ComercialesTable = ({ usuario, onVolver }) => {
             <input 
               type="text" 
               readOnly
-              value={`${usuario.nombre} ${usuario.apellidos}`}
+              value={datos.nombre} // En comerciales el nombre suele venir completo o solo nombre
               className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white cursor-default"
             />
           </div>
@@ -29,18 +40,18 @@ const ComercialesTable = ({ usuario, onVolver }) => {
             <input 
               type="email" 
               readOnly
-              value={usuario.email}
+              value={datos.email}
               className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white cursor-default"
             />
           </div>
 
-          {/* Teléfono */}
+          {/* Teléfono (Corregido: usa 'contacto') */}
           <div className="flex items-center justify-between gap-4">
             <label className="text-xl font-normal text-black w-1/3 text-right pr-4">Teléfono</label>
             <input 
               type="text" 
               readOnly
-              value={usuario.telefono}
+              value={telefonoReal} 
               className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white cursor-default"
             />
           </div>
@@ -49,40 +60,25 @@ const ComercialesTable = ({ usuario, onVolver }) => {
           <div className="flex items-center justify-between gap-4">
             <label className="text-xl font-normal text-black w-1/3 text-right pr-4">Rol</label>
             <div className="relative w-2/3">
-              <select 
-                disabled
-                className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-white opacity-100 text-black cursor-default font-bold"
-              >
-                <option>Comercial</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
-                <svg className="h-5 w-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
+              <input 
+                type="text"
+                readOnly
+                value="Comercial"
+                className="w-full border border-gray-600 rounded-full py-1 px-4 text-center bg-gray-100 text-gray-500 cursor-default font-bold"
+              />
             </div>
           </div>
 
-          {/* Administrador asignado (Dato específico) */}
+          {/* Administrador asignado (Corregido para ver el nombre) */}
           <div className="flex items-center justify-between gap-4">
             <label className="text-xl font-normal text-black w-1/3 text-right pr-4 leading-tight">Admin. responsable</label>
             <div className="relative w-2/3">
-              <select 
-                disabled
-                className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-white opacity-100 text-black cursor-default"
-              >
-                {/* Accedemos al dato original 'id_administrador' */}
-                <option>
-                    {usuario.original?.id_administrador 
-                        ? `Admin #${usuario.original.id_administrador}` 
-                        : "N/A"}
-                </option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
-                <svg className="h-5 w-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
+               <input 
+                type="text"
+                readOnly
+                value={nombreAdmin}
+                className="w-full border border-gray-600 rounded-full py-1 px-4 text-center bg-white cursor-default text-gray-700"
+              />
             </div>
           </div>
 

@@ -63,18 +63,7 @@ const AdminsTable = ({ usuario, onVolver }) => {
             </div>
           </div>
 
-          {/* Comercial - Bloqueado */}
-          <div className="flex items-center justify-between">
-            <label className="text-xl font-normal text-black w-1/3">Comercial asignado</label>
-            <div className="relative w-2/3">
-              <select 
-                disabled
-                className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-gray-200 opacity-100"
-              >
-                <option>N/A</option>
-              </select>
-            </div>
-          </div>
+          
 
           {/* Botón Volver (Conectado a la función) */}
           <div className="flex justify-center pt-4">

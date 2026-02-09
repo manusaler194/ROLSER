@@ -6,11 +6,12 @@ const ModificarComercial = () => {
     const navegar = useNavigate();
     const { id } = useParams(); 
 
-    // Estado inicial basado en la migración 'comerciales'
+    // Estado inicial
     const [comercial, setComercial] = useState({
         nombre: '',
-        email: '',     // En migración es 'email'
-        contacto: ''   // En migración es 'contacto' (usualmente el teléfono)
+        email: '',
+        contacto: '',
+        password: '' // Añadido por si quieres cambiar la contraseña, si no, se envía vacía
     });
     
     const [estaCargando, setEstaCargando] = useState(true);
@@ -19,19 +20,23 @@ const ModificarComercial = () => {
     useEffect(() => {
         const cargarComercial = async () => {
             try {
-                // Ajusta la ruta si tu backend usa 'comerciales'
-                const respuesta = await fetch(`http://localhost/api/comerciales/${id}`);
+                // Asegúrate que la IP es correcta
+                const respuesta = await fetch(`http://192.168.0.14:8008/api/comerciales/${id}`);
                 
-                
+                if (!respuesta.ok) throw new Error("Error al conectar con la API");
 
                 const datos = await respuesta.json();
-                const usuario = datos.comercial[0];
+                
+                // CORRECCIÓN IMPORTANTE:
+                // Tu controlador devuelve: response()->json($comercial, 200);
+                // Por tanto, 'datos' ES el objeto comercial. No hay array 'comercial[0]'.
+                const usuario = datos; 
 
                 setComercial({
                     nombre: usuario.nombre || '',
                     email: usuario.email || '',
-                    
-                    contacto: usuario.contacto || usuario.telefono || '' 
+                    contacto: usuario.contacto || usuario.telefono || '',
+                    password: '' // La contraseña no la cargamos por seguridad
                 });
 
             } catch (error) {
@@ -58,12 +63,23 @@ const ModificarComercial = () => {
     const manejarEnvio = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost/api/comerciales/actualizar/${id}`, comercial); 
+            // Creamos una copia para enviar
+            const datosAEnviar = { ...comercial };
+            
+            // Si la contraseña está vacía, la borramos para que Laravel no intente validarla/guardarla vacía
+            if (!datosAEnviar.password) {
+                delete datosAEnviar.password;
+            }
+
+            await axios.put(`http://192.168.0.14:8008/api/comerciales/actualizar/${id}`, datosAEnviar); 
+            
             alert("Comercial modificado con éxito");
-            navegar('/usuarios'); 
+            navegar('/listado-comerciales'); // Es mejor volver al listado específico
         } catch (error) {
             console.error("Error al actualizar:", error);
-            alert("Hubo un error al guardar los cambios.");
+            // Mostramos el error real si viene del servidor
+            const mensajeError = error.response?.data?.message || "Hubo un error al guardar los cambios.";
+            alert(mensajeError);
         }
     }
 
@@ -84,35 +100,25 @@ const ModificarComercial = () => {
                     {/* NOMBRE */}
                     <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">Nombre</label>
                     <input 
-                        type="text" 
-                        name="nombre" 
-                        value={comercial.nombre} 
-                        onChange={manejarCambio} 
-                        className={clasesInput} 
-                        required 
+                        type="text" name="nombre" value={comercial.nombre} onChange={manejarCambio} 
+                        className={clasesInput} required 
                     />
 
                     {/* EMAIL */}
                     <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">Correo Electrónico</label>
                     <input 
-                        type="email" 
-                        name="email" 
-                        value={comercial.email} 
-                        onChange={manejarCambio} 
-                        className={clasesInput} 
-                        required 
+                        type="email" name="email" value={comercial.email} onChange={manejarCambio} 
+                        className={clasesInput} required 
                     />
 
-                    {/* CONTACTO (Teléfono) */}
+                    {/* CONTACTO */}
                     <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">Contacto / Teléfono</label>
                     <input 
-                        type="text" 
-                        name="contacto" 
-                        value={comercial.contacto} 
-                        onChange={manejarCambio} 
-                        className={clasesInput} 
-                        required 
+                        type="text" name="contacto" value={comercial.contacto} onChange={manejarCambio} 
+                        className={clasesInput} required 
                     />
+
+                    
 
                     <button type="submit" className="w-full py-4 mt-4 text-white font-bold bg-[#bd0026] rounded-full hover:bg-red-800 transition-all transform active:scale-95 shadow-lg uppercase tracking-wider"> 
                         Guardar Cambios 
@@ -121,7 +127,7 @@ const ModificarComercial = () => {
             </div>
 
             <div className="fixed bottom-10 right-10">
-                <button onClick={() => navegar('/usuarios')} className="bg-black text-white px-10 py-3 rounded-full text-xl font-bold hover:bg-gray-800 shadow-xl transition-transform active:scale-95 cursor-pointer uppercase">
+                <button onClick={() => navegar('/listado-comerciales')} className="bg-black text-white px-10 py-3 rounded-full text-xl font-bold hover:bg-gray-800 shadow-xl transition-transform active:scale-95 cursor-pointer uppercase">
                     Volver
                 </button>
             </div>

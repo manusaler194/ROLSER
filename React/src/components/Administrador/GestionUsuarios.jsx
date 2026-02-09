@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+/*import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 
@@ -10,7 +10,7 @@ import ComercialesTable from "./Comercial";
 
 const GestionUsuarios = () => {
   
-  const URL_API = "http://localhost/api/users";
+  const URL_API = "http://192.168.0.14:8008/api/users";
 
   
   const navegar = useNavigate();
@@ -183,14 +183,14 @@ const GestionUsuarios = () => {
               </span>
             </div>
 
-            {/* --- NUEVO BOTÓN AÑADIR --- */}
+            
             <button
               onClick={manejarCrearNuevo}
               className="w-full md:w-auto bg-[#bd0026] text-white px-6 py-3 rounded-lg font-bold shadow-md hover:bg-red-800 hover:shadow-xl transition-all duration-300 uppercase tracking-wider flex items-center justify-center gap-2"
             >
               <span className="text-xl leading-none pb-1">+</span> Crear Nuevo
             </button>
-            {/* --------------------------- */}
+       
           </div>
 
           <input
@@ -330,19 +330,68 @@ const ItemLista = ({ usuario, alVer, alEditar }) => (
   </div>
 );
 
-const InputEditable = ({ label, name, value, onChange, type = "text" }) => (
-  <div>
-    <label className="block text-xs font-bold text-gray-500 uppercase mb-1 ml-1">
-      {label}
-    </label>
-    <input
-      type={type}
-      name={name}
-      value={value}
-      onChange={onChange}
-      className="w-full bg-white border border-gray-400 p-3 text-gray-800 font-medium focus:outline-none focus:border-[#bd0026] focus:ring-1 focus:ring-[#bd0026] transition-all rounded-sm"
-    />
-  </div>
-);
+
+export default GestionUsuarios;
+*/
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const GestionUsuarios = () => {
+  const navigate = useNavigate();
+  const [contadores, setContadores] = useState({});
+
+  // Carga inicial solo para los numeritos de las tarjetas
+  useEffect(() => {
+    fetch("http://192.168.0.14:8008/api/users")
+      .then((res) => res.json())
+      .then((data) => {
+        setContadores({
+          admins: data.admins?.length || 0,
+          clientes: data.clientes?.length || 0,
+          vips: data.vips?.length || 0,
+          encargados: data.encargados?.length || 0,
+          comerciales: data.comerciales?.length || 0,
+        });
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  // Configuración de botones con SUS RUTAS ESPECÍFICAS
+  const categorias = [
+    { id: "admins", titulo: "Administradores", ruta: "/listado-administradores" },
+    { id: "clientes", titulo: "Clientes", ruta: "/listado-clientes" },
+    { id: "vips", titulo: "Clientes VIP", ruta: "/listado-clientes-vip" },
+    { id: "encargados", titulo: "Encargados", ruta: "/listado-encargados" },
+    { id: "comerciales", titulo: "Comerciales", ruta: "/listado-comerciales" },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6 font-sans">
+      <header className="mb-12 text-center">
+        <h1 className="text-4xl font-bold text-gray-900 uppercase tracking-widest">
+          Gestión de Usuarios
+        </h1>
+        <div className="h-1 w-24 bg-[#bd0026] mx-auto mt-4"></div>
+      </header>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
+        {categorias.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => navigate(cat.ruta)} // <--- Navega a la página específica
+            className="bg-white group p-8 rounded-xl border border-gray-300 shadow-sm hover:border-[#bd0026] hover:shadow-xl transition-all duration-300 flex flex-col items-center cursor-pointer"
+          >
+            <span className="text-xl font-bold text-gray-700 group-hover:text-[#bd0026] uppercase tracking-wide">
+              {cat.titulo}
+            </span>
+            <span className="text-sm text-gray-400 mt-2">
+              {contadores[cat.id] || 0} Registros
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default GestionUsuarios;

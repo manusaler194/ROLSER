@@ -20,7 +20,7 @@ const ModificarAdministrador = () => {
     useEffect(() => {
         const cargarAdmin = async () => {
             try {
-                const response = await fetch(`http://localhost/api/administradores/${id}`);
+                const response = await fetch(`http://192.168.0.14:8008/api/administradores/${id}`);
                 
                 if (!response.ok) {
                     throw new Error(`Error HTTP: ${response.status}`);
