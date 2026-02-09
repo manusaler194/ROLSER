@@ -21,7 +21,7 @@ const ModificarClienteVip = () => {
     const cargarClienteVip = async () => {
       try {
         // ... fetch ...
-        const respuesta = await fetch(`http://localhost/api/clientesVip/${id}`);
+        const respuesta = await fetch(`http://192.168.0.14:8008/api/clientesVip/${id}`);
         const datos = await respuesta.json();
 
         
@@ -59,7 +59,7 @@ const ModificarClienteVip = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `http://localhost/api/clientesVip/actualizar/${id}`,
+        `http://192.168.0.14:8008/api/clientesVip/actualizar/${id}`,
         clienteVip,
       );
       alert("Cliente VIP modificado con éxito");

@@ -39,6 +39,7 @@ class ClienteVipController extends Controller
             $clienteVip->administrador()->associate($administrador);
             $clienteVip->comercial()->associate($comercial);
             $clienteVip->save();
+           // $clienteVip = ClienteVip::create($validatedData);
 
             return response()->json([
                 'message'    => 'Cliente VIP creado con éxito.',

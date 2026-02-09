@@ -20,7 +20,13 @@ import CrearAdmin from "./components/Administrador/CrearAdmin.jsx";
 import CrearCliente from "./components/Administrador/CrearCliente.jsx";
 import CrearClienteVip from "./components/Administrador/CrearClienteVip.jsx";
 import CrearPedidoRebastecimiento from "./components/Pedido/CrearPedidoRebastecimiento.jsx";
- 
+import CrearEncargado from "./components/Administrador/CrearEncargado.jsx";
+import CrearComercial from "./components/Administrador/CrearComercial.jsx";
+import ListadoAdministrador from "./components/Administrador/ListadoAdministrador.jsx";
+import ListadoCliente from "./components/Administrador/ListadoCliente.jsx";
+import ListadoClienteVip from "./components/Administrador/ListadoClienteVip.jsx";
+import ListadoEncargado from "./components/Administrador/ListadoEncargado.jsx";
+import ListadoComerciales from "./components/Administrador/ListadoComercial.jsx";
 const App = () => {
  const rolActual = "admin";
 
@@ -35,9 +41,16 @@ const App = () => {
 
         <main className="flex-1 overflow-auto p-6 bg-gray-50">
           <Routes>
+            <Route path="/listado-comerciales" element={<ListadoComerciales />} />
+            <Route path="/listado-encargados" element={<ListadoEncargado />} />
+            <Route path="/listado-clientes-vip" element={<ListadoClienteVip />} />
+            <Route path="/listado-clientes" element={<ListadoCliente />} />
+            <Route path="/listado-administradores" element={<ListadoAdministrador />} />
             <Route path="/modificar-encargado/:id" element={<ModificarEncargado />} />
+            <Route path="/crear-comercial" element={<CrearComercial />}/>
             <Route path="/crear-admin" element={<CrearAdmin />} />
             <Route path="/crear-cliente" element={<CrearCliente />} />
+            <Route path="/crear-encargado" element={<CrearEncargado />} />
             <Route path="/crear-clientevip" element={<CrearClienteVip />} />
             <Route path="/modificar-comercial/:id" element={<ModificarComercial />} />
             <Route path="/modificar-clientevip/:id" element={<ModificarClienteVip />} />

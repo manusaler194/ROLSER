@@ -16,7 +16,7 @@ class ClienteVip extends Model
         return $this->hasMany(Pedido::class, 'id_pedido');
     }
     public function comercial() {
-        return $this->belongsTo(Comercial::class);
+        return $this->belongsTo(Comercial::class, 'id_comercial');
     }
     public function administrador() {
         return $this->belongsTo(Administrador::class, 'id_administrador');

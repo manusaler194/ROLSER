@@ -19,7 +19,7 @@ class CatalogoSeeder extends Seeder
 
         for ($i = 1; $i < 11; $i++) {
             DB::table('catalogos')->insert([
-            'nombre_temporada' => $faker->name(),
+            'nombre_catalogo' => $faker->name(),
             'anyo' => $faker->numberBetween(2000, 2026),
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
