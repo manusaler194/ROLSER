@@ -8,7 +8,7 @@ class Catalogo extends Model
 {
     protected $table = 'catalogos';
     protected $primaryKey = 'id_catalogo';
-    protected $fillable = ['nombre_temporada', 'anyo', 'id_administrador'];
+    protected $fillable = ['nombre_catalogo', 'anyo', 'id_administrador'];
 
     public function articulos(){
         return $this->belongsToMany(Articulo::class, 'id_articulo');

@@ -10,6 +10,7 @@ class Administrador extends Model{
     protected $primaryKey = 'id_administrador';
     protected $fillable = ['nombre', 'apellidos','telefono', 'email','password'];
 
+
     public function clientes(){
 
         return $this->hasMany(Cliente::class,);
