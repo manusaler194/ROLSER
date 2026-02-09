@@ -21,6 +21,8 @@ return new class extends Migration
 
             $table->foreignId('id_administrador')->nullable()->constrained('administradores', 'id_administrador')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_catalogo')->nullable()->constrained('catalogos', 'id_catalogo')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreignId('id_comercial')->nullable()->constrained('comerciales', 'id_comercial')->nullOnDelete()->cascadeOnUpdate();
+            
 
         });
     }

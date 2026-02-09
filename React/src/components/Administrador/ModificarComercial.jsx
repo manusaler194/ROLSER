@@ -22,17 +22,15 @@ const ModificarComercial = () => {
                 // Ajusta la ruta si tu backend usa 'comerciales'
                 const respuesta = await fetch(`http://localhost/api/comerciales/${id}`);
                 
-                if (!respuesta.ok) {
-                    throw new Error(`Error HTTP: ${respuesta.status}`);
-                }
+                
 
                 const datos = await respuesta.json();
-                const usuario = Array.isArray(datos) ? datos[0] : datos;
+                const usuario = datos.comercial[0];
 
                 setComercial({
                     nombre: usuario.nombre || '',
                     email: usuario.email || '',
-                    // Mapeo: la base de datos dice 'contacto', pero por si acaso viene como telefono
+                    
                     contacto: usuario.contacto || usuario.telefono || '' 
                 });
 

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ClienteVip;
 use App\Models\Administrador;
 use App\Models\Catalogo;
-
+use App\Models\Comercial;
 class ClienteVipController extends Controller
 {
     // ==========================================
@@ -20,12 +20,13 @@ class ClienteVipController extends Controller
             'direccion'        => 'required|string|max:255',
             'id_administrador' => 'nullable|integer',
             'id_catalogo'      => 'nullable|integer',
+            'id_comercial'     => 'nullable|integer',
         ]);
 
         try {
             $administrador = Administrador::findOrFail($validatedData["id_administrador"]);
             $catalogo      = Catalogo::findOrFail($validatedData["id_catalogo"]);
-
+            $comercial      = Comercial::findOrFail($validatedData["id_comercial"]);
             $clienteVip = new ClienteVip([
                 'nombre'    => $validatedData["nombre"],
                 'telefono'  => $validatedData["telefono"],
@@ -36,7 +37,7 @@ class ClienteVipController extends Controller
             // Asociamos las relaciones (foreign keys)
             $clienteVip->catalogo()->associate($catalogo);
             $clienteVip->administrador()->associate($administrador);
-
+            $clienteVip->comercial()->associate($comercial);
             $clienteVip->save();
 
             return response()->json([
@@ -58,7 +59,7 @@ class ClienteVipController extends Controller
     public function mostrar(Request $request){
         try{
             // Usamos eager loading (with) para traer las relaciones
-            $clientesVip = ClienteVip::with(['administrador', 'catalogo'])->get();
+            $clientesVip = ClienteVip::with(['administrador', 'catalogo','comercial'])->get();
 
             return response()->json([
                 'message'     => "Datos recogidos",
@@ -80,7 +81,7 @@ class ClienteVipController extends Controller
     {
         try {
             // Adaptado al estilo de PedidoController: recibe Request y usa where
-            $clienteVip = ClienteVip::with(['administrador', 'catalogo'])
+            $clienteVip = ClienteVip::with(['administrador', 'catalogo', 'comercial'])
                             ->where("id_clientevip", $request->id_clientevip)
                             ->get();
 
@@ -114,6 +115,7 @@ class ClienteVipController extends Controller
             'direccion'        => 'required|string|max:255',
             'id_administrador' => 'nullable|integer',
             'id_catalogo'      => 'nullable|integer',
+            'id_comercial'     => 'nullable|integer',
         ]);
 
         try{

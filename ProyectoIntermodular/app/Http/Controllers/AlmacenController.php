@@ -30,7 +30,7 @@ class AlmacenController extends Controller{
             return response()->json([
                 'message' => 'Almacen creado con éxito.',
                 'almacen' => $almacen,
-            ], 201); // Código HTTP 201: Creado
+            ], 201); 
 
         } catch (\Exception $e) {
 
@@ -39,7 +39,7 @@ class AlmacenController extends Controller{
                 'error' => $e->getMessage(),
             ], 500);
         }
-    } 
+    }
 
     public function mostrar(Request $request){
         try{
