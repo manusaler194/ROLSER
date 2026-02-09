@@ -16,7 +16,7 @@ class Comercial extends Authenticatable{
 
     protected $primaryKey = 'id_comercial';
 
-    protected $fillable = ['nombre', 'contacto','email','password'];
+    protected $fillable = ['nombre', 'contacto','email','password','id_administrador'];
 
     protected $hidden = ['password','remember_token',];
 

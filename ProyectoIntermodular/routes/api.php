@@ -82,7 +82,7 @@ Route::get('/clientesVip', [ClienteVipController::class, 'mostrar']);
 Route::post('/clientesVip/guardar', [ClienteVipController::class, 'guardar']);
 Route::put('/clientesVip/actualizar/{id_clientevip}', [ClienteVipController::class, 'actualizar']);
 Route::delete('/clientesVip/borrar/{id_clientevip}', [ClienteVipController::class, 'eliminar']);
-Route::get('/clientesVip/{id_cliente}', [ClienteVipController::class, 'mostrarClienteVip']);
+Route::get('/clientesVip/{id_clientevip}', [ClienteVipController::class, 'mostrarClienteVip']);
 /* -------------------------------------------------------------------------- */
 /* FACTURAS                                  */
 /* -------------------------------------------------------------------------- */
@@ -114,4 +114,4 @@ Route::get('/comerciales', [ComercialController::class, 'mostrar']);
 Route::post('/comerciales/guardar', [ComercialController::class, 'guardar']);
 Route::put('/comerciales/actualizar/{id_comercial}', [ComercialController::class, 'actualizar']);
 Route::delete('/comerciales/borrar/{id_comercial}', [ComercialController::class, 'eliminar']);
-Route::get('/comerciales/{id_cliente}', [ComercialController::class, 'mostrarComercial']);
+Route::get('/comerciales/{id_comercial}', [ComercialController::class, 'mostrarComercial']);

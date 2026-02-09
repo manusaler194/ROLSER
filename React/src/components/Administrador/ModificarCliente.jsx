@@ -16,11 +16,11 @@ const ModificarCliente = () => {
     
     const [estaCargando, setEstaCargando] = useState(true);
 
-    // 1. Cargar datos del cliente (GET)
+    
     useEffect(() => {
         const cargarCliente = async () => {
             try {
-                // Asegúrate de que esta ruta coincida con tu backend (Route::get('/clientes/{id}'))
+                
                 const respuesta = await fetch(`http://localhost/api/clientes/${id}`);
                 
                 if (!respuesta.ok) {
@@ -29,20 +29,24 @@ const ModificarCliente = () => {
 
                 const datos = await respuesta.json();
                 
-                // Manejo seguro: si es array cogemos el primero, si es objeto lo usamos directo
-                const usuario = Array.isArray(datos) ? datos[0] : datos;
+                console.log("Datos recibidos:", datos); 
 
-                setCliente({
-                    nombre: usuario.nombre || '',
-                    // Mapeo: si viene como 'email' lo guardamos en 'correo'
-                    correo: usuario.correo || usuario.email || '', 
-                    telefono: usuario.telefono || '',
-                    direccion: usuario.direccion || ''
-                });
+                
+                const arrayClientes = datos.cliente; 
+                const usuario = Array.isArray(arrayClientes) ? arrayClientes[0] : arrayClientes;
+
+                if (usuario) {
+                    setCliente({
+                        nombre: usuario.nombre || '',
+                        correo: usuario.correo || usuario.email || '', 
+                        telefono: usuario.telefono || '',
+                        direccion: usuario.direccion || ''
+                    });
+                }
 
             } catch (error) {
                 console.error("Error al cargar:", error);
-                alert("No se pudieron cargar los datos del cliente.");
+                // alert("No se pudieron cargar los datos del cliente."); 
             } finally {
                 setEstaCargando(false);
             }

@@ -8,7 +8,12 @@ class Administrador extends Model{
 
     protected $table = 'administradores';
     protected $primaryKey = 'id_administrador';
+
     protected $fillable = ['nombre', 'apellidos','telefono', 'email','password'];
+
+
+
+
 
 
     public function clientes(){

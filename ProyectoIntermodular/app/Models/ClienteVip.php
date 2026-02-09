@@ -10,18 +10,22 @@ class ClienteVip extends Model
 
     protected $table = 'clientes_vip';
     protected $primaryKey = 'id_clientevip';
-    protected $fillable = ['nombre', 'telefono','correo','direccion'];
+    protected $fillable = ['nombre', 'telefono','correo','direccion','id_administrador','id_catalogo','id_comercial'];
 
     public function pedido() {
-        return $this->belongsTo(Pedido::class, 'id_pedido');
+        return $this->hasMany(Pedido::class, 'id_pedido');
     }
     public function comercial() {
-        return $this->hasMany(Comercial::class);
+        return $this->belongsTo(Comercial::class);
     }
     public function administrador() {
-        return $this->hasMany(Administrador::class);
+        return $this->belongsTo(Administrador::class, 'id_administrador');
     }
     public function factura() {
-        return $this->belongsTo(Facturas::class, 'id_factura');
+        return $this->hasMany(Facturas::class, 'id_factura');
+    }
+    public function catalogo() {
+        return $this->belongsTo(Catalogo::class, 'id_catalogo');
     }
 }
+
