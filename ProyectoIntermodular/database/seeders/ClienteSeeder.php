@@ -5,9 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-class ClienteSeeder extends Seeder
-{
+class ClienteSeeder extends Seeder{
     /**
      * Run the database seeds.
      */
@@ -17,10 +17,10 @@ class ClienteSeeder extends Seeder
 
         for ($i = 1; $i < 11; $i++) {
             DB::table('clientes')->insert([
-
                 'nombre' => $faker->name(),
                 'telefono' => $faker->phoneNumber(),
-                'correo' => $faker->email(),
+                'email' => $faker->unique()->email(),
+                'password' => Hash::make('password'),
                 'direccion' => $faker->address(),
                 'created_at' => now(),
                 'updated_at' => now(),

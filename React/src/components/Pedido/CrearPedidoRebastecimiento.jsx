@@ -6,6 +6,8 @@ const CrearPedidoRebastecimiento = () => {
     const [idComercial, setIdComercial] = useState(null);
     const [idCliente, setIdCliente] = useState(null);
     const [idEncargado, setIdEncargado] = useState(null);
+    const [idClienteVip, setIdClienteVip] = useState(null);
+    
 
     useEffect(() => {
         const cargarArticulos = async () => {
@@ -20,15 +22,13 @@ const CrearPedidoRebastecimiento = () => {
         cargarArticulos();
     }, []);
 
-    const manejarCantidad = (id, cantidad) => {
-        const valor = parseInt(cantidad) || 0;
-        setArticulos(articulos.map(articulo =>
-            articulo.id_articulo === id ? { ...articulo, cantidadPedir: valor } : articulo
-        ));
-    };
-
+    const handleCantidad = (id, nuevaCantidad) =>{
+        setArticulos(prevArticulo =>
+            prevArticulo.map(articulo=> articulo.id_articulo === id ? {...articulo, cantidad: nuevaCantidad}: articulo)
+        );
+    }
     const añadirProducto = async () => {
-        const productos= articulos.filter(articulo => articulo.cantidadPedir > 0);
+        const productos = articulos.filter(articulo => articulo.cantidad > 0);
 
         if (productos.length === 0) {
             alert("Selecciona al menos un producto.");
@@ -36,24 +36,25 @@ const CrearPedidoRebastecimiento = () => {
         }
 
         try {
-            const resFactura = await fetch('http://localhost/api/facturas/guardar', {
+            const crearFactura = await fetch('http://localhost/api/facturas/guardar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    cantidad: productos.reduce((contador, articulo) => contador + articulo.cantidadPedir, 0),
+                    cantidad: productos.reduce((contador, articulo) => contador + articulo.cantidad, 0),
                     fecha: new Date().toISOString().split('T')[0],
-                    precio: productos.reduce((contador, articulo) => contador + (articulo.cantidadPedir * articulo.precio), 0),
+                    precio: productos.reduce((contador, articulo) => contador + (articulo.cantidad * articulo.precio), 0),
                     id_administrador: idAdministrador,
                     id_comercial: idComercial,
                     id_cliente: idCliente,
-                    id_clientevip: null 
+                    id_clientevip: idClienteVip 
                 })
             });
-            const dataFactura = await resFactura.json();
+
+            if (!crearFactura.ok) throw new Error("Error al crear la factura");
+            const dataFactura = await crearFactura.json();
             const facturaId = dataFactura.factura.id_factura;
 
-
-            const resPedido = await fetch('http://localhost/api/pedidos/guardar', {
+            const crearPedido = await fetch('http://localhost/api/pedidos/guardar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -65,44 +66,45 @@ const CrearPedidoRebastecimiento = () => {
                     id_encargado: idEncargado
                 })
             });
-            const dataPedido = await resPedido.json();
-            const pedidoId = dataPedido.pedidos?.id_pedido || dataPedido.pedidos?.id;
 
-            const promesasLineas = productos.map(articulo => {
-                return fetch('http://localhost/api/lineasPedido/guardar', {
+            if (!crearPedido.ok) throw new Error("Error al crear el pedido");
+            const dataPedido = await crearPedido.json();
+            const pedidoId = dataPedido.pedidos?.id_pedido;
+
+            const promesasLineas = productos.map(articulo => 
+                fetch('http://localhost/api/lineasPedido/guardar', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         precio: articulo.precio,
-                        cantidad: articulo.cantidadPedir,
+                        cantidad: articulo.cantidad,
                         id_pedido: pedidoId,
                         id_articulo: articulo.id_articulo
                     })
-                });
-            });
+                }).then(response => {
+                    if (!response.ok) throw new Error(`Error en línea del producto ${articulo.id_articulo}`);
+                    return response.json();
+                })
+            );
 
             await Promise.all(promesasLineas);
 
-            alert("¡Pedido, Factura y Líneas registrados correctamente!");
-            setArticulos(articulos.map(articulo => ({...articulo, cantidadPedir: 0})));
+            alert("Pedido registrado");
+            setArticulos(prev => prev.map(art => ({ ...art, cantidad: 0 })));
 
         } catch (error) {
-            console.error("Error en el proceso:", error);
-            alert("Hubo un fallo en la creación en cadena.");
+            console.error("Detalle del error:", error);
+            alert(`Fallo en el proceso: ${error.message}`);
         }
     };
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">
             <div className="max-w-6xl mx-auto">
+                
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-800">Reabastecimiento de Inventario</h1>
-                    <button 
-                        onClick={añadirProducto} 
-                        className="bg-[#bc002d] text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-[#9a0025] transition duration-300"
-                    >
-                        Confirmar Pedido
-                    </button>
+                    <button onClick={añadirProducto} className="bg-[#bc002d] text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-[#9a0025] transition duration-300">Confirmar Pedido</button>
                 </div>
 
                 <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
@@ -125,17 +127,10 @@ const CrearPedidoRebastecimiento = () => {
                                     </td>
                                     <td className="px-6 py-4 text-gray-700">{articulo.precio}€</td>
                                     <td className="px-6 py-4">
-                                        <input 
-                                            type="number" 
-                                            min="0" 
-                                            value={articulo.cantidadPedir || ""}
-                                            className="w-20 p-2 border border-gray-300 rounded-md outline-none focus:border-[#bc002d]" 
-                                            onChange={(e) => manejarCantidad(articulo.id_articulo, e.target.value)} 
-                                            placeholder="0"
-                                        />
+                                        <input type="number" min="0" value={articulo.cantidad}className="w-20 p-2 border border-gray-300 rounded-md outline-none focus:border-[#bc002d]" onChange={(e) => handleCantidad(articulo.id_articulo, e.target.value)} placeholder="0"/>
                                     </td>
                                     <td className="px-6 py-4 font-semibold text-[#bc002d]">
-                                        {((articulo.cantidadPedir || 0) * articulo.precio).toFixed(2)}€
+                                        {((articulo.cantidad || 0) * articulo.precio).toFixed(2)}€
                                     </td>
                                 </tr>
                             ))}
@@ -147,7 +142,7 @@ const CrearPedidoRebastecimiento = () => {
                    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                        <span className="text-gray-600 mr-4">Total Estimado:</span>
                        <span className="text-2xl font-bold text-gray-800"> 
-                            {articulos.reduce((acc, art) => acc + ((art.cantidadPedir || 0) * art.precio), 0).toFixed(2)}€
+                            {articulos.reduce((contador, articulo) => contador + ((articulo.cantidad || 0) * articulo.precio), 0).toFixed(2)}€
                        </span>
                    </div>
                 </div>

@@ -15,13 +15,14 @@ use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\LineaPedidoController;
 use App\Http\Controllers\SeccionController;
 use App\Http\Controllers\ComercialController;
-
+use App\Http\Controllers\Api\AuthController;
 use App\Models\Almacen;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/almacenes', [AlmacenController::class, 'mostrar']);
 Route::get('/almacenes/{id_almacen}', [AlmacenController::class, 'mostrarAlmacen']);

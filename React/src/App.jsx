@@ -27,6 +27,7 @@ import ListadoCliente from "./components/Administrador/ListadoCliente.jsx";
 import ListadoClienteVip from "./components/Administrador/ListadoClienteVip.jsx";
 import ListadoEncargado from "./components/Administrador/ListadoEncargado.jsx";
 import ListadoComerciales from "./components/Administrador/ListadoComercial.jsx";
+
 const App = () => {
  const rolActual = "admin";
 

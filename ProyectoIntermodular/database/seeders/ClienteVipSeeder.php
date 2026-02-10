@@ -24,7 +24,8 @@ class ClienteVipSeeder extends Seeder
 
                 'nombre' => $faker->name(),
                 'telefono' => $faker->phoneNumber(),
-                'correo' => $faker->email(),
+                'email' => $faker->unique()->email(),
+                'password' => Hash::make('password'),
                 'direccion' => $faker->address(),
                 'created_at' => $faker->date(),
                 'updated_at' => $faker->date(),
