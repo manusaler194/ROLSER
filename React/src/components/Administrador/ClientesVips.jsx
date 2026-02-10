@@ -11,7 +11,7 @@ const VipsTable = ({ usuario, onVolver }) => {
   const datos = usuario.original || usuario;
 
   // CORRECCIÓN 1: Email (El JSON trae "correo")
-  const emailReal = datos.correo || datos.email || "";
+  const emailReal = datos.email || "";
 
   // CORRECCIÓN 2: Acceder al objeto 'administrador'
   const nombreAdmin = datos.administrador 

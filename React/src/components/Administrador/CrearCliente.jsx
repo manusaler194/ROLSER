@@ -3,200 +3,234 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const CrearCliente = () => {
+  const navigate = useNavigate();
+  const URL_API_GUARDAR = "http://localhost/api/clientes/guardar";
+
+  // Estado del formulario
   const [cliente, setCliente] = useState({
     nombre: "",
     telefono: "",
-    correo: "",
+    email: "",      // Mantenemos 'email' como confirmamos antes
     direccion: "",
+    password: "",
     id_administrador: "",
     id_comercial: "",
   });
 
+  // Estados para listas desplegables
   const [administradores, setAdministradores] = useState([]);
   const [comerciales, setComerciales] = useState([]);
-  const navigate = useNavigate();
 
+  // Estados de control de UI
+  const [error, setError] = useState(null);
+  const [cargando, setCargando] = useState(false);
+
+  // Cargar listas al iniciar
   useEffect(() => {
-        const cargarDatos = async () => {
-            try {
-                const resAdmins = await axios.get('http://localhost/api/administradores'); 
-                const resComerciales = await axios.get('http://localhost/api/comerciales');
-                
-                console.log("Respuesta Admins:", resAdmins.data);
-                console.log("Respuesta Comerciales:", resComerciales.data);
+    const cargarListas = async () => {
+      try {
+        const [resAdmins, resComerciales] = await Promise.all([
+          axios.get("http://localhost/api/administradores"),
+          axios.get("http://localhost/api/comerciales"),
+        ]);
 
-                
-                const listaAdmins = resAdmins.data.admin || resAdmins.data.administrador || resAdmins.data;
-                if (Array.isArray(listaAdmins)) {
-                    setAdministradores(listaAdmins);
-                } else {
-                    setAdministradores([]); 
-                    console.error("La API de administradores no devolvió un array:", resAdmins.data);
-                }
-                
-                
-                const listaComerciales = resComerciales.data.comercial || resComerciales.data.comerciales || resComerciales.data;
-                if (Array.isArray(listaComerciales)) {
-                     setComerciales(listaComerciales);
-                } else {
-                     setComerciales([]); 
-                     console.error("La API de comerciales no devolvió un array:", resComerciales.data);
-                }
+        const listaAdmins = resAdmins.data.admin || resAdmins.data || [];
+        const listaComerciales = resComerciales.data.comercial || resComerciales.data || [];
 
-            } catch (error) {
-                console.error("Error al cargar listas:", error);
-                // En caso de error, aseguramos que sean arrays vacíos para que no rompa la página
-                setAdministradores([]);
-                setComerciales([]);
-            }
-        };
-        cargarDatos();
-    }, []);
+        setAdministradores(Array.isArray(listaAdmins) ? listaAdmins : []);
+        setComerciales(Array.isArray(listaComerciales) ? listaComerciales : []);
+      } catch (err) {
+        console.error("Error cargando listas:", err);
+        setError("No se pudieron cargar las listas de administradores o comerciales.");
+      }
+    };
+    cargarListas();
+  }, []);
 
-  const handleChange = (e) => {
-    setCliente({ ...cliente, [e.target.name]: e.target.value });
+  const manejarCambio = (e) => {
+    setCliente({
+      ...cliente,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = async (e) => {
+  const manejarEnvio = async (e) => {
     e.preventDefault();
+    setCargando(true);
+    setError(null);
+
     try {
-      // Convertimos a número o null.
-      // Si la cadena está vacía (""), enviamos null.
+      // Preparamos los datos (convertir IDs a números o null)
       const datosEnviados = {
         ...cliente,
-        id_administrador: cliente.id_administrador
-          ? parseInt(cliente.id_administrador)
-          : null,
-        id_comercial: cliente.id_comercial
-          ? parseInt(cliente.id_comercial)
-          : null,
+        id_administrador: cliente.id_administrador ? parseInt(cliente.id_administrador) : null,
+        id_comercial: cliente.id_comercial ? parseInt(cliente.id_comercial) : null,
       };
 
-      await axios.post("http://localhost/api/clientes/guardar", datosEnviados);
+      await axios.post(URL_API_GUARDAR, datosEnviados);
 
-      alert("Cliente creado con éxito");
+      alert("Cliente creado con éxito.");
       navigate("/usuarios");
-    } catch (error) {
-      console.error("Error completo:", error);
-      const mensajeError = error.response?.data?.message || "Error desconocido";
-      alert(`Error: ${mensajeError}`);
+    } catch (err) {
+      console.error("Error completo:", err);
+      const mensaje = err.response?.data?.message || err.message || "Error al crear el cliente";
+      setError(mensaje);
+    } finally {
+      setCargando(false);
     }
   };
 
-  const inputClasses =
-    "w-full px-5 py-3 mb-6 border border-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-red-800 appearance-none bg-white text-gray-700";
+  // Clase común para todos los inputs y selects (Estilo Admin)
+  const claseInput = "w-full bg-white border border-gray-400 p-3 text-gray-800 focus:outline-none focus:border-[#bd0026] focus:ring-1 focus:ring-[#bd0026] rounded-sm transition-all";
+  const claseLabel = "block text-xs font-bold text-gray-500 uppercase mb-1 ml-1";
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 font-sans">
-      <div className="w-full max-w-2xl p-10 bg-white border border-gray-200 rounded-[2rem] shadow-lg">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
-          Crear nuevo Cliente
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
+      <div className="w-full max-w-lg bg-white p-10 shadow-2xl rounded-sm border-t-4 border-[#bd0026]">
+        
+        <h2 className="text-2xl font-bold mb-8 text-center text-black uppercase tracking-wider border-b pb-4">
+          Nuevo Cliente
         </h2>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="nombre"
-            placeholder="Nombre Completo"
-            value={cliente.nombre}
-            className={inputClasses}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="telefono"
-            placeholder="Teléfono"
-            value={cliente.telefono}
-            className={inputClasses}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="correo"
-            placeholder="Correo Electrónico"
-            value={cliente.correo}
-            className={inputClasses}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="direccion"
-            placeholder="Dirección"
-            value={cliente.direccion}
-            className={inputClasses}
-            onChange={handleChange}
-            required
-          />
+        {/* Mensaje de Error */}
+        {error && (
+          <div className="mb-6 p-3 bg-red-100 border-l-4 border-red-500 text-red-700 font-bold text-sm">
+            {error}
+          </div>
+        )}
 
-          {/* SELECT ADMINISTRADOR */}
-          <div className="relative mb-6">
-            <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">
-              Administrador Asignado
-            </label>
-            <select
-              name="id_administrador"
-              value={cliente.id_administrador}
-              className={inputClasses}
-              onChange={handleChange}
-            >
-              <option value="">-- Ninguno --</option>
-              {Array.isArray(administradores) && 
-              administradores.map((admin) => (
-               <option
-                  key={admin.id || admin.id_administrador}
-                  value={admin.id || admin.id_administrador}
-                >
-                  {admin.nombre} {admin.apellidos}
-                </option>
-              ))}
-            </select>
+        <form onSubmit={manejarEnvio} className="space-y-5" autoComplete="off">
+          
+          {/* GRUPO 1: Nombre y Teléfono */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className={claseLabel}>Nombre Completo</label>
+              <input
+                type="text"
+                name="nombre"
+                required
+                value={cliente.nombre}
+                onChange={manejarCambio}
+                className={claseInput}
+                placeholder="Ej. Ana García"
+              />
+            </div>
+            <div>
+              <label className={claseLabel}>Teléfono</label>
+              <input
+                type="text"
+                name="telefono"
+                required
+                value={cliente.telefono}
+                onChange={manejarCambio}
+                className={claseInput}
+                placeholder="Ej. 600 123 456"
+              />
+            </div>
           </div>
 
-          {/* Select Comercial */}
-          <div className="relative mb-8">
-            <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">
-              Comercial Asignado
-            </label>
-            <select
-              name="id_comercial"
-              value={cliente.id_comercial}
-              className={inputClasses}
-              onChange={handleChange}
-            >
-              <option value="">-- Ninguno --</option>
+          {/* GRUPO 2: Email */}
+          <div>
+            <label className={claseLabel}>Email</label>
+            <input
+              type="email"
+              name="email"
+              required
+              value={cliente.email}
+              onChange={manejarCambio}
+              className={claseInput}
+              placeholder="cliente@empresa.com"
+            />
+          </div>
 
-              {/* CORRECCIÓN AQUÍ: Verificamos si es array antes de hacer map */}
-              {Array.isArray(comerciales) &&
-                comerciales.map((comercial) => (
-                  <option
-                    key={comercial.id || comercial.id_comercial}
-                    value={comercial.id || comercial.id_comercial}
-                  >
-                    {comercial.nombre} {comercial.apellidos}
+          {/* GRUPO 3: Dirección */}
+          <div>
+            <label className={claseLabel}>Dirección</label>
+            <input
+              type="text"
+              name="direccion"
+              required
+              value={cliente.direccion}
+              onChange={manejarCambio}
+              className={claseInput}
+              placeholder="Calle Principal, 123"
+            />
+          </div>
+
+          {/* GRUPO 4: Contraseña */}
+          <div>
+            <label className={claseLabel}>Contraseña</label>
+            <input
+              type="password"
+              name="password"
+              required
+              value={cliente.password}
+              onChange={manejarCambio}
+              className={claseInput}
+              placeholder="••••••••"
+              autoComplete="new-password"
+            />
+          </div>
+
+          {/* GRUPO 5: Selectores (Administrador y Comercial) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className={claseLabel}>Asignar Admin</label>
+              <select
+                name="id_administrador"
+                value={cliente.id_administrador}
+                onChange={manejarCambio}
+                className={claseInput}
+              >
+                <option value="">-- Ninguno --</option>
+                {administradores.map((admin) => (
+                  <option key={admin.id_administrador} value={admin.id_administrador}>
+                    {admin.nombre} {admin.apellidos}
                   </option>
                 ))}
-            </select>
+              </select>
+            </div>
+            <div>
+              <label className={claseLabel}>Asignar Comercial</label>
+              <select
+                name="id_comercial"
+                value={cliente.id_comercial}
+                onChange={manejarCambio}
+                className={claseInput}
+              >
+                <option value="">-- Ninguno --</option>
+                {comerciales.map((com) => (
+                  <option key={com.id_comercial} value={com.id_comercial}>
+                    {com.nombre} {com.apellidos}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full py-4 mt-2 text-white font-bold bg-[#b3002d] rounded-full hover:bg-red-900 transition-all transform active:scale-95 shadow-lg"
-          >
-            CREAR CLIENTE
-          </button>
-        </form>
-      </div>
+          {/* BOTONES */}
+          <div className="flex justify-center pt-8 gap-3">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="w-1/2 border border-gray-400 text-gray-600 font-bold py-3 px-4 rounded shadow hover:bg-gray-50 transition duration-300 uppercase"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={cargando}
+              className={`w-1/2 text-white font-bold py-3 px-4 rounded shadow-lg transition duration-300 uppercase ${
+                cargando
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-black hover:bg-gray-800"
+              }`}
+            >
+              {cargando ? "Guardando..." : "Crear Cliente"}
+            </button>
+          </div>
 
-      <div className="absolute bottom-10 right-10 md:bottom-20 md:right-20">
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer"
-        >
-          Volver
-        </button>
+        </form>
       </div>
     </div>
   );

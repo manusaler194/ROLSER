@@ -55,9 +55,9 @@ const ListadoCliente = () => {
   const filtrados = lista.filter((cliente) => {
     const termino = busqueda.toLowerCase();
     const nombre = (cliente.nombre || "").toLowerCase();
-    const correo = (cliente.correo || "").toLowerCase();
+    const email = (cliente.email || "").toLowerCase();
     
-    return nombre.includes(termino) || correo.includes(termino);
+    return nombre.includes(termino) || email.includes(termino);
   });
 
   // 3. RENDERIZADO CONDICIONAL (Ficha o Lista)
@@ -122,7 +122,7 @@ const ListadoCliente = () => {
                   <span className="block text-lg font-bold text-gray-800">
                     {cliente.nombre}
                   </span>
-                  <span className="text-sm text-gray-500">{cliente.correo}</span>
+                  <span className="text-sm text-gray-500">{cliente.email}</span>
                   {/* Info extra (opcional): mostramos el comercial asignado si existe */}
                   {cliente.comercial && (
                     <span className="block text-xs text-gray-400 mt-1">

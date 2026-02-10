@@ -8,7 +8,7 @@ const CrearClienteVip = () => {
   const [clienteVip, setClienteVip] = useState({
     nombre: "",
     telefono: "",
-    correo: "",
+    email: "",
     direccion: "",
     id_administrador: "",
     id_catalogo: "",
@@ -76,7 +76,7 @@ const CrearClienteVip = () => {
       const datosEnviados = {
         nombre: clienteVip.nombre,
         telefono: clienteVip.telefono,
-        correo: clienteVip.correo,
+        email: clienteVip.email,
         direccion: clienteVip.direccion,
         id_administrador: clienteVip.id_administrador
           ? parseInt(clienteVip.id_administrador)
@@ -132,9 +132,9 @@ const CrearClienteVip = () => {
           />
           <input
             type="email"
-            name="correo"
+            name="email"
             placeholder="Correo Electrónico"
-            value={clienteVip.correo}
+            value={clienteVip.email}
             className={inputClasses}
             onChange={handleChange}
             required

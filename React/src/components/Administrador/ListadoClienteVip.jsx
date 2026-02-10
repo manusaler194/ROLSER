@@ -56,9 +56,9 @@ const ListadoClienteVip = () => {
   const filtrados = lista.filter((vip) => {
     const termino = busqueda.toLowerCase();
     const nombre = (vip.nombre || "").toLowerCase();
-    const correo = (vip.correo || "").toLowerCase();
+    const email = (vip.email || "").toLowerCase();
     
-    return nombre.includes(termino) || correo.includes(termino);
+    return nombre.includes(termino) || email.includes(termino);
   });
 
   // 3. RENDERIZADO CONDICIONAL (Ficha o Lista)
@@ -125,7 +125,7 @@ const ListadoClienteVip = () => {
                   <span className="block text-lg font-bold text-gray-800">
                     {vip.nombre}
                   </span>
-                  <span className="text-sm text-gray-500 block mb-1">{vip.correo}</span>
+                  <span className="text-sm text-gray-500 block mb-1">{vip.email}</span>
                   
                   {/* Info extra específica para VIPs (Catálogo) */}
                   {vip.catalogo && (

@@ -9,7 +9,7 @@ const ModificarClienteVip = () => {
   // Estado inicial
   const [clienteVip, setClienteVip] = useState({
     nombre: "",
-    correo: "",
+    email: "",
     telefono: "",
     direccion: "",
   });
@@ -21,7 +21,7 @@ const ModificarClienteVip = () => {
     const cargarClienteVip = async () => {
       try {
         // ... fetch ...
-        const respuesta = await fetch(`http://192.168.0.14:8008/api/clientesVip/${id}`);
+        const respuesta = await fetch(`http://localhost/api/clientesVip/${id}`);
         const datos = await respuesta.json();
 
         
@@ -30,7 +30,7 @@ const ModificarClienteVip = () => {
         if (usuario) {
           setClienteVip({
             nombre: usuario.nombre || "",
-            correo: usuario.correo || "", 
+            email: usuario.email || "", 
             telefono: usuario.telefono || "",
             direccion: usuario.direccion || "",
           });
@@ -108,8 +108,8 @@ const ModificarClienteVip = () => {
           </label>
           <input
             type="email"
-            name="correo"
-            value={clienteVip.correo} // <-- Esto es lo que muestra el dato
+            name="email"
+            value={clienteVip.email} // <-- Esto es lo que muestra el dato
             onChange={manejarCambio}
             className={clasesInput}
             required

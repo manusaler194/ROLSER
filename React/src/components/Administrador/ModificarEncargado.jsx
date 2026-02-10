@@ -30,7 +30,7 @@ const ModificarEncargado = () => {
 
                 setEncargado({
                     nombre: usuario.nombre || '',
-                    email: usuario.email || usuario.correo || '',
+                    email: usuario.email || '',
                     
                     telefono: usuario.telefono || usuario.contacto || '' 
                 });

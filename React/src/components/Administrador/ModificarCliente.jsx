@@ -9,7 +9,7 @@ const ModificarCliente = () => {
     
     const [cliente, setCliente] = useState({
         nombre: '',
-        correo: '',    
+        email: '',    
         telefono: '',
         direccion: ''
     });
@@ -38,7 +38,7 @@ const ModificarCliente = () => {
                 if (usuario) {
                     setCliente({
                         nombre: usuario.nombre || '',
-                        correo: usuario.correo || usuario.email || '', 
+                        email: usuario.email || '', 
                         telefono: usuario.telefono || '',
                         direccion: usuario.direccion || ''
                     });
@@ -107,8 +107,8 @@ const ModificarCliente = () => {
                     <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">Correo Electrónico</label>
                     <input 
                         type="email" 
-                        name="correo" 
-                        value={cliente.correo} 
+                        name="email" 
+                        value={cliente.email} 
                         onChange={manejarCambio} 
                         className={clasesInput} 
                         required 

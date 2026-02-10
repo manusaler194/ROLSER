@@ -13,7 +13,7 @@ const ClientesTable = ({ usuario, onVolver }) => {
   const datos = usuario.original || usuario;
 
   // CORRECCIÓN 1: El JSON trae "correo", no "email"
-  const emailReal = datos.correo || datos.email || "";
+  const emailReal = datos.email || "";
 
   // CORRECCIÓN 2: Acceder al objeto anidado 'comercial'
   const nombreComercial = datos.comercial 
