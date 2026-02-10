@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 use App\Models\Catalogo;
 use App\Models\Administrador;
+use App\Models\Articulo;
 use Illuminate\Http\Request;
 
 class CatalogoController extends Controller{
-                                              
+
     public function mostrarCatalogos(Request $request) {
         try{
             $catalogo = Catalogo::with("administradores")->get();
@@ -31,6 +32,7 @@ class CatalogoController extends Controller{
 
         try {
             $administrador = Administrador::findOrFail($validatedData['id_administrador']);
+            $articulo = Articulo::findOrFail($validatedData['id_articulo']);
 
             $catalogo = new Catalogo([
                 'nombre_catalogo' => $validatedData['nombre_catalogo'],
@@ -38,6 +40,7 @@ class CatalogoController extends Controller{
             ]);
 
             $catalogo->administradores()->associate($administrador);
+            $articulo->articulos()->associate($articulo);
             $catalogo->save();
 
             return response()->json([
@@ -87,6 +90,14 @@ class CatalogoController extends Controller{
     }
 
 
+    public function articulos(){
+        return $this->belongsToMany(
+            Articulo::class,
+            'articulo_catalogo',
+            'id_catalogo',
+            'id_articulo'
+        )->withTimestamps();
+    }
 
 
 }

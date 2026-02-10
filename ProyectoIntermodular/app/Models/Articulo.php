@@ -21,4 +21,8 @@ class Articulo extends Model
     public function lineas_pedidos(){
         return $this->hasMany(Pedido::class, 'id_linea');
     }
+
+    public function catalogos(){
+        return $this->belongsToMany(Catalogo::class, 'id_catalogo');
+    }
 }
