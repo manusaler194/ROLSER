@@ -16,7 +16,7 @@ class ClienteVipController extends Controller
         $validatedData = $request->validate([
             'nombre'           => 'required|string|max:50',
             'telefono'         => 'required|string|max:20',
-            'correo'           => 'required|string|max:255',
+            'email'           => 'required|string|max:255',
             'direccion'        => 'required|string|max:255',
             'id_administrador' => 'nullable|integer',
             'id_catalogo'      => 'nullable|integer',
@@ -30,7 +30,7 @@ class ClienteVipController extends Controller
             $clienteVip = new ClienteVip([
                 'nombre'    => $validatedData["nombre"],
                 'telefono'  => $validatedData["telefono"],
-                'correo'    => $validatedData["correo"],
+                'email'    => $validatedData["email"],
                 'direccion' => $validatedData["direccion"]
             ]);
 
@@ -112,7 +112,7 @@ class ClienteVipController extends Controller
         $validatedData = $request->validate([
             'nombre'           => 'required|string|max:50',
             'telefono'         => 'required|string|max:20',
-            'correo'           => 'required|string|max:255',
+            'email'           => 'required|string|max:255',
             'direccion'        => 'required|string|max:255',
             'id_administrador' => 'nullable|integer',
             'id_catalogo'      => 'nullable|integer',
