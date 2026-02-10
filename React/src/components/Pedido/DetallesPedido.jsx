@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { apiFetch } from "../../utils/api"; 
 
 const DetallesPedido = () => {
   const [pedido, setPedido] = useState(null);
@@ -9,7 +10,7 @@ const DetallesPedido = () => {
   useEffect(() => {
     const cargarPedido = async () => {
       try {
-        const response = await fetch(`http://localhost/api/pedidos/${id}`);
+        const response = await apiFetch(`http://localhost/api/pedidos/${id}`);
         const data = await response.json();
         if (data.pedido && data.pedido.length > 0) {
           setPedido(data.pedido[0]);
@@ -70,7 +71,7 @@ const DetallesPedido = () => {
                       {linea.precio} €
                     </td>
                     <td className="px-6 py-4 text-gray-700 text-right">
-                      {linea.precio * linea.cantidad} €
+                      {(linea.precio * linea.cantidad).toFixed(2)} €
                     </td>
                   </tr>
                 ))}

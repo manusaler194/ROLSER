@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { apiFetch } from "../../utils/api"; 
 
 const GestionarPedidos = () => {
     const [pedidos, setPedidos] = useState([]);
@@ -16,7 +17,7 @@ const GestionarPedidos = () => {
 
    const obtenerPedidos = async () => {
     try {
-        const response = await fetch('http://localhost/api/pedidos');
+        const response = await apiFetch('http://localhost/api/pedidos');
         const data = await response.json();
         console.log(data);
         setPedidos(data.pedidos || []);
@@ -38,7 +39,7 @@ const GestionarPedidos = () => {
 
     const handleEliminar = async (id) => {
     try {
-        const response = await fetch(`http://localhost/api/pedidos/borrar/${id}`, {
+        const response = await apiFetch(`http://localhost/api/pedidos/borrar/${id}`, {
             method: 'DELETE',
         });
 
