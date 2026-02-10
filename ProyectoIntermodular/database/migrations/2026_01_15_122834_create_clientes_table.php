@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('correo', 255);
             $table->string('direccion',255);
             $table->timestamps();
-
+            $table->string('password');
             $table->foreignId('id_administrador')->nullable()->constrained('administradores', 'id_administrador')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_comercial')->nullable()->constrained('comerciales', 'id_comercial')->nullOnDelete()->cascadeOnUpdate();
         });

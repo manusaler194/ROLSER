@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre', 50);
             $table->string('telefono', 20);
             $table->string('email', 255);
+            $table->string('password');
             $table->timestamps();
         });
     }
