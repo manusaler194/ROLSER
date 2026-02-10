@@ -2,23 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 
-class EncargadoAlmacen extends Model
-{
+class EncargadoAlmacen extends Authenticatable{
+    
+    use HasApiTokens, Notifiable;
+
     protected $table = 'encargados_de_almacen';
     protected $primaryKey = 'id_encargado';
-    protected $fillable = ['nombre', 'telefono', 'email'];
+
+    protected $fillable = ['nombre', 'telefono', 'email', 'password'];
+
+    protected $hidden = ['password'];
 
     public function proveedores(){
-        return $this->hasMany(Proveedor::class, 'id_proveedor');
+        return $this->hasMany(Proveedor::class, 'id_encargado');
     }
 
     public function almacenes(){
-        return $this->hasMany(Almacen::class, 'id_almacen');
+        return $this->hasMany(Almacen::class, 'id_encargado');
     }
 
     public function pedidos(){
-        return $this->hasMany(Pedido::class, 'id_pedido');
+        return $this->hasMany(Pedido::class, 'id_encargado');
     }
 }

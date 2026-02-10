@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Rolser</title>
-    
-    
+    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="font-sans antialiased">
@@ -31,10 +31,10 @@
 
         {{-- ================= MAIN (Fondo Rojo) ================= --}}
         <main class="flex-1 bg-[#C8102E] flex items-center justify-center px-4 py-10">
-            
+
             {{-- Tarjeta Blanca --}}
             <div class="bg-white p-10 w-full max-w-[450px] shadow-2xl flex flex-col items-center">
-                
+
                 {{-- Logo dentro de la tarjeta --}}
                 <div class="flex items-center gap-3 mb-8">
                     <div class="flex gap-1">
@@ -46,22 +46,22 @@
                         Rolser
                     </h2>
                 </div>
-                
+
                 <h3 class="text-gray-500 mb-6 text-sm uppercase tracking-wider">Crear nueva cuenta</h3>
 
                 {{-- Formulario de Registro --}}
                 <form method="POST" action="{{ route('registrar') }}" class="w-full flex flex-col gap-5">
-                    @csrf 
+                    @csrf
 
                     {{-- Input: Nombre --}}
                     <div>
-                        <input 
-                            type="text" 
-                            name="name" 
-                            placeholder="Nombre completo" 
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Nombre completo"
                             class="w-full bg-[#f5f5f5] border border-gray-400 text-gray-700 text-center py-3 px-4 focus:outline-none focus:border-[#C8102E] placeholder-gray-600 shadow-sm"
                             value="{{ old('name') }}"
-                            required 
+                            required
                             autofocus
                         >
                         @error('name')
@@ -71,10 +71,10 @@
 
                     {{-- Input: Email --}}
                     <div>
-                        <input 
-                            type="email" 
-                            name="email" 
-                            placeholder="Correo electrónico" 
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Correo electrónico"
                             class="w-full bg-[#f5f5f5] border border-gray-400 text-gray-700 text-center py-3 px-4 focus:outline-none focus:border-[#C8102E] placeholder-gray-600 shadow-sm"
                             value="{{ old('email') }}"
                             required
@@ -86,10 +86,10 @@
 
                     {{-- Input: Contraseña --}}
                     <div>
-                        <input 
-                            type="password" 
-                            name="password" 
-                            placeholder="Contraseña" 
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Contraseña"
                             class="w-full bg-[#f5f5f5] border border-gray-400 text-gray-700 text-center py-3 px-4 focus:outline-none focus:border-[#C8102E] placeholder-gray-600 shadow-sm"
                             required
                         >
@@ -100,18 +100,18 @@
 
                     {{-- Input: Confirmar Contraseña --}}
                     <div>
-                        <input 
-                            type="password" 
-                            name="password_confirmation" 
-                            placeholder="Confirmar contraseña" 
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            placeholder="Confirmar contraseña"
                             class="w-full bg-[#f5f5f5] border border-gray-400 text-gray-700 text-center py-3 px-4 focus:outline-none focus:border-[#C8102E] placeholder-gray-600 shadow-sm"
                             required
                         >
                     </div>
 
                     {{-- Botón Registrar --}}
-                    <button 
-                        type="submit" 
+                    <button
+                        type="submit"
                         class="w-full bg-[#C8102E] hover:bg-[#a50b24] text-white font-bold py-3 rounded shadow-md transition-colors uppercase tracking-wide text-sm mt-2"
                     >
                         Registrarse

@@ -6,24 +6,23 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
-
-class
-ComercialSeeder extends Seeder
+use Illuminate\Support\Facades\Hash;
+class ComercialSeeder extends Seeder
 {
 
     public function run(): void{
         $faker = Faker::create('es_ES');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 1; $i < 11; $i++) {
             DB::table('comerciales')->insert([
                 'nombre' => $faker->name(),
                 'contacto' => $faker->phoneNumber(),
                 'email' => $faker->unique()->safeEmail(),
                 'email_verified_at' => now(),
-                'password' => bcrypt('password'),
-                'remember_token' => $faker->text(100),
-                'created_at' => date('Y-m-d'),
-                'updated_at' => date('Y-m-d'),
+                'password' => Hash::make('123456'),
+                'remember_token' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
                 "id_administrador" => rand(1,10)
             ]);
         }

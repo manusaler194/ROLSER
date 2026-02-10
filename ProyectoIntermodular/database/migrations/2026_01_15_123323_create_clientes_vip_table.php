@@ -15,14 +15,15 @@ return new class extends Migration
             $table->id('id_clientevip');
             $table->string('nombre', 50);
             $table->string('telefono', 20);
-            $table->string('correo', 255);
-            $table->string('direccion',255);
+            $table->string('email', 255)->unique();
+            $table->string('password');
+            $table->string('direccion', 255);
             $table->timestamps();
 
             $table->foreignId('id_administrador')->nullable()->constrained('administradores', 'id_administrador')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_catalogo')->nullable()->constrained('catalogos', 'id_catalogo')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_comercial')->nullable()->constrained('comerciales', 'id_comercial')->nullOnDelete()->cascadeOnUpdate();
-            
+
 
         });
     }

@@ -39,39 +39,22 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
-        ], 'api' => [   /*añadimos linea api*/
-            'driver' => 'passport',
-            'provider' => 'users',
         ],
+
+        // Definimos un guard para cada tipo de usuario usando Sanctum
+        'admin_api' => ['driver' => 'sanctum', 'provider' => 'admins'],
+        'comercial_api' => ['driver' => 'sanctum', 'provider' => 'comerciales'],
+        'cliente_api' => ['driver' => 'sanctum', 'provider' => 'clientes'],
+        'clientevip_api' => ['driver' => 'sanctum', 'provider' => 'clientes_vip'],
+        'encargado_api' => ['driver' => 'sanctum', 'provider' => 'encargados'],
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | User Providers
-    |--------------------------------------------------------------------------
-    |
-    | All authentication guards have a user provider, which defines how the
-    | users are actually retrieved out of your database or other storage
-    | system used by the application. Typically, Eloquent is utilized.
-    |
-    | If you have multiple user tables or models you may configure multiple
-    | providers to represent the model / table. These providers may then
-    | be assigned to any extra authentication guards you have defined.
-    |
-    | Supported: "database", "eloquent"
-    |
-    */
-
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Comercial::class,
-        ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admins' => ['driver' => 'eloquent', 'model' => App\Models\Administrador::class],
+        'comerciales' => ['driver' => 'eloquent', 'model' => App\Models\Comercial::class],
+        'clientes' => ['driver' => 'eloquent', 'model' => App\Models\Cliente::class],
+        'clientes_vip' => ['driver' => 'eloquent', 'model' => App\Models\ClienteVip::class],
+        'encargados' => ['driver' => 'eloquent', 'model' => App\Models\EncargadoAlmacen::class],
     ],
 
     /*

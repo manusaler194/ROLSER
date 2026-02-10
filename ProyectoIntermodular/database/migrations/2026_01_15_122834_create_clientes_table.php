@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void{
         Schema::create('clientes', function (Blueprint $table) {
-
             $table->id('id_cliente');
             $table->string('nombre', 50);
             $table->string('telefono', 20);
-            $table->string('correo', 255);
-            $table->string('direccion',255);
+            $table->string('email', 255)->unique();
+            $table->string('password');
+            $table->string('direccion', 255);
             $table->timestamps();
 
             $table->foreignId('id_administrador')->nullable()->constrained('administradores', 'id_administrador')->nullOnDelete()->cascadeOnUpdate();

@@ -21,9 +21,10 @@ class EncargadoAlmacenSeeder extends Seeder
             DB::table('encargados_de_almacen')->insert([
                 'nombre' => $faker->name(),
                 'telefono' => $faker->phoneNumber(),
-                'email' => $faker->email(),
-                'created_at' => date('Y-m-d'),
-                'updated_at' => date('Y-m-d')
+                'email' => $faker->unique()->email(),
+                'password' => Hash::make('password'),
+                'created_at' => now(),
+                'updated_at' => now()
             ]);
 
         }
