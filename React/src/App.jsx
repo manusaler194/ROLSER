@@ -54,7 +54,7 @@ const AppContent = () => {
 
                 <main className="flex-1 overflow-auto p-6 bg-gray-50">
                     <Routes>
-                        {/* --- RUTAS COMUNES / CATÁLOGO --- */}
+                        {/* --- RUTAS COMUNES (Accesibles por todos los logueados) --- */}
                         <Route path="/catalogos" element={<Catalogos />} />
                         <Route path="/pedidos" element={<GestionarPedidos />} />
                         <Route path="/DetallesPedido/:id" element={<DetallesPedido />} />
@@ -94,13 +94,30 @@ const AppContent = () => {
                             </>
                         )}
 
-                        {/* --- REDIRECCIÓN INICIAL SEGÚN ROL --- */}
+                        {/* --- REDIRECCIÓN INICIAL INTELIGENTE SEGÚN ROL --- */}
                         <Route path="/" element={
-                            <Navigate to={role === 'encargadoalmacen' ? "/GestionAlmacen" : "/catalogos"} />
+                            <Navigate to={
+                                role === 'encargadoalmacen' ? "/GestionAlmacen" : 
+                                role === 'comercial' ? "/pedidos" : 
+                                "/catalogos"
+                            } replace />
                         } />
 
-                        {/* RUTA 404 / NO AUTORIZADO */}
-                        <Route path="*" element={<div className="p-10 text-center"><h1>Acceso denegado o página no encontrada</h1></div>} />
+                        {/* RUTA DE ESCAPE: Si nada coincide o el rol no tiene permiso */}
+                        <Route path="*" element={
+                            <div className="flex flex-col items-center justify-center h-full text-center p-10">
+                                <h1 className="text-3xl font-bold text-gray-800">Acceso restringido</h1>
+                                <p className="text-gray-500 mt-2">
+                                    Tu perfil de <span className="font-bold text-red-600 uppercase">[{role || 'Sin Rol'}]</span> no tiene acceso a esta sección o la página no existe.
+                                </p>
+                                <button 
+                                    onClick={() => window.location.href = "/"}
+                                    className="mt-6 bg-[#bc002d] text-white px-6 py-2 rounded-full hover:bg-red-800 transition-all shadow-lg"
+                                >
+                                    Volver al Inicio
+                                </button>
+                            </div>
+                        } />
                     </Routes>
                 </main>
             </div>
@@ -108,7 +125,6 @@ const AppContent = () => {
     );
 };
 
-// COMPONENTE PRINCIPAL
 const App = () => {
     return (
         <AuthProvider>
