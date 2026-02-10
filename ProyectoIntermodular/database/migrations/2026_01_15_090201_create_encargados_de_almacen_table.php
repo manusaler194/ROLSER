@@ -15,7 +15,11 @@ return new class extends Migration
             $table->id('id_encargado');
             $table->string('nombre', 50);
             $table->string('telefono', 20);
-            $table->string('email', 255)->unique(); 
+
+            $table->string('email', 255)->unique();
+
+
+
             $table->string('password');
             $table->timestamps();
         });
