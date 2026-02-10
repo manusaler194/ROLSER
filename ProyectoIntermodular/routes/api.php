@@ -46,23 +46,31 @@ Route::get('/pedidos/{id_pedido}', [PedidoController::class, 'mostrarPedido']);
 Route::put('/pedidos/actualizar/{id_pedido}', [PedidoController::class, 'actualizar']);
 Route::delete('/pedidos/borrar/{id_pedido}', [PedidoController::class, 'eliminar']);
 
-
+/* -------------------------------------------------------------------------- */
+/* PROVEEDOR                                 */
+/* -------------------------------------------------------------------------- */
 Route::get('/proveedor', [ProveedorController::class, 'mostrarProveedores']);
 Route::post('/proveedor/guardar', [ProveedorController::class, 'proveedorNuevo']);
 Route::put('/proveedor/actualizar/{id_proveedor}', [ProveedorController::class, 'proveedorActualizar']);
 Route::delete('/proveedor/borrar/{id_proveedor}', [ProveedorController::class, 'eliminarProveedor']);
-
+/* -------------------------------------------------------------------------- */
+/* CATALOGO                                 */
+/* -------------------------------------------------------------------------- */
 Route::get('/catalogo', [CatalogoController::class, 'mostrarCatalogos']);
 Route::post('/catalogo/guardar', [CatalogoController::class, 'catalogoNuevo']);
 Route::put('/catalogo/actualizar/{id_catalogo}', [CatalogoController::class, 'catalogoActualizar']);
 Route::delete('/catalogo/borrar/{id_catalogo}', [CatalogoController::class, 'eliminarCatalogo']);
-
+/* -------------------------------------------------------------------------- */
+/* ARTICULO                                 */
+/* -------------------------------------------------------------------------- */
 // Poner el método, /articulo la ruta, de que controlador, y lo último nombre del método al que se refiere
 Route::get('/articulo', [ArticuloController::class, 'mostrarArticulos']);
 Route::post('/articulo/guardar', [ArticuloController::class, 'articuloNuevo']);
 Route::put('/articulo/actualizar/{id_articulo}', [ArticuloController::class, 'articuloActualizar']);
 Route::delete('/articulo/borrar/{id_articulo}', [ArticuloController::class, 'eliminarArticulo']);
-
+/* -------------------------------------------------------------------------- */
+/* ENCARGADO ALMACEN                                 */
+/* -------------------------------------------------------------------------- */
 Route::get('/encargadoAlmacen', [EncargadoAlmacenController::class, 'mostrar']);
 Route::post('/encargadoAlmacen/guardar', [EncargadoAlmacenController::class, 'encargadoAlmacenNuevo']);
 Route::put('/encargadoAlmacen/actualizar/{id_encargado}', [EncargadoAlmacenController::class, 'encargadoAlmacenActualizar']);
@@ -116,3 +124,10 @@ Route::post('/comerciales/guardar', [ComercialController::class, 'guardar']);
 Route::put('/comerciales/actualizar/{id_comercial}', [ComercialController::class, 'actualizar']);
 Route::delete('/comerciales/borrar/{id_comercial}', [ComercialController::class, 'eliminar']);
 Route::get('/comerciales/{id_comercial}', [ComercialController::class, 'mostrarComercial']);
+
+
+/* -------------------------------------------------------------------------- */
+/* ARTICULO-CATÁLOGO                               */
+/* -------------------------------------------------------------------------- */
+Route::post('/catalogo/guardar', [ArticuloController::class, 'guardarCatalogo']);
+
