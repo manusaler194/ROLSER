@@ -8,22 +8,21 @@ const ListadoEncargado = () => {
   const [busqueda, setBusqueda] = useState("");
   const [cargando, setCargando] = useState(true);
   
-  // Estado para la ficha individual
+  
   const [encargadoSeleccionado, setEncargadoSeleccionado] = useState(null);
 
-  // 1. CARGA DE DATOS
+  
   useEffect(() => {
-    // La ruta es /api/EncargadoAlmacen
-    fetch("http://192.168.0.14:8008/api/encargadoAlmacen")
+    
+    fetch("http://localhost/api/encargadoAlmacen")
       .then((res) => res.json())
       .then((data) => {
-        // SEGÚN TU JSON: Devuelve un array directo [ ... ], no un objeto.
-        // Verificamos si es array, si no, buscamos si viene dentro de alguna propiedad por si acaso.
+
         if (Array.isArray(data)) {
           setLista(data);
         } else {
-          // Fallback por si acaso cambia a { data: [...] }
-          setLista(data.data || []);
+          
+          setLista(data.encargadoAlmacen || []);
         }
         setCargando(false);
       })
@@ -33,7 +32,32 @@ const ListadoEncargado = () => {
       });
   }, []);
 
-  // 2. FILTRADO
+  const eliminarEncargado = async (id) => {
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este Encargado?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost/api/encargadoAlmacen/borrar/${id}`, {
+        method: "DELETE", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        
+        const nuevaLista = lista.filter((admin) => admin.id_administrador !== id);
+        setLista(nuevaLista);
+        alert("Encargado eliminado con éxito.");
+      } else {
+        alert("Error al eliminar.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  
   const filtrados = lista.filter((encargado) => {
     const termino = busqueda.toLowerCase();
     const nombre = (encargado.nombre || "").toLowerCase();
@@ -42,7 +66,7 @@ const ListadoEncargado = () => {
     return nombre.includes(termino) || email.includes(termino);
   });
 
-  // 3. MOSTRAR FICHA INDIVIDUAL
+  
   if (encargadoSeleccionado) {
     return (
       <EncargadosTable 
@@ -58,7 +82,7 @@ const ListadoEncargado = () => {
     <div className="min-h-screen bg-gray-100 p-8 font-sans">
       <div className="max-w-4xl mx-auto">
         
-        {/* BOTÓN VOLVER */}
+        
         <button 
           onClick={() => navigate("/usuarios")} 
           className="text-[#bd0026] font-bold mb-8 hover:underline flex items-center gap-2"
@@ -66,7 +90,7 @@ const ListadoEncargado = () => {
           ← VOLVER AL MENÚ
         </button>
 
-        {/* CABECERA */}
+        
         <div className="flex justify-between items-center mb-8">
           <div>
             <h2 className="text-3xl font-bold uppercase text-gray-900">Encargados</h2>
@@ -83,7 +107,7 @@ const ListadoEncargado = () => {
           </button>
         </div>
 
-        {/* BUSCADOR */}
+        
         <input
           type="text"
           placeholder="Buscar encargado por nombre o email..."
@@ -92,7 +116,7 @@ const ListadoEncargado = () => {
           onChange={(e) => setBusqueda(e.target.value)}
         />
 
-        {/* LISTA DE ENCARGADOS */}
+        
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
           {filtrados.length > 0 ? (
             filtrados.map((encargado) => (
@@ -114,6 +138,12 @@ const ListadoEncargado = () => {
                     className="bg-black text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-gray-800 transition-all shadow-sm uppercase tracking-wider"
                   >
                     Modificar
+                  </button>
+                   <button
+                    onClick={() => eliminarEncargado(encargado.id_encargado)}
+                    className="bg-red-600 text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-red-800 transition-all shadow-sm uppercase tracking-wider"
+                  >
+                    Borrar
                   </button>
                   <button
                     onClick={() => setEncargadoSeleccionado(encargado)}

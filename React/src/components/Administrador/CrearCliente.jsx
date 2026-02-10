@@ -25,23 +25,21 @@ const CrearCliente = () => {
                 console.log("Respuesta Admins:", resAdmins.data);
                 console.log("Respuesta Comerciales:", resComerciales.data);
 
-                // LÓGICA MÁS ROBUSTA PARA ADMINISTRADORES
-                // Buscamos: data.admin (singular), data.administradores (plural) o data directamente
-                const listaAdmins = resAdmins.data.admin || resAdmins.data.administradores || resAdmins.data;
+                
+                const listaAdmins = resAdmins.data.admin || resAdmins.data.administrador || resAdmins.data;
                 if (Array.isArray(listaAdmins)) {
                     setAdministradores(listaAdmins);
                 } else {
-                    setAdministradores([]); // Evita el error .map is not a function
+                    setAdministradores([]); 
                     console.error("La API de administradores no devolvió un array:", resAdmins.data);
                 }
                 
-                // LÓGICA MÁS ROBUSTA PARA COMERCIALES
-                // Buscamos: data.comercial (singular), data.comerciales (plural) o data directamente
+                
                 const listaComerciales = resComerciales.data.comercial || resComerciales.data.comerciales || resComerciales.data;
                 if (Array.isArray(listaComerciales)) {
                      setComerciales(listaComerciales);
                 } else {
-                     setComerciales([]); // Evita el error .map is not a function
+                     setComerciales([]); 
                      console.error("La API de comerciales no devolvió un array:", resComerciales.data);
                 }
 
@@ -145,9 +143,9 @@ const CrearCliente = () => {
               onChange={handleChange}
             >
               <option value="">-- Ninguno --</option>
-              {administradores.map((admin) => (
-                // IMPORTANTE: Verifica si tu BD devuelve 'id' o 'id_administrador'
-                <option
+              {Array.isArray(administradores) && 
+              administradores.map((admin) => (
+               <option
                   key={admin.id || admin.id_administrador}
                   value={admin.id || admin.id_administrador}
                 >

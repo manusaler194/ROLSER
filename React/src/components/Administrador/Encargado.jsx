@@ -2,7 +2,7 @@ import React from 'react';
 
 const EncargadosTable = ({ usuario, onVolver }) => {
   
-  // Verificación de seguridad
+  
   if (!usuario) return <p className="text-center p-4">No hay datos del encargado.</p>;
 
   return (

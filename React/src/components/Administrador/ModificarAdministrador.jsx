@@ -20,7 +20,7 @@ const ModificarAdministrador = () => {
     useEffect(() => {
         const cargarAdmin = async () => {
             try {
-                const response = await fetch(`http://192.168.0.14:8008/api/administradores/${id}`);
+                const response = await fetch(`http://localhost/api/administradores/${id}`);
                 
                 if (!response.ok) {
                     throw new Error(`Error HTTP: ${response.status}`);
@@ -59,13 +59,13 @@ const ModificarAdministrador = () => {
         });
     };
 
-    // 3. Guardar cambios (PUT)
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await axios.put(`http://localhost/api/administradores/actualizar/${id}`, admin); 
             alert("Administrador modificado con éxito");
-            navigate('/usuarios'); // Asegúrate que esta ruta lleva a tu menú principal
+            navigate('/usuarios');
         } catch (error) {
             console.error("Error al actualizar:", error);
             alert("Hubo un error al guardar los cambios.");
@@ -92,7 +92,7 @@ const ModificarAdministrador = () => {
                             <input 
                                 type="text" 
                                 name="nombre" 
-                                value={admin.nombre} // El valor viene del estado
+                                value={admin.nombre} 
                                 onChange={handleChange} 
                                 className={inputClasses} 
                                 required 

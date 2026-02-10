@@ -8,15 +8,15 @@ const ListadoComerciales = () => {
   const [busqueda, setBusqueda] = useState("");
   const [cargando, setCargando] = useState(true);
   
-  // Estado para la ficha individual
+  
   const [comercialSeleccionado, setComercialSeleccionado] = useState(null);
 
-  // 1. CARGA DE DATOS
+  
   useEffect(() => {
-    fetch("http://192.168.0.14:8008/api/comerciales")
+    fetch("http://localhost/api/comerciales")
       .then((res) => res.json())
       .then((data) => {
-        // La API devuelve: { message: "...", comerciales: [...] }
+        
         setLista(data.comerciales || []); 
         setCargando(false);
       })
@@ -26,7 +26,32 @@ const ListadoComerciales = () => {
       });
   }, []);
 
-  // 2. FILTRADO
+    const eliminarComercial = async (id) => {
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este Comercial?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost/api/comerciales/borrar/${id}`, {
+        method: "DELETE", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        
+        const nuevaLista = lista.filter((admin) => admin.id_administrador !== id);
+        setLista(nuevaLista);
+        alert("Comercial eliminado con éxito.");
+      } else {
+        alert("Error al eliminar.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  
   const filtrados = lista.filter((comercial) => {
     const termino = busqueda.toLowerCase();
     const nombre = (comercial.nombre || "").toLowerCase();
@@ -35,7 +60,7 @@ const ListadoComerciales = () => {
     return nombre.includes(termino) || email.includes(termino);
   });
 
-  // 3. MOSTRAR FICHA INDIVIDUAL
+  
   if (comercialSeleccionado) {
     return (
       <ComercialesTable 
@@ -51,7 +76,7 @@ const ListadoComerciales = () => {
     <div className="min-h-screen bg-gray-100 p-8 font-sans">
       <div className="max-w-4xl mx-auto">
         
-        {/* BOTÓN VOLVER */}
+        
         <button 
           onClick={() => navigate("/usuarios")} 
           className="text-[#bd0026] font-bold mb-8 hover:underline flex items-center gap-2"
@@ -59,7 +84,7 @@ const ListadoComerciales = () => {
           ← VOLVER AL MENÚ
         </button>
 
-        {/* CABECERA */}
+        
         <div className="flex justify-between items-center mb-8">
           <div>
             <h2 className="text-3xl font-bold uppercase text-gray-900">Comerciales</h2>
@@ -76,7 +101,7 @@ const ListadoComerciales = () => {
           </button>
         </div>
 
-        {/* BUSCADOR */}
+        
         <input
           type="text"
           placeholder="Buscar comercial por nombre o email..."
@@ -85,7 +110,7 @@ const ListadoComerciales = () => {
           onChange={(e) => setBusqueda(e.target.value)}
         />
 
-        {/* LISTA DE COMERCIALES */}
+        
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
           {filtrados.length > 0 ? (
             filtrados.map((comercial) => (
@@ -100,7 +125,7 @@ const ListadoComerciales = () => {
                   <span className="text-sm text-gray-500">{comercial.email}</span>
                   <span className="block text-xs text-gray-400 mt-1">Contacto: {comercial.contacto}</span>
                   
-                  {/* Mostramos el jefe (Administrador) si existe */}
+                  
                   {comercial.administrador && (
                     <span className="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-md mt-2 font-medium">
                       Admin: {comercial.administrador.nombre} {comercial.administrador.apellidos}
@@ -114,6 +139,12 @@ const ListadoComerciales = () => {
                     className="bg-black text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-gray-800 transition-all shadow-sm uppercase tracking-wider"
                   >
                     Modificar
+                  </button>
+                  <button
+                    onClick={() => eliminarComercial(comercial.id_comercial)}
+                    className="bg-red-600 text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-red-800 transition-all shadow-sm uppercase tracking-wider"
+                  >
+                    Borrar
                   </button>
                   <button
                     onClick={() => setComercialSeleccionado(comercial)}

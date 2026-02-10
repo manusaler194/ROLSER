@@ -340,9 +340,9 @@ const GestionUsuarios = () => {
   const navigate = useNavigate();
   const [contadores, setContadores] = useState({});
 
-  // Carga inicial solo para los numeritos de las tarjetas
+  
   useEffect(() => {
-    fetch("http://192.168.0.14:8008/api/users")
+    fetch("http://localhost/api/users")
       .then((res) => res.json())
       .then((data) => {
         setContadores({
@@ -356,7 +356,7 @@ const GestionUsuarios = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  // Configuración de botones con SUS RUTAS ESPECÍFICAS
+  
   const categorias = [
     { id: "admins", titulo: "Administradores", ruta: "/listado-administradores" },
     { id: "clientes", titulo: "Clientes", ruta: "/listado-clientes" },
@@ -378,7 +378,7 @@ const GestionUsuarios = () => {
         {categorias.map((cat) => (
           <button
             key={cat.id}
-            onClick={() => navigate(cat.ruta)} // <--- Navega a la página específica
+            onClick={() => navigate(cat.ruta)} // 
             className="bg-white group p-8 rounded-xl border border-gray-300 shadow-sm hover:border-[#bd0026] hover:shadow-xl transition-all duration-300 flex flex-col items-center cursor-pointer"
           >
             <span className="text-xl font-bold text-gray-700 group-hover:text-[#bd0026] uppercase tracking-wide">

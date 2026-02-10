@@ -8,15 +8,15 @@ const ListadoCliente = () => {
   const [busqueda, setBusqueda] = useState("");
   const [cargando, setCargando] = useState(true);
   
-  // Estado para la ficha individual
+  
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
 
-  // 1. CARGA DE DATOS (Ruta específica /api/clientes)
+  
   useEffect(() => {
-    fetch("http://192.168.0.14:8008/api/clientes")
+    fetch("http://localhost/api/clientes")
       .then((res) => res.json())
       .then((data) => {
-        // La API devuelve: { message: "...", clientes: [...] }
+        
         setLista(data.clientes || []); 
         setCargando(false);
       })
@@ -26,7 +26,32 @@ const ListadoCliente = () => {
       });
   }, []);
 
-  // 2. FILTRADO (Buscamos por Nombre o Correo)
+  const eliminarCliente = async (id) => {
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este Cliente?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost/api/clientes/borrar/${id}`, {
+        method: "DELETE", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        
+        const nuevaLista = lista.filter((admin) => admin.id_administrador !== id);
+        setLista(nuevaLista);
+        alert("Cliente eliminado con éxito.");
+      } else {
+        alert("Error al eliminar.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const filtrados = lista.filter((cliente) => {
     const termino = busqueda.toLowerCase();
     const nombre = (cliente.nombre || "").toLowerCase();
@@ -112,6 +137,12 @@ const ListadoCliente = () => {
                     className="bg-black text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-gray-800 transition-all shadow-sm uppercase tracking-wider"
                   >
                     Modificar
+                  </button>
+                  <button
+                    onClick={() => eliminarCliente(cliente.id_cliente)}
+                    className="bg-red-600 text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-red-800 transition-all shadow-sm uppercase tracking-wider"
+                  >
+                    Borrar
                   </button>
                   <button
                     onClick={() => setClienteSeleccionado(cliente)}

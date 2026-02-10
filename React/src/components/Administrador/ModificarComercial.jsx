@@ -6,37 +6,35 @@ const ModificarComercial = () => {
     const navegar = useNavigate();
     const { id } = useParams(); 
 
-    // Estado inicial
+    
     const [comercial, setComercial] = useState({
         nombre: '',
         email: '',
         contacto: '',
-        password: '' // Añadido por si quieres cambiar la contraseña, si no, se envía vacía
+        password: '' 
     });
     
     const [estaCargando, setEstaCargando] = useState(true);
 
-    // 1. Cargar datos (GET)
+    
     useEffect(() => {
         const cargarComercial = async () => {
             try {
-                // Asegúrate que la IP es correcta
-                const respuesta = await fetch(`http://192.168.0.14:8008/api/comerciales/${id}`);
+                
+                const respuesta = await fetch(`http://localhost/api/comerciales/${id}`);
                 
                 if (!respuesta.ok) throw new Error("Error al conectar con la API");
 
                 const datos = await respuesta.json();
                 
-                // CORRECCIÓN IMPORTANTE:
-                // Tu controlador devuelve: response()->json($comercial, 200);
-                // Por tanto, 'datos' ES el objeto comercial. No hay array 'comercial[0]'.
+                
                 const usuario = datos; 
 
                 setComercial({
                     nombre: usuario.nombre || '',
                     email: usuario.email || '',
                     contacto: usuario.contacto || usuario.telefono || '',
-                    password: '' // La contraseña no la cargamos por seguridad
+                    password: '' 
                 });
 
             } catch (error) {

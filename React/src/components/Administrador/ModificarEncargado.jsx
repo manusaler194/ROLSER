@@ -6,20 +6,19 @@ const ModificarEncargado = () => {
     const navegar = useNavigate();
     const { id } = useParams(); 
 
-    // Estado inicial
+    
     const [encargado, setEncargado] = useState({
         nombre: '',
         email: '',
-        telefono: '' // O 'contacto', según tu BD
+        telefono: '' 
     });
     
     const [estaCargando, setEstaCargando] = useState(true);
 
-    // 1. Cargar datos (GET)
+    
     useEffect(() => {
         const cargarEncargado = async () => {
             try {
-                // Ajusta la ruta si tu backend usa otra (ej: /api/encargadoAlmacen)
                 const respuesta = await fetch(`http://localhost/api/encargadoAlmacen/${id}`);
                 
                 if (!respuesta.ok) {
@@ -32,7 +31,7 @@ const ModificarEncargado = () => {
                 setEncargado({
                     nombre: usuario.nombre || '',
                     email: usuario.email || usuario.correo || '',
-                    // Mapeo flexible (telefono o contacto)
+                    
                     telefono: usuario.telefono || usuario.contacto || '' 
                 });
 
@@ -56,11 +55,11 @@ const ModificarEncargado = () => {
         });
     };
 
-    // 2. Guardar cambios (PUT)
+    
     const manejarEnvio = async (e) => {
         e.preventDefault();
         try {
-            // Ajusta la ruta de actualización
+            
             await axios.put(`http://localhost/api/encargadoAlmacen/actualizar/${id}`, encargado); 
             alert("Encargado modificado con éxito");
             navegar('/usuarios'); 

@@ -59,7 +59,7 @@ const ModificarClienteVip = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `http://192.168.0.14:8008/api/clientesVip/actualizar/${id}`,
+        `http://localhost/api/clientesVip/actualizar/${id}`,
         clienteVip,
       );
       alert("Cliente VIP modificado con éxito");

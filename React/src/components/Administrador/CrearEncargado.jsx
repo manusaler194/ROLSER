@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 const CrearEncargado = () => {
   const navigate = useNavigate();
 
-  // Estado inicial basado en el JSON que me has pasado
+  
   const [encargado, setEncargado] = useState({
     nombre: "",
     telefono: "",
-    email: "", // Ojo: En el JSON se llama 'email', no 'correo'
+    email: "", 
   });
 
   const handleChange = (e) => {
@@ -22,11 +22,11 @@ const CrearEncargado = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Ajusta la URL si tu ruta en Laravel es diferente (ej: /encargados/guardar)
-      await axios.post("http://192.168.0.14:8008/api/encargadoAlmacen/guardar", encargado);
+      
+      await axios.post("http://localhost/api/encargadoAlmacen/guardar", encargado);
       
       alert("Encargado creado con éxito");
-      navigate("/usuarios"); // O la ruta donde tengas la lista de encargados
+      navigate("/usuarios"); 
     } catch (error) {
       console.error("Error:", error);
       alert("Error al crear el encargado. Revisa la consola.");

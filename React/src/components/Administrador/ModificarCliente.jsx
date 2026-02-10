@@ -6,10 +6,10 @@ const ModificarCliente = () => {
     const navegar = useNavigate();
     const { id } = useParams(); 
 
-    // Estado inicial basado en tu migración (tabla clientes)
+    
     const [cliente, setCliente] = useState({
         nombre: '',
-        correo: '',    // En BD es 'correo', no 'email'
+        correo: '',    
         telefono: '',
         direccion: ''
     });
@@ -21,7 +21,7 @@ const ModificarCliente = () => {
         const cargarCliente = async () => {
             try {
                 
-                const respuesta = await fetch(`http://192.168.0.14:8008/api/clientes/${id}`);
+                const respuesta = await fetch(`http://localhost/api/clientes/${id}`);
                 
                 if (!respuesta.ok) {
                     throw new Error(`Error HTTP: ${respuesta.status}`);
@@ -46,7 +46,7 @@ const ModificarCliente = () => {
 
             } catch (error) {
                 console.error("Error al cargar:", error);
-                // alert("No se pudieron cargar los datos del cliente."); 
+                
             } finally {
                 setEstaCargando(false);
             }
@@ -64,14 +64,14 @@ const ModificarCliente = () => {
         });
     };
 
-    // 2. Guardar cambios (PUT)
+    
     const manejarEnvio = async (e) => {
         e.preventDefault();
         try {
-            // Asegúrate de que la ruta backend sea correcta
-            await axios.put(`http://192.168.0.14:8008/api/clientes/actualizar/${id}`, cliente); 
+            
+            await axios.put(`http://localhost/api/clientes/actualizar/${id}`, cliente); 
             alert("Cliente modificado con éxito");
-            navegar('/usuarios'); // Vuelta al menú
+            navegar('/usuarios'); 
         } catch (error) {
             console.error("Error al actualizar:", error);
             alert("Hubo un error al guardar los cambios.");
@@ -92,7 +92,7 @@ const ModificarCliente = () => {
                 </h2>
                 
                 <form onSubmit={manejarEnvio}>
-                    {/* NOMBRE (En la migración no hay apellidos, solo nombre) */}
+                    {/* NOMBRE */}
                     <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">Nombre Completo</label>
                     <input 
                         type="text" 

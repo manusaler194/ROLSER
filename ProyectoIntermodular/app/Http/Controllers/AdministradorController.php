@@ -79,7 +79,7 @@ class AdministradorController extends Controller
             $administrador = Administrador::all();
             return response()->json([
                 'message' => "Datos recogidos",
-                'administrador' => $administrador
+                'admin' => $administrador
             ], 200);
         }catch(\Exception $e){
             return response()->json([

@@ -21,7 +21,7 @@ const CrearComercial = () => {
   useEffect(() => {
     const cargarAdmins = async () => {
       try {
-        const res = await axios.get("http://192.168.0.14:8008/api/administradores");
+        const res = await axios.get("http://localhost/api/administradores");
         
         // Carga robusta detectando la estructura de la respuesta
         const lista = res.data.admin || res.data.administradores || res.data;
@@ -53,7 +53,7 @@ const CrearComercial = () => {
       };
 
       // Ajusta la ruta de tu API según corresponda
-      await axios.post("http://192.168.0.14:8008/api/comerciales/guardar", datosEnviados);
+      await axios.post("http://localhost/api/comerciales/guardar", datosEnviados);
       
       alert("Comercial creado con éxito");
       navigate("/usuarios");

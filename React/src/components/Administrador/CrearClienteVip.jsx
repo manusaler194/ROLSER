@@ -23,13 +23,13 @@ const CrearClienteVip = () => {
     const cargarDatos = async () => {
       try {
         const resAdmins = await axios.get(
-          "http://192.168.0.14:8008/api/administradores",
+          "http://localhost/api/administradores",
         );
         const resCatalogos = await axios.get(
-          "http://192.168.0.14:8008/api/catalogo",
+          "http://localhost/api/catalogo",
         );
         const resComerciales = await axios.get(
-          "http://192.168.0.14:8008/api/comerciales",
+          "http://localhost/api/comerciales",
         );
 
         // --- DEBUG: MIRA LA CONSOLA (F12) PARA VER LOS NOMBRES REALES ---
@@ -90,7 +90,7 @@ const CrearClienteVip = () => {
       };
 
       await axios.post(
-        "http://192.168.0.14:8008/api/clientesVip/guardar",
+        "http://localhost/api/clientesVip/guardar",
         datosEnviados,
       );
       alert("Cliente VIP creado con éxito");
@@ -224,7 +224,7 @@ const CrearClienteVip = () => {
                 catalogos.map((cat) => {
                   // INTENTAMOS: nombre_temporada -> nombre -> title -> descripcion -> ID
                   const textoCatalogo =
-                    cat.nombre_catalogo  ||
+                    cat.nombre_temporada  ||
                     `Catálogo #${cat.id}`;
                   return (
                     <option
