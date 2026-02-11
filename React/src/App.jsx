@@ -6,7 +6,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Header from "./components/Conjunto/Header";
 import Navbar from "./components/Conjunto/Navbar";
 import Login from "./components/Auth/Login";
-import Catalogos from "./components/Catalogo/Catalogos";
+import Catalogos from "./components/Catalogo/crearCatalogos";
 import GestionUsuarios from "./components/Administrador/GestionUsuarios";
 import GestionAlmacen from "./components/Almacen/GestionAlmacen";
 import CrearAlmacen from "./components/Almacen/CrearAlmacen";

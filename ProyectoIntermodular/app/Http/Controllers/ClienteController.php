@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cliente;
 use App\Models\Administrador;
+use App\Models\Articulo;
+use App\Models\Catalogo;
 use App\Models\Comercial;
 
 class ClienteController extends Controller
@@ -146,4 +148,9 @@ class ClienteController extends Controller
             ], 500);
         }
     }
+
+
+
+
+
 }

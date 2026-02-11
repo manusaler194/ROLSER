@@ -88,4 +88,15 @@ class CatalogoController extends Controller{
             "message" => "catálogo con id =" . $request->id_catalogo . " ha sido borrado con éxito"
         ],201);
     }
+
+    public function guardarArticuloCatalogo(Request $request){
+        $catalogo = Catalogo::find($request->catalogo_id);
+        $articulos = Articulo::find($request->articulos);
+
+        $catalogo->articulos()->attach($articulos, [
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const CrearCatalogo = () => {
+const crearCatalogo = () => {
   // Estados del formulario
   const [nombreCatalogo, setNombreCatalogo] = useState("");
   const [anyo, setAnyo] = useState("");
@@ -15,7 +15,7 @@ const CrearCatalogo = () => {
       try {
         const response = await fetch("http://localhost/api/administradores");
         const data = await response.json();
-        setAdministradores(data.admin || []);
+        setAdministradores(data.admin);
       } catch (error) {
           console.error("Error al cargar administradores:", error);
       }
@@ -30,7 +30,7 @@ const CrearCatalogo = () => {
       try {
         const response = await fetch("http://localhost/api/articulo");
         const data = await response.json();
-        setArticulos(data.almacen || []);
+        setArticulos(data.almacen);
       } catch (error) {
         console.error("Error al cargar articulos:", error);
       }
@@ -38,63 +38,58 @@ const CrearCatalogo = () => {
     cargarArticulos();
   }, []);
 
-
   // Enviar formulario
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setMensaje("");
+    e.preventDefault();
+    setMensaje("");
 
-  const idAdministrador = e.target.administrador.value;
+    const idAdministrador = e.target.administrador.value;
 
-  try {
-    const catalogo = await fetch("http://localhost/api/catalogo/guardar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        nombre_catalogo: nombreCatalogo,
-        anyo: anyo,
-        id_administrador: idAdministrador,
-      }),
-    });
+    try {
+      const catalogo = await fetch("http://localhost/api/catalogo/guardar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre_catalogo: nombreCatalogo,
+          anyo: anyo,
+          id_administrador: idAdministrador,
+        }),
+      });
 
-    const dataCatalogo = await catalogo.json();
-    console.log(dataCatalogo.idCatalogo);
+      const dataCatalogo = await catalogo.json();
 
-    if (!catalogo.ok) {
-      setMensaje(dataCatalogo.error || "Error al crear el catálogo");
-      return;
+      if (!catalogo.ok) {
+        setMensaje(dataCatalogo.error || "Error al crear el catálogo");
+        return;
+      }
+
+      if (articulosSeleccionados.length > 0) {
+        await Promise.all(articulosSeleccionados.map(idArticulo => fetch("http://localhost/api/articulo_catalogo/guardar", {
+              method: "POST",
+              headers: {"Content-Type": "application/json"},
+              body: JSON.stringify({
+                id_catalogo: dataCatalogo.idCatalogo,
+                id_articulo: idArticulo,
+              }),
+            })
+          )
+        );
+      }
+
+      setNombreCatalogo("");
+      setAnyo("");
+      setArticulosSeleccionados([]);
+      setMensaje("Catálogo creado correctamente");
+
+    } catch (error) {
+      console.error("Error:", error);
+      setMensaje("Error al crear el catálogo");
     }
-
-    if (articulosSeleccionados.length > 0) {
-      await Promise.all(articulosSeleccionados.map(idArticulo => fetch("http://localhost/api/articulo_catalogo/guardar", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-              id_catalogo: dataCatalogo.idCatalogo,
-              id_articulo: idArticulo,
-            }),
-          })
-        )
-      );
-    }
-
-    setNombreCatalogo("");
-    setAnyo("");
-    setArticulosSeleccionados([]);
-    setMensaje("Catálogo creado correctamente");
-
-  } catch (error) {
-    console.error("Error:", error);
-    setMensaje("Error al crear el catálogo");
-  }
-};
+  };
 
 
 
   return (
-
-    
-
 
     <div className="w-full max-w-xl mx-auto p-10 bg-white rounded-lg shadow-lg mt-10">
       
@@ -184,4 +179,4 @@ const CrearCatalogo = () => {
   );
 };
 
-export default CrearCatalogo;
+export default crearCatalogo;
