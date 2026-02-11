@@ -13,6 +13,18 @@ class ComercialSeeder extends Seeder
     public function run(): void{
         $faker = Faker::create('es_ES');
 
+        DB::table('comerciales')->insert([
+            'nombre' => 'Comercial de Prueba',
+            'contacto' => '611111111',
+            'email' => 'comercial@gmail.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('12345678'),
+            'remember_token' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'id_administrador' => 1,
+        ]);
+
         for ($i = 1; $i < 11; $i++) {
             DB::table('comerciales')->insert([
                 'nombre' => $faker->name(),

@@ -4,37 +4,57 @@ import axios from 'axios';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    // Intentamos recuperar la sesión del almacenamiento del navegador
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [role, setRole] = useState(localStorage.getItem('role'));
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+    const [user, setUser] = useState(() => {
+        // Usamos una función inicializadora para evitar errores si el JSON está mal
+        const savedUser = localStorage.getItem('user');
+        try {
+            return savedUser ? JSON.parse(savedUser) : null;
+        } catch (e) {
+            return null;
+        }
+    });
 
-    // Cada vez que el token cambie, configuramos Axios para que lo envíe siempre
-    // Dentro de AuthProvider en AuthContext.jsx
     useEffect(() => {
         if (token) {
-            // Esto añade el token a TODAS las peticiones de Axios automáticamente
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             localStorage.setItem('token', token);
             localStorage.setItem('role', role);
+            if (user) localStorage.setItem('user', JSON.stringify(user));
         } else {
             delete axios.defaults.headers.common['Authorization'];
             localStorage.clear();
         }
-    }, [token, role]);
+    }, [token, role, user]); // Añadimos 'user' a las dependencias
 
-    const login = (data) => {
-        setToken(data.token);
-        setRole(data.role);
-        setUser(data.user);
-        localStorage.setItem('role', data.role);
-        localStorage.setItem('user', JSON.stringify(data.user));
+    const login = (userData, userToken) => {
+        // Verificamos que userData y role existan antes de normalizar
+        if (!userData || !userData.role) {
+            console.error("El usuario no tiene un rol asignado");
+            return;
+        }
+
+        const roleNormalizado = userData.role.toLowerCase().trim(); 
+        
+        // Actualizamos el estado. React detectará estos cambios y App.jsx 
+        // habilitará las rutas correspondientes inmediatamente.
+        setToken(userToken);
+        setRole(roleNormalizado);
+        setUser(userData);
+
+        // Guardamos explícitamente para asegurar persistencia antes de navegar
+        localStorage.setItem('token', userToken);
+        localStorage.setItem('role', roleNormalizado);
+        localStorage.setItem('user', JSON.stringify(userData));
     };
 
     const logout = () => {
         setToken(null);
         setRole(null);
         setUser(null);
+        localStorage.clear();
+        delete axios.defaults.headers.common['Authorization'];
     };
 
     return (

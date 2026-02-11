@@ -19,6 +19,19 @@ class ClienteVipSeeder extends Seeder
     {
         $faker = Faker::create('es_ES');
 
+        DB::table('clientes_vip')->insert([
+            'nombre' => 'VIP de Prueba',
+            'telefono' => '644444444',
+            'email' => 'vip@gmail.com',
+            'password' => Hash::make('12345678'),
+            'direccion' => 'Avenida del Lujo 777, Valencia',
+            'created_at' => now(),
+            'updated_at' => now(),
+            'id_administrador' => 1, 
+            'id_catalogo' => 1,      
+            'id_comercial' => 1,     
+        ]);
+
         for ($i = 1; $i < 11; $i++) {
             DB::table('clientes_vip')->insert([
 

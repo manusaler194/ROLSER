@@ -15,7 +15,15 @@ class EncargadoAlmacenSeeder extends Seeder
 
     public function run(): void{
         $faker = Faker::create('es_ES');
-
+        
+        DB::table('encargados_de_almacen')->insert([
+            'nombre' => 'Encargado Almacén',
+            'telefono' => '622222222',
+            'email' => 'almacen@gmail.com',
+            'password' => Hash::make('12345678'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         for ($i = 1; $i < 11; $i++) {
             DB::table('encargados_de_almacen')->insert([

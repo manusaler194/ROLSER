@@ -16,6 +16,16 @@ class AdministradorSeeder extends Seeder
     {
         $faker = Faker::create('es_ES');
 
+        DB::table('administradores')->insert([
+            'nombre' => 'Admin',
+            'apellidos' => 'Sistema',
+            'email' => 'admin@gmail.com',
+            'telefono' => '600000000',
+            'password' => Hash::make('12345678'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
        for ($i = 1; $i < 11; $i++) {
             DB::table('administradores')->insert([
                 'nombre' => $faker->firstName(),
