@@ -55,12 +55,13 @@ const AppContent = () => {
                 <main className="flex-1 overflow-auto p-6 bg-gray-50">
                     <Routes>
 
-                        <Route path="/catalogos" element={<Catalogos />} />
-                        <Route path="/DetallesPedido/:id" element={<DetallesPedido />} />
+                       
 
                         {currentRole === 'admin' && (
                             <>
                                 <Route path="/crear-catalogo" element={<Catalogos />} />
+                                <Route path="/catalogos" element={<div>Por hacer</div>} />
+
                                 <Route path="/usuarios" element={<GestionUsuarios />} />
                                 <Route path="/listado-comerciales" element={<ListadoComerciales />} />
                                 <Route path="/listado-encargados" element={<ListadoEncargado />} />
