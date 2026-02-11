@@ -24,6 +24,26 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::middleware(['auth:sanctum', 'role:administrador'])->get('/test-admin', function () {
+    return response()->json(['message' => 'Hola Jefe, el middleware funciona.']);
+});
+
+Route::middleware(['auth:sanctum', 'role:comercial'])->get('/test-comercial', function () {
+    return response()->json(['message' => 'Hola Comercial, el middleware funciona.']);
+});
+
+Route::middleware('role:cliente,clientevip')->get('/test-cliente', function () {
+    return response()->json(['message' => 'Acceso para clientes ok']);
+});
+
+Route::middleware('role:clientevip')->get('/test-vip', function () {
+    return response()->json(['message' => 'Bienvenido a la zona de lujo, VIP']);
+});
+
+Route::middleware('role:encargadoalmacen')->get('/test-almacen', function () {
+    return response()->json(['message' => 'Stock y almacén bajo control']);
+});
+
 Route::get('/almacenes', [AlmacenController::class, 'mostrar']);
 Route::get('/almacenes/{id_almacen}', [AlmacenController::class, 'mostrarAlmacen']);
 Route::post('/almacenes/guardar', [AlmacenController::class, 'guardar']);

@@ -10,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Comercial extends Authenticatable{
 
-   // use HasApiTokens, HasFactory, Notifiable;
+   use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'comerciales';
 
