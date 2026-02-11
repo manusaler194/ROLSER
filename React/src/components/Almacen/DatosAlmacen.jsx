@@ -21,7 +21,6 @@ const inputClasses = "w-full px-5 py-3 mb-10 border border-gray-400 rounded-full
 
 return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 py-10">
-      {/* Cambié h-150 por min-h-fit y pb-10 para que crezca según el contenido */}
       <div className="w-full max-w-2xl min-h-fit p-10 bg-white border border-gray-200 rounded-2rem shadow-lg relative">
         
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Datos del Almacén</h2>

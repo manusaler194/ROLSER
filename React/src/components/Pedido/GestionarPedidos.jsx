@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { apiFetch } from "../../utils/api"; 
 
 const GestionarPedidos = () => {
     const [pedidos, setPedidos] = useState([]);
     const [filtro, setFiltro] = useState('Todos');
-    const [abrirMenu, setAbrirMenu] = useState(null);
+    const [abrirMenuAcciones, setAbrirMenuAcciones] = useState(null);
+    const [abrirMenuCambioEstado, setAbrirMenuCambioEstado] = useState(null);
+
     const [busquedaCliente, setBusquedaCliente] = useState('');
     const [busquedaEncargado, setBusquedaEncargado] = useState('');
-
     const navigate = useNavigate();
+
     useEffect(() => {
         obtenerPedidos();
     }, []);
 
    const obtenerPedidos = async () => {
-    try {
-        const response = await apiFetch('http://localhost/api/pedidos');
-        const data = await response.json();
-        console.log(data);
-        setPedidos(data.pedidos || []);
-    } catch (err) {
-        console.error("Error al cargar:", err);
-    }
-};
+        try {
+            const response = await apiFetch('http://localhost/api/pedidos');
+            const data = await response.json();
+            console.log(data);
+            setPedidos(data.pedidos || []);
+        } catch (err) {
+            console.error("Error al cargar:", err);
+        }
+    };
     const pedidosFiltrados = pedidos.filter(pedido =>{
         const coincideEstado = filtro !== "Todos" ? pedido.estado === filtro : true;
         
@@ -38,23 +40,51 @@ const GestionarPedidos = () => {
     })
 
     const handleEliminar = async (id) => {
-    try {
-        const response = await apiFetch(`http://localhost/api/pedidos/borrar/${id}`, {
-            method: 'DELETE',
-        });
+        try {
+            const response = await apiFetch(`http://localhost/api/pedidos/borrar/${id}`, {
+                method: 'DELETE',
+            });
 
-        if (response.ok) {
-            setAbrirMenu(null);
-            alert("Pedido eliminado");
-            obtenerPedidos();
-        } else {
-            alert("No se pudo eliminar el pedido.");
+            if (response.ok) {
+                setAbrirMenuAcciones(null);
+                alert("Pedido eliminado");
+                obtenerPedidos();
+            } else {
+                alert("No se pudo eliminar el pedido.");
+            }
+        } catch (error) {
+            console.error("Error al eliminar:", error);
+            alert("Ocurrió un error al eliminar.");
         }
-    } catch (error) {
-        console.error("Error al eliminar:", error);
-        alert("Ocurrió un error de red al intentar eliminar.");
-    }
-  };
+    };
+
+    const modificarEstado = async (pedido, nuevoEstado) => {
+        console.log(pedido);
+        try {
+            const response = await apiFetch(`http://localhost/api/pedidos/actualizar/${pedido.id_pedido}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                id_pedido: pedido.id_pedido,
+                fecha_pedido: pedido.fecha_pedido,
+                estado: nuevoEstado,
+                id_comercial: pedido.id_comercial,
+                id_cliente: pedido.id_cliente,
+                id_clientevip: pedido.id_clientevip,
+                id_encargado: pedido.id_encargado,
+                id_factura: pedido.id_factura
+            }),
+            });
+
+            setAbrirMenuCambioEstado(null);
+            obtenerPedidos();
+
+        } catch (error) {
+        console.error("Error al enviar datos:", error);
+        alert("Hubo un error al modificar el pedido");
+        }
+
+    };
     return (
         <div className="p-8 flex flex-col gap-6 max-w-4xl">
             <div className="flex flex-row flex-wrap items-end gap-4 bg-gray-50 p-4 border border-gray-200 rounded-lg">
@@ -85,7 +115,6 @@ const GestionarPedidos = () => {
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="bg-gray-200 text-gray-800">
-                            <th className="border border-gray-400 px-4 py-2 font-bold text-center">Id</th>
                             <th className="border border-gray-400 px-4 py-2 font-bold">Cliente</th>
                             <th className="border border-gray-400 px-4 py-2 font-bold">Estado</th>
                             <th className="border border-gray-400 px-4 py-2 font-bold">Encargado</th>
@@ -97,31 +126,50 @@ const GestionarPedidos = () => {
                         {pedidosFiltrados.length > 0 ? (
                             pedidosFiltrados.map((pedido) => (
                                 <tr key={pedido.id_pedido} className="bg-gray-100 hover:bg-white transition-colors">
-                                    <td className="border border-gray-400 px-4 py-2 text-center">{pedido.id_pedido}</td>
                                     
                                     <td className="border border-gray-400 px-4 py-2">
                                         <div className="flex flex-col">
-                                            <span className="font-medium">{pedido.cliente_vip?.nombre || pedido.cliente?.nombre || pedido.comercial?.nombre || 'Sin asignar'}</span>
+                                            <span className="font-medium">{pedido.cliente_vip?.nombre || pedido.cliente?.nombre  || 'Sin asignar'}</span>
                                             {pedido.cliente && pedido.comercial && <span className="text-[10px] text-gray-500 uppercase">Comercial: {pedido.comercial.nombre}</span>}
                                             {pedido.cliente_vip && <span className="text-[10px] text-yellow-600 font-bold uppercase">Cliente VIP</span>}
                                         </div>
                                     </td>
 
                                     <td className="border border-gray-400 px-4 py-2"> 
-                                        <span className={`px-2 py-1 rounded text-xs font-bold ${pedido.estado === 'En preparación' ? 'bg-red-200' : pedido.estado ===  'En proceso de entrega' ? 'bg-orange-200' : 'bg-green-200'}`}>
-                                            {pedido.estado}
-                                        </span>
+                                        <button onClick={()=>{
+                                                    const idActual = pedido.id_pedido;
+                                                    setAbrirMenuCambioEstado(prevId =>(prevId == idActual ? null: idActual))
+                                                        }} className='"bg-gray-200 px-3 py-1 rounded cursor-pointer'>
+                                            <span className={`px-2 py-1 rounded text-xs font-bold ${pedido.estado === 'En preparación' ? 'bg-red-200' : pedido.estado ===  'En proceso de entrega' ? 'bg-orange-200' : 'bg-green-200'}`}>{pedido.estado}</span>
+                                        </button>
+                                         {abrirMenuCambioEstado === pedido.id_pedido && (
+                                        <div className="absolute mt-2 w-48 bg-white border-2 border-gray-400 z-50 shadow-xl">
+                                            <div className="flex flex-col text-sm">
+                                                <button onClick={()=>{ modificarEstado(pedido, "En proceso de entrega")
+                                                                         setAbrirMenuCambioEstado(null)
+                                                                        }} className="px-4 py-2 border-b border-gray-400 hover:bg-gray-100 text-left cursor-pointer">En proceso de entrega</button>
+                                                <button onClick={()=>{ modificarEstado(pedido,"En preparación")
+                                                                         setAbrirMenuCambioEstado(null)
+                                                                        }} className="px-4 py-2 border-b border-gray-400 hover:bg-gray-100 text-left cursor-pointer">En preparacion</button>
+                                                <button  onClick={()=>{ modificarEstado(pedido,"Entregado")
+                                                                         setAbrirMenuCambioEstado(null)
+                                                                        }} className="px-4 py-2 border-b border-gray-400 hover:bg-gray-100 text-left cursor-pointer">Entregado</button>
+
+                                            </div>
+                                        </div>
+                                    )}
                                     </td>
                                     <td className="border border-gray-400 px-4 py-2">
-                                        {pedido.encargado_almacen ? pedido.encargado_almacen.nombre : 'N/A'}
+                                        {pedido.encargado_almacen ? pedido.encargado_almacen.nombre : 'Realizado por administrador'}
                                     </td>
                                     <td className="border border-gray-400 px-4 py-2 relative">
                                     <button onClick={() => {
                                                                 const idActual = pedido.id_pedido;
-                                                                setAbrirMenu(prevId => (prevId == idActual ? null : idActual));
-                                                            }}  className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 cursor-pointer">...</button>
+                                                                setAbrirMenuAcciones(prevId => (prevId == idActual ? null : idActual));
+                                                            }}  className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 cursor-pointer">...
+                                    </button>
 
-                                    {abrirMenu === pedido.id_pedido && (
+                                    {abrirMenuAcciones === pedido.id_pedido && (
                                         <div className="absolute right-0 mt-2 w-48 bg-white border-2 border-gray-400 z-50 shadow-xl">
                                             <div className="flex flex-col text-sm">
                                                 <button onClick={() => handleEliminar(pedido.id_pedido)} className="px-4 py-2 border-b border-gray-400 hover:bg-gray-100 text-left cursor-pointer text-red-600">Eliminar</button>

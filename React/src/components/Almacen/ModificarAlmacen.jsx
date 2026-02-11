@@ -28,9 +28,8 @@ const ModificarAlmacen = () =>{
         const obtenerAlmacen = async () => {
             const response = await apiFetch(`http://localhost/api/almacenes/${id}`);
             const data = await response.json();
-            
+            console.log(data);
             const almacenRecibido = data.almacen[0];
-            
             setAlmacen({
                 direccion: almacenRecibido.direccion,
                 capacidad: almacenRecibido.capacidad,
@@ -38,7 +37,6 @@ const ModificarAlmacen = () =>{
             });
             
         };
-
        const obtenerEncargados = async () => {
         try {
             const response = await apiFetch('http://localhost/api/encargadoAlmacen');
@@ -49,7 +47,6 @@ const ModificarAlmacen = () =>{
             console.error("Error al obtener encargados:", error);
         }
         };
-
         obtenerAlmacen();
         obtenerEncargados();
         },[id]);
