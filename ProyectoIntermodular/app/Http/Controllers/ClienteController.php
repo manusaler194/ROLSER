@@ -8,35 +8,44 @@ use App\Models\Administrador;
 use App\Models\Articulo;
 use App\Models\Catalogo;
 use App\Models\Comercial;
-
+use Illuminate\Support\Facades\Hash;
 class ClienteController extends Controller
 {
 
     public function guardar(Request $request)
     {
+
         $validatedData = $request->validate([
             'nombre'           => 'required|string|max:50',
             'telefono'         => 'required|string|max:20',
-            'email'           => 'required|string|max:255',
+            'email'            => 'required|string|max:255',
             'direccion'        => 'required|string|max:255',
             'id_administrador' => 'nullable|integer',
             'id_comercial'     => 'nullable|integer',
+            'password'         => 'required|string',
         ]);
 
         try {
-            $administrador = Administrador::findOrFail($validatedData["id_administrador"]);
-            $comercial = Comercial::findOrFail($validatedData["id_comercial"]);
 
             $cliente = new Cliente([
                 'nombre'    => $validatedData["nombre"],
                 'telefono'  => $validatedData["telefono"],
-                'email'    => $validatedData["email"],
-                'direccion' => $validatedData["direccion"]
+                'email'     => $validatedData["email"],
+                'direccion' => $validatedData["direccion"],
+                'password' => Hash::make($validatedData["password"]),
             ]);
 
+            
+            if ($request->id_administrador) {
+                $cliente->administrador()->associate(Administrador::find($request->id_administrador));
+            }
 
-            $cliente->comercial()->associate($comercial);
-            $cliente->administrador()->associate($administrador);
+
+            if ($request->id_comercial) {
+                $cliente->comercial()->associate(Comercial::find($request->id_comercial));
+            }
+
+
             $cliente->save();
 
             return response()->json([
@@ -106,12 +115,16 @@ class ClienteController extends Controller
             'telefono'         => 'required|string|max:20',
             'email'           => 'required|string|max:255',
             'direccion'        => 'required|string|max:255',
+            'password'          => 'nullable|string',
             'id_administrador' => 'nullable|integer',
             'id_comercial'     => 'nullable|integer',
         ]);
 
         try {
             $cliente = Cliente::findOrFail($request->id_cliente);
+            if(isset($validatedData['password'])){
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            }
             $cliente->update($validatedData);
 
             return response()->json([
@@ -148,9 +161,4 @@ class ClienteController extends Controller
             ], 500);
         }
     }
-
-
-
-
-
 }

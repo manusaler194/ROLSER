@@ -12,7 +12,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost/api/login', { email, password });
+            const response = await axios.post('http://192.168.0.14:8008/api/login', { email, password });
             console.log(response.data);
             const { user, token, role } = response.data;
             

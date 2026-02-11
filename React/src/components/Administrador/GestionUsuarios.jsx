@@ -342,7 +342,7 @@ const GestionUsuarios = () => {
 
   
   useEffect(() => {
-    fetch("http://localhost/api/users")
+    fetch("http://192.168.0.14:8008/api/users")
       .then((res) => res.json())
       .then((data) => {
         setContadores({

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Cliente;
 use App\Models\ClienteVip;
 use App\Models\EncargadoAlmacen;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Comercial;
 class AdministradorController extends Controller
 
@@ -20,9 +21,15 @@ class AdministradorController extends Controller
             'email'     => 'required|email|max:100|unique:administradores,email',
             'password'  => 'required|string',
         ]);
-
         try {
-            $administrador = Administrador::create($validatedData);
+            $administrador = new Administrador([
+                    'nombre'    => $validatedData["nombre"],
+                    'apellidos'  => $validatedData["apellidos"],
+                    'email'     => $validatedData["email"],
+                    'telefono' => $validatedData["telefono"],
+                    'password' => Hash::make($validatedData["password"]),
+                ]);
+                $administrador->save();
 
             return response()->json([
                 'message' => 'Administrador creado con éxito.',
@@ -97,7 +104,7 @@ class AdministradorController extends Controller
         'nombre'    => 'required|string|max:50',
         'apellidos' => 'required|string|max:100',
         'telefono'  => 'required|string|max:20',
-        'email' => 'required|email|max:100|unique:administradores,email,' . $id_administrador . ',id_administrador',
+        'email' => 'required|email|max:100',
         'password'  => 'nullable|string',
     ]);
 
@@ -105,13 +112,13 @@ class AdministradorController extends Controller
         $administrador = Administrador::findOrFail($id_administrador);
 
 
-        if (empty($request->password)) {
-            unset($validatedData['password']);
-        } else {
+        if(isset($validatedData['password'])){
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            }
 
-        }
+            $administrador->update($validatedData);
 
-        $administrador->update($validatedData);
+        
 
         return response()->json([
             'message' => 'Administrador actualizado con éxito.',

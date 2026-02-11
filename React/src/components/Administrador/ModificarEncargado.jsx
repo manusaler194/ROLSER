@@ -6,20 +6,22 @@ const ModificarEncargado = () => {
     const navegar = useNavigate();
     const { id } = useParams(); 
 
-    
+    // Añadido el campo password al estado inicial
     const [encargado, setEncargado] = useState({
         nombre: '',
         email: '',
-        telefono: '' 
+        telefono: '',
+        password: '' // Opcional para modificación
     });
     
     const [estaCargando, setEstaCargando] = useState(true);
+    const [guardando, setGuardando] = useState(false);
 
-    
     useEffect(() => {
         const cargarEncargado = async () => {
             try {
-                const respuesta = await fetch(`http://localhost/api/encargadoAlmacen/${id}`);
+                // CORRECCIÓN: Usamos la IP en lugar de localhost
+                const respuesta = await fetch(`http://192.168.0.14:8008/api/encargadoAlmacen/${id}`);
                 
                 if (!respuesta.ok) {
                     throw new Error(`Error HTTP: ${respuesta.status}`);
@@ -31,8 +33,8 @@ const ModificarEncargado = () => {
                 setEncargado({
                     nombre: usuario.nombre || '',
                     email: usuario.email || '',
-                    
-                    telefono: usuario.telefono || usuario.contacto || '' 
+                    telefono: usuario.telefono || usuario.contacto || '',
+                    password: '' // Se deja vacío por seguridad
                 });
 
             } catch (error) {
@@ -55,77 +57,136 @@ const ModificarEncargado = () => {
         });
     };
 
-    
     const manejarEnvio = async (e) => {
         e.preventDefault();
+        setGuardando(true);
         try {
+            // Creamos copia para no afectar el estado visual inmediatamente
+            const datosAEnviar = { ...encargado };
+
+            // Si no hay contraseña escrita, no la enviamos a Laravel
+            if (!datosAEnviar.password) {
+                delete datosAEnviar.password;
+            }
             
-            await axios.put(`http://localhost/api/encargadoAlmacen/actualizar/${id}`, encargado); 
+            // CORRECCIÓN: Usamos la IP en lugar de localhost
+            await axios.put(`http://192.168.0.14:8008/api/encargadoAlmacen/actualizar/${id}`, datosAEnviar); 
+            
             alert("Encargado modificado con éxito");
             navegar('/usuarios'); 
         } catch (error) {
             console.error("Error al actualizar:", error);
-            alert("Hubo un error al guardar los cambios (revisa email duplicado o campos vacíos).");
+            // Manejo de validaciones 422
+            if (error.response && error.response.status === 422) {
+                const mensajesError = Object.values(error.response.data.errors).flat().join("\n");
+                alert("Corrige estos errores:\n" + mensajesError);
+            } else {
+                alert("Hubo un error al guardar los cambios (revisa email duplicado o problemas de conexión).");
+            }
+        } finally {
+            setGuardando(false);
         }
     }
 
-    const clasesInput = "w-full px-5 py-3 mb-6 border border-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-[#bd0026] appearance-none bg-white text-gray-700 placeholder-gray-500 font-medium";
+    // Clases CSS unificadas con toda la app
+    const clasesInput = "w-full bg-white border border-gray-400 p-3 text-gray-800 focus:outline-none focus:border-[#bd0026] focus:ring-1 focus:ring-[#bd0026] rounded-sm transition-all";
+    const claseLabel = "block text-xs font-bold text-gray-500 uppercase mb-1 ml-1";
 
     if (estaCargando) {
-        return <div className="flex h-screen justify-center items-center">Cargando datos del Encargado...</div>;
+        return (
+            <div className="flex min-h-screen bg-gray-50 justify-center items-center">
+                <p className="text-gray-600 font-bold text-lg animate-pulse">Cargando datos del Encargado...</p>
+            </div>
+        );
     }
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-50 font-sans">
-            <div className="w-full max-w-2xl p-10 bg-white border border-gray-200 rounded-[2rem] shadow-lg">
-                <h2 className="text-3xl font-bold text-center text-black mb-8 uppercase tracking-wide">
+        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
+            <div className="w-full max-w-lg bg-white p-6 sm:p-10 shadow-2xl rounded-sm border-t-4 border-[#bd0026]">
+                <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-center text-black uppercase tracking-wider border-b pb-4">
                     Modificar Encargado
                 </h2>
                 
-                <form onSubmit={manejarEnvio}>
-                    {/* NOMBRE */}
-                    <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">Nombre</label>
-                    <input 
-                        type="text" 
-                        name="nombre" 
-                        value={encargado.nombre} 
-                        onChange={manejarCambio} 
-                        className={clasesInput} 
-                        required 
-                    />
+                <form onSubmit={manejarEnvio} className="space-y-4 sm:space-y-5" autoComplete="off">
+                    
+                    {/* Fila 1: Nombre y Teléfono (Grid de 2 columnas en PC) */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label className={claseLabel}>Nombre</label>
+                            <input 
+                                type="text" 
+                                name="nombre" 
+                                value={encargado.nombre} 
+                                onChange={manejarCambio} 
+                                className={clasesInput} 
+                                required 
+                            />
+                        </div>
+                        <div>
+                            <label className={claseLabel}>Teléfono / Contacto</label>
+                            <input 
+                                type="text" 
+                                name="telefono" 
+                                value={encargado.telefono} 
+                                onChange={manejarCambio} 
+                                className={clasesInput} 
+                                required 
+                            />
+                        </div>
+                    </div>
 
-                    {/* EMAIL */}
-                    <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">Correo Electrónico</label>
-                    <input 
-                        type="email" 
-                        name="email" 
-                        value={encargado.email} 
-                        onChange={manejarCambio} 
-                        className={clasesInput} 
-                        required 
-                    />
+                    {/* Fila 2: Correo */}
+                    <div>
+                        <label className={claseLabel}>Correo Electrónico</label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            value={encargado.email} 
+                            onChange={manejarCambio} 
+                            className={clasesInput} 
+                            required 
+                        />
+                    </div>
 
-                    {/* TELEFONO */}
-                    <label className="ml-4 mb-1 block text-xs font-bold text-gray-500 uppercase">Teléfono / Contacto</label>
-                    <input 
-                        type="text" 
-                        name="telefono" 
-                        value={encargado.telefono} 
-                        onChange={manejarCambio} 
-                        className={clasesInput} 
-                        required 
-                    />
+                    {/* Fila 3: Nueva Contraseña (Opcional) */}
+                    <div>
+                        <label className={claseLabel}>Nueva Contraseña (Opcional)</label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            value={encargado.password} 
+                            onChange={manejarCambio} 
+                            className={clasesInput} 
+                            placeholder="Escribe para cambiar la contraseña"
+                            autoComplete="new-password"
+                        />
+                        <p className="text-[10px] text-gray-500 mt-1 ml-1">
+                            * Deja este campo en blanco si deseas mantener la contraseña actual.
+                        </p>
+                    </div>
 
-                    <button type="submit" className="w-full py-4 mt-4 text-white font-bold bg-[#bd0026] rounded-full hover:bg-red-800 transition-all transform active:scale-95 shadow-lg uppercase tracking-wider"> 
-                        Guardar Cambios 
-                    </button>
+                    {/* Botones de acción integrados y responsive */}
+                    <div className="flex flex-col-reverse sm:flex-row justify-center pt-6 sm:pt-8 gap-3 sm:gap-4">
+                        <button 
+                            type="button" 
+                            onClick={() => navegar('/usuarios')} 
+                            className="w-full sm:w-1/2 border border-gray-400 text-gray-600 font-bold py-3 px-4 rounded shadow hover:bg-gray-50 transition duration-300 uppercase tracking-wider"
+                        >
+                            Cancelar
+                        </button>
+                        <button 
+                            type="submit" 
+                            disabled={guardando}
+                            className={`w-full sm:w-1/2 text-white font-bold py-3 px-4 rounded shadow-lg transition duration-300 uppercase tracking-wider ${
+                                guardando 
+                                    ? "bg-gray-500 cursor-not-allowed" 
+                                    : "bg-[#bd0026] hover:bg-red-800"
+                            }`}
+                        > 
+                            {guardando ? "Guardando..." : "Guardar Cambios"}
+                        </button>
+                    </div>
                 </form>
-            </div>
-
-            <div className="fixed bottom-10 right-10">
-                <button onClick={() => navegar('/usuarios')} className="bg-black text-white px-10 py-3 rounded-full text-xl font-bold hover:bg-gray-800 shadow-xl transition-transform active:scale-95 cursor-pointer uppercase">
-                    Volver
-                </button>
             </div>
         </div>
     )

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\ClienteVip;
 use App\Models\Administrador;
@@ -18,6 +18,7 @@ class ClienteVipController extends Controller
             'telefono'         => 'required|string|max:20',
             'email'           => 'required|string|max:255',
             'direccion'        => 'required|string|max:255',
+            'password'         => 'required|string',
             'id_administrador' => 'nullable|integer',
             'id_catalogo'      => 'nullable|integer',
             'id_comercial'     => 'nullable|integer',
@@ -31,7 +32,8 @@ class ClienteVipController extends Controller
                 'nombre'    => $validatedData["nombre"],
                 'telefono'  => $validatedData["telefono"],
                 'email'    => $validatedData["email"],
-                'direccion' => $validatedData["direccion"]
+                'password' => Hash::make($validatedData["password"]),
+                'direccion' => $validatedData["direccion"],
             ]);
 
             // Asociamos las relaciones (foreign keys)
@@ -114,6 +116,7 @@ class ClienteVipController extends Controller
             'telefono'         => 'required|string|max:20',
             'email'           => 'required|string|max:255',
             'direccion'        => 'required|string|max:255',
+            'password'          => 'nullable|string',
             'id_administrador' => 'nullable|integer',
             'id_catalogo'      => 'nullable|integer',
             'id_comercial'     => 'nullable|integer',
@@ -121,6 +124,9 @@ class ClienteVipController extends Controller
 
         try{
             $clienteVip = ClienteVip::findOrFail($request->id_clientevip);
+            if(isset($validatedData['password'])){
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            }
             $clienteVip->update($validatedData);
 
             return response()->json([

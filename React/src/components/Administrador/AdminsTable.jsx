@@ -6,52 +6,61 @@ const AdminsTable = ({ usuario, onVolver }) => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-      <h2 className="text-2xl font-bold mb-4 text-black">Datos del usuario</h2>
+      <h2 className="text-2xl font-bold mb-4 text-black text-center">Datos del usuario</h2>
       
-      <div className="bg-white p-8 rounded-[30px] border border-gray-400 shadow-sm w-full max-w-lg">
+      {/* Ajustamos el padding en móviles (p-6) y en desktop (sm:p-8) */}
+      <div className="bg-white p-6 sm:p-8 rounded-[30px] border border-gray-400 shadow-sm w-full max-w-lg">
         <div className="space-y-6">
           
           {/* Nombre */}
-          <div className="flex items-center justify-between">
-            <label className="text-xl font-normal text-black w-1/3">Nombre</label>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+            <label className="text-lg sm:text-xl font-normal text-black w-full sm:w-1/3 mb-1 sm:mb-0 pl-2 sm:pl-0">
+              Nombre
+            </label>
             <input 
               type="text" 
               readOnly
               // Usamos los datos normalizados que vienen del padre
               value={`${usuario.nombre} ${usuario.apellidos}`}
-              className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white"
+              className="w-full sm:w-2/3 border border-gray-600 rounded-full py-2 sm:py-1 px-4 text-center focus:outline-none bg-white"
             />
           </div>
 
           {/* Email */}
-          <div className="flex items-center justify-between">
-            <label className="text-xl font-normal text-black w-1/3">Email</label>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+            <label className="text-lg sm:text-xl font-normal text-black w-full sm:w-1/3 mb-1 sm:mb-0 pl-2 sm:pl-0">
+              Email
+            </label>
             <input 
               type="email" 
               readOnly
               value={usuario.email}
-              className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white"
+              className="w-full sm:w-2/3 border border-gray-600 rounded-full py-2 sm:py-1 px-4 text-center focus:outline-none bg-white"
             />
           </div>
 
           {/* Teléfono */}
-          <div className="flex items-center justify-between">
-            <label className="text-xl font-normal text-black w-1/3">Teléfono</label>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+            <label className="text-lg sm:text-xl font-normal text-black w-full sm:w-1/3 mb-1 sm:mb-0 pl-2 sm:pl-0">
+              Teléfono
+            </label>
             <input 
               type="text" 
               readOnly
               value={usuario.telefono}
-              className="w-2/3 border border-gray-600 rounded-full py-1 px-4 text-center focus:outline-none bg-white"
+              className="w-full sm:w-2/3 border border-gray-600 rounded-full py-2 sm:py-1 px-4 text-center focus:outline-none bg-white"
             />
           </div>
 
           {/* Rol - Estático para Admins */}
-          <div className="flex items-center justify-between">
-            <label className="text-xl font-normal text-black w-1/3">Rol</label>
-            <div className="relative w-2/3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+            <label className="text-lg sm:text-xl font-normal text-black w-full sm:w-1/3 mb-1 sm:mb-0 pl-2 sm:pl-0">
+              Rol
+            </label>
+            <div className="relative w-full sm:w-2/3">
               <select 
                 disabled
-                className="w-full appearance-none border border-gray-600 rounded-full py-1 px-4 text-center bg-white opacity-100 font-bold text-gray-700"
+                className="w-full appearance-none border border-gray-600 rounded-full py-2 sm:py-1 px-4 text-center bg-white opacity-100 font-bold text-gray-700"
               >
                 <option>Administrador</option>
               </select>
@@ -63,13 +72,12 @@ const AdminsTable = ({ usuario, onVolver }) => {
             </div>
           </div>
 
-          
-
           {/* Botón Volver (Conectado a la función) */}
           <div className="flex justify-center pt-4">
             <button 
               onClick={onVolver}
-              className="bg-[#bd0026] text-white font-medium py-2 px-12 rounded-full hover:bg-red-800 transition-colors shadow-md"
+              // El botón ocupa todo el ancho en móvil (w-full) y se adapta al contenido en pantallas más grandes (sm:w-auto)
+              className="bg-[#bd0026] text-white font-medium py-3 sm:py-2 px-12 w-full sm:w-auto rounded-full hover:bg-red-800 transition-colors shadow-md"
             >
               Volver
             </button>

@@ -14,7 +14,7 @@ const ListadoComerciales = () => {
   const [comercialSeleccionado, setComercialSeleccionado] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost/api/comerciales")
+    fetch("http://192.168.0.14:8008/api/comerciales")
       .then((res) => res.json())
       .then((data) => {
         setLista(data.comerciales || []); 
@@ -32,7 +32,7 @@ const ListadoComerciales = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost/api/comerciales/borrar/${id}`, {
+      const response = await fetch(`http://192.168.0.14:8008/api/comerciales/borrar/${id}`, {
         method: "DELETE", 
         headers: {
           "Content-Type": "application/json",

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\EncargadoAlmacen;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Hash;
 class EncargadoAlmacenController extends Controller{
 
     public function mostrar(Request $request) {
@@ -49,6 +49,7 @@ class EncargadoAlmacenController extends Controller{
             'nombre' => 'required|string|max: 50',
             'telefono' => 'required|string|max: 20',
             'email' => 'required|string|max: 255',
+            'password' => 'required|string',
         ]);
 
         try {
@@ -57,6 +58,7 @@ class EncargadoAlmacenController extends Controller{
                 'nombre' => $validatedData['nombre'],
                 'telefono' => $validatedData['telefono'],
                 'email' => $validatedData['email'],
+                'password' => Hash::make($validatedData["password"]),
             ]);
 
             $encargadoAlmacen->save();
@@ -79,9 +81,13 @@ class EncargadoAlmacenController extends Controller{
             'nombre' => 'required|string|max: 50',
             'telefono' => 'required|string|max: 20',
             'email' => 'required|string|max: 255',
+            'password'=> 'nullable|string',
         ]);
         try{
             $encargadoAlmacen= EncargadoAlmacen::findOrFail($request->id_encargado);
+            if(isset($validatedData['password'])){
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            }
             $encargadoAlmacen->update($validatedData);
 
             return response()->json([

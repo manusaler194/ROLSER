@@ -5,7 +5,7 @@ const CrearAdmin = () => {
   const navegar = useNavigate();
 
   // URL de tu API
-  const URL_API = "http://localhost/api/administradores/guardar";
+  const URL_API = "http://192.168.0.14:8008/api/administradores/guardar";
 
   const [datos, setDatos] = useState({
     nombre: "",
@@ -62,8 +62,9 @@ const CrearAdmin = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
-      <div className="w-full max-w-lg bg-white p-10 shadow-2xl rounded-sm border-t-4 border-[#bd0026]">
-        <h2 className="text-2xl font-bold mb-8 text-center text-black uppercase tracking-wider border-b pb-4">
+      {/* Padding ajustado: p-6 en móvil para ganar espacio, p-10 en escritorio */}
+      <div className="w-full max-w-lg bg-white p-6 sm:p-10 shadow-2xl rounded-sm border-t-4 border-[#bd0026]">
+        <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-center text-black uppercase tracking-wider border-b pb-4">
           Nuevo Administrador
         </h2>
 
@@ -73,9 +74,9 @@ const CrearAdmin = () => {
           </div>
         )}
 
-        <form onSubmit={manejarEnvio} className="space-y-5">
-          {/* Nombre y Apellidos */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={manejarEnvio} className="space-y-4 sm:space-y-5">
+          {/* Nombre y Apellidos (Ocupan 1 columna en móvil, 2 en pantallas a partir de tamaño sm) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-gray-500 uppercase mb-1 ml-1">
                 Nombre
@@ -154,19 +155,19 @@ const CrearAdmin = () => {
             />
           </div>
 
-          {/* Botones */}
-          <div className="flex justify-center pt-8 gap-3">
+          {/* Botones - Apilados en móvil (Cancelar debajo, Crear arriba), lado a lado en PC */}
+          <div className="flex flex-col-reverse sm:flex-row justify-center pt-6 sm:pt-8 gap-3 sm:gap-4">
             <button
               type="button"
               onClick={() => navegar(-1)}
-              className="w-1/2 border border-gray-400 text-gray-600 font-bold py-3 px-4 rounded shadow hover:bg-gray-50 transition duration-300 uppercase"
+              className="w-full sm:w-1/2 border border-gray-400 text-gray-600 font-bold py-3 px-4 rounded shadow hover:bg-gray-50 transition duration-300 uppercase"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={cargando}
-              className={`w-1/2 text-white font-bold py-3 px-4 rounded shadow-lg transition duration-300 uppercase ${
+              className={`w-full sm:w-1/2 text-white font-bold py-3 px-4 rounded shadow-lg transition duration-300 uppercase ${
                 cargando
                   ? "bg-gray-500 cursor-not-allowed"
                   : "bg-black hover:bg-gray-800"
