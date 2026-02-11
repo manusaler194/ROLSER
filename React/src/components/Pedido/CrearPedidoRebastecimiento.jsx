@@ -12,9 +12,10 @@ const CrearPedidoRebastecimiento = () => {
             try {
                 const response = await apiFetch('http://localhost/api/articulo');
                 const data = await response.json();
-                
-                const articulosConCantidad = data.map(a => ({ ...a, cantidad: 0 }));
+                console.log(data);
+                const articulosConCantidad = data.almacen.map(a => ({ ...a, cantidad: 0 }));
                 setArticulos(articulosConCantidad);
+                console.log(user);
             } catch (error) {
                 console.error("Error al cargar artículos:", error);
             }
@@ -51,8 +52,7 @@ const CrearPedidoRebastecimiento = () => {
                     cantidad: totalCantidad,
                     fecha: new Date().toISOString().split('T')[0],
                     precio: totalPrecio,
-                    id_administrador: role === 'administrador' ? user?.id : null,
-                    id_encargado: role === 'encargadoalmacen' ? user?.id : null
+                    id_administrador: role === 'admin' ? user.id : null,
                 })
             });
 
@@ -66,7 +66,7 @@ const CrearPedidoRebastecimiento = () => {
                     fecha_pedido: new Date().toISOString().split('T')[0],
                     estado: 'Pendiente',
                     id_factura: facturaId,
-                    id_encargado: role === 'encargadoalmacen' ? user?.id : null
+                    id_encargado: role === 'encargado_almacen' ? user?.id : null
                 })
             });
 
@@ -91,7 +91,7 @@ const CrearPedidoRebastecimiento = () => {
 
             await Promise.all(promesasLineas);
 
-            alert("✅ Pedido de reabastecimiento registrado con éxito.");
+            alert(" Pedido de reabastecimiento registrado con éxito.");
             
             setArticulos(prev => prev.map(art => ({ ...art, cantidad: 0 })));
 
@@ -110,19 +110,8 @@ const CrearPedidoRebastecimiento = () => {
                 <div className="flex justify-between items-center mb-8">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-800">Reabastecimiento de Inventario</h1>
-                        <p className="text-sm text-gray-500">
-                            Registrado por: <span className="font-semibold text-blue-600">{user?.nombre || 'Usuario'}</span> ({role})
-                        </p>
                     </div>
-                    <button 
-                        onClick={añadirProducto} 
-                        disabled={loading}
-                        className={`font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 text-white ${
-                            loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#bc002d] hover:bg-[#9a0025]'
-                        }`}
-                    >
-                        {loading ? 'Procesando...' : 'Confirmar Pedido'}
-                    </button>
+                    <button onClick={añadirProducto} disabled={loading}className={'font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 text-white bg-red-700 hover:bg-red-800'}>Confirmar Pedido</button>
                 </div>
 
                 <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
@@ -141,23 +130,13 @@ const CrearPedidoRebastecimiento = () => {
                                 <tr key={articulo.id_articulo} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-4 font-medium text-gray-900">{articulo.nombre}</td>
                                     <td className="px-6 py-4 text-center">
-                                        <span className={`px-3 py-1 text-xs font-bold rounded-full ${articulo.stock_actual < 50 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-                                            {articulo.stock_actual} unidades
-                                        </span>
+                                        <span className={`px-3 py-1 text-xs font-bold rounded-full ${articulo.stock_actual < 50 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>{articulo.stock_actual} unidades</span>
                                     </td>
                                     <td className="px-6 py-4 text-gray-700">{articulo.precio}€</td>
                                     <td className="px-6 py-4">
-                                        <input 
-                                            type="number" 
-                                            min="0" 
-                                            value={articulo.cantidad}
-                                            className="w-20 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#bc002d] outline-none" 
-                                            onChange={(e) => handleCantidad(articulo.id_articulo, e.target.value)} 
-                                        />
+                                        <input type="number" min="0" value={articulo.cantidad}className="w-20 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#bc002d] outline-none" onChange={(e) => handleCantidad(articulo.id_articulo, e.target.value)} />
                                     </td>
-                                    <td className="px-6 py-4 font-semibold text-[#bc002d]">
-                                        {((articulo.cantidad || 0) * articulo.precio).toFixed(2)}€
-                                    </td>
+                                    <td className="px-6 py-4 font-semibold text-[#bc002d]">{((articulo.cantidad || 0) * articulo.precio).toFixed(2)}€</td>
                                 </tr>
                             ))}
                         </tbody>

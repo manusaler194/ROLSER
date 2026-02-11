@@ -135,7 +135,7 @@ const CrearCatalogo = () => {
 
         {/* Artículos */}
         <div>
-          <label className="block mb-2 font-semibold">Artículos</label>
+          <label className="block mb-2 font-semibold">Artículos (OPCIONAL)</label>
 
           <div className="max-h-48 overflow-y-auto border rounded-lg p-3 space-y-2">
             {articulos.map((articulo) => (
