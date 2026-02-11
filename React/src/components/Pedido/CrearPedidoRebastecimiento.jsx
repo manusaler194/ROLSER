@@ -5,10 +5,11 @@ import { useAuth } from "../../context/AuthContext";
 const CrearPedidoRebastecimiento = () => {
     const { user, role } = useAuth(); 
     const [articulos, setArticulos] = useState([]);
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const cargarArticulos = async () => {
+                    console.log(user)
+        
             try {
                 const response = await apiFetch('http://localhost/api/articulo');
                 const data = await response.json();
@@ -36,11 +37,10 @@ const CrearPedidoRebastecimiento = () => {
         const productos = articulos.filter(articulo => articulo.cantidad > 0);
 
         if (productos.length === 0) {
-            alert("Por favor, selecciona al menos un producto con cantidad mayor a 0.");
+            alert("Selecciona al menos un producto");
             return;
         }
 
-        setLoading(true); 
 
         try {
             const totalPrecio = productos.reduce((acc, art) => acc + (art.cantidad * art.precio), 0);
@@ -56,7 +56,7 @@ const CrearPedidoRebastecimiento = () => {
                 })
             });
 
-            if (!resFactura.ok) throw new Error("Error al generar la factura en el servidor.");
+            if (!resFactura.ok) throw new Error("Error al generar la factura.");
             const dataFactura = await resFactura.json();
             const facturaId = dataFactura.factura.id_factura;
 
@@ -64,7 +64,7 @@ const CrearPedidoRebastecimiento = () => {
                 method: 'POST',
                 body: JSON.stringify({
                     fecha_pedido: new Date().toISOString().split('T')[0],
-                    estado: 'Pendiente',
+                    estado: 'En preparación',
                     id_factura: facturaId,
                     id_encargado: role === 'encargado_almacen' ? user?.id : null
                 })
@@ -98,9 +98,7 @@ const CrearPedidoRebastecimiento = () => {
         } catch (error) {
             console.error("Error completo:", error);
             alert(`Error: ${error.message}`);
-        } finally {
-            setLoading(false); 
-        }
+        } 
     };
 
     return (
@@ -111,7 +109,7 @@ const CrearPedidoRebastecimiento = () => {
                     <div>
                         <h1 className="text-3xl font-bold text-gray-800">Reabastecimiento de Inventario</h1>
                     </div>
-                    <button onClick={añadirProducto} disabled={loading}className={'font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 text-white bg-red-700 hover:bg-red-800'}>Confirmar Pedido</button>
+                    <button onClick={añadirProducto} className={'font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 text-white bg-red-700 hover:bg-red-800'}>Confirmar Pedido</button>
                 </div>
 
                 <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">

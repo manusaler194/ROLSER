@@ -58,7 +58,7 @@ const CrearAlmacen = () =>{
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Crear nuevo Almacén</h2>
                 <form onSubmit={handleSubmit}> 
                     <input type="text" name="direccion" placeholder="Dirección" value={almacen.direccion} className={inputClasses} onChange={handleDireccion} required/>
-                    <input type="number" name="capacidad" placeholder="Capacidad (m²)" value={almacen.capacidad} className={inputClasses} onChange={handleCapacidad} min = "1" required/>
+                    <input type="number" name="capacidad" placeholder="Capacidad" value={almacen.capacidad} className={inputClasses} onChange={handleCapacidad} min = "1" required/>
                     <div className="relative mb-4">
                         <select name="id_encargado" value={almacen.id_encargado} className={inputClasses} onChange={handleEncargado} onFocus={()=> setMenu(true)} required>
                             <option key="default" value="" disabled>Encargado</option>

@@ -14,7 +14,6 @@ const GestionAlmacen = () => {
         const data = await response.json();
         
         console.log(data);
-        // Accedemos a .almacen tal como hacías con axios
         setAlmacenes(data.almacen); 
     } catch (error) {
         console.error("Error al cargar:", error);
