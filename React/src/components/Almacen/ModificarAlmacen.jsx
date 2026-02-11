@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
+import { apiFetch } from '../../utils/api';
 
 const ModificarAlmacen = () =>{
       const [almacen,setAlmacen] = useState({
@@ -25,7 +26,7 @@ const ModificarAlmacen = () =>{
 
     useEffect(() => {
         const obtenerAlmacen = async () => {
-            const response = await fetch(`http://localhost/api/almacenes/${id}`);
+            const response = await apiFetch(`http://localhost/api/almacenes/${id}`);
             const data = await response.json();
             
             const almacenRecibido = data.almacen[0];
@@ -40,9 +41,10 @@ const ModificarAlmacen = () =>{
 
        const obtenerEncargados = async () => {
         try {
-            const response = await fetch('http://localhost/api/encargadoAlmacen');
+            const response = await apiFetch('http://localhost/api/encargadoAlmacen');
             const data = await response.json();
-            setEncargados(data);
+            console.log(data);
+            setEncargados(data.encargadoAlmacen);
         } catch (error) {
             console.error("Error al obtener encargados:", error);
         }
