@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import iconoDesplegable from '/src/assets/desplegable.svg';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 const GestionAlmacen = () => {
   const [abrirMenu, setAbrirMenu] = useState(null);
@@ -43,6 +44,7 @@ const GestionAlmacen = () => {
     }
   };
   
+
   return (
     <div className="p-10 flex flex-col h-full">
       <div className="flex flex-col gap-6 w-72">

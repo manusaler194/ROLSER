@@ -9,9 +9,11 @@ import Login from "./components/Auth/Login";
 import Catalogos from "./components/Catalogo/crearCatalogos";
 import GestionUsuarios from "./components/Administrador/GestionUsuarios";
 import GestionAlmacen from "./components/Almacen/GestionAlmacen";
+import GestionAlmacenEncargado from "./components/Almacen/GestionAlmacenEncargado";
 import CrearAlmacen from "./components/Almacen/CrearAlmacen";
 import ModificarAlmacen from "./components/Almacen/ModificarAlmacen";
 import DatosAlmacen from "./components/Almacen/DatosAlmacen";
+import DatosAlmacenEncargado from "./components/Almacen/DatosAlmacenEncargado";
 import ModificarAdministrador from "./components/Administrador/ModificarAdministrador";
 import GestionarPedidos from "./components/Pedido/GestionarPedidos";
 import ModificarCliente from "./components/Administrador/ModificarCliente";
@@ -59,9 +61,12 @@ const AppContent = () => {
 
                         {currentRole === 'admin' && (
                             <>
+                                <Route path="/GestionAlmacen" element={<GestionAlmacen />} />
                                 <Route path="/crear-catalogo" element={<Catalogos />} />
                                 <Route path="/catalogos" element={<div>Por hacer</div>} />
-
+                                <Route path="/CrearAlmacen" element={<CrearAlmacen />} />
+                                <Route path="/ModificarAlmacen/:id" element={<ModificarAlmacen />} />
+                                <Route path="/DatosAlmacen/:id" element={<DatosAlmacen />} />
                                 <Route path="/usuarios" element={<GestionUsuarios />} />
                                 <Route path="/listado-comerciales" element={<ListadoComerciales />} />
                                 <Route path="/listado-encargados" element={<ListadoEncargado />} />
@@ -82,16 +87,17 @@ const AppContent = () => {
                                 <Route path="/estadisticas" element={<div>Estadísticas</div>} />
                             </>
                         )}
-
+                        {currentRole === 'encargado_almacen' && (
+                            <>
+                                <Route path="/GestionAlmacenEncargado" element={<GestionAlmacenEncargado />} />
+                                <Route path="/DatosAlmacenEncargado/:id" element={<DatosAlmacenEncargado />} />    
+                                <Route path="/stock" element={<div>Stock</div>}/>                            
+                            </>
+                        )}
                         {['admin', 'encargado_almacen'].includes(currentRole) && (
                             <>
                                 <Route path="/pedidos" element={<GestionarPedidos />} />
-                                <Route path="/GestionAlmacen" element={<GestionAlmacen />} />
-                                <Route path="/CrearAlmacen" element={<CrearAlmacen />} />
-                                <Route path="/ModificarAlmacen/:id" element={<ModificarAlmacen />} />
-                                <Route path="/DatosAlmacen/:id" element={<DatosAlmacen />} />
                                 <Route path="/crear-pedido-reabastecimiento" element={<CrearPedidoRebastecimiento />} />
-                                {currentRole === 'encargado_almacen' && <Route path="/stock" element={<div>Stock</div>} />}
                             </>
                         )}
 
