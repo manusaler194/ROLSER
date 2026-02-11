@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 const Navbar = ({usuario}) => {
    const menu = [
       { label: 'Gestionar usuarios', icon: iconoUsuario , rol: ['admin'], path: '/usuarios' },
-      { label: 'Crear catálogos', icon: iconoCatalogo , rol: ['admin'], path: '/catalogos' },
+      { label: 'Crear catálogos', icon: iconoCatalogo , rol: ['admin'], path: '/crear-catalogo' },
       { label: 'Definir tarifas', icon: iconoInforme, rol: ['admin'], path: '/tarifas' },
       { label: 'Gestionar pedidos', icon: iconoPedido , rol: ['admin', 'encargado_almacen'], path: '/pedidos' },
       { label: 'Gestionar pedidos realizados', icon: iconoPedido , rol: ['cliente', 'clientevip', 'comercial'], path: '/pedidosRealizados' },
@@ -21,7 +21,7 @@ const Navbar = ({usuario}) => {
       { label: 'Estadísticas', icon: iconoEstadistica, rol: ['admin'], path: '/estadisticas' },
       { label: 'Ver facturas', icon: iconoInforme, rol: ['admin', 'cliente', 'clientevip','admin'], path: '/facturas' },
       { label: 'Ver catálogo', icon: iconoCatalogo, rol: ['clientevip', 'comercial'], path: '/catalogo' },
-      { label: 'Ver catálogo', icon: iconoCatalogo, rol: ['admin'], path: '/crear-catalogo' },
+      { label: 'Ver catálogo', icon: iconoCatalogo, rol: ['admin'], path: '/catalogos' },
       { label: 'Realizar pedido', icon: iconoCarrito, rol: ['clientevip', 'comercial'], path: '/realizar-pedido' },
       { label: 'Aplicar descuento', icon: iconoDescuento, rol: ['comercial'], path: '/aplicar-descuento' },
       { label: 'Solicitar bajas,altas..', icon: iconoDatos, rol: ['clientevip', 'comercial'], path: '/solicitar-bajas-altas' },

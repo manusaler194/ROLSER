@@ -56,9 +56,12 @@ const AppContent = () => {
                     <Routes>
 
 
+
                         {currentRole === 'admin' && (
                             <>
                                 <Route path="/crear-catalogo" element={<Catalogos />} />
+                                <Route path="/catalogos" element={<div>Por hacer</div>} />
+
                                 <Route path="/usuarios" element={<GestionUsuarios />} />
                                 <Route path="/listado-comerciales" element={<ListadoComerciales />} />
                                 <Route path="/listado-encargados" element={<ListadoEncargado />} />
