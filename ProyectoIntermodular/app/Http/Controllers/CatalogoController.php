@@ -88,16 +88,4 @@ class CatalogoController extends Controller{
             "message" => "catálogo con id =" . $request->id_catalogo . " ha sido borrado con éxito"
         ],201);
     }
-
-
-    public function articulos(){
-        return $this->belongsToMany(
-            Articulo::class,
-            'articulo_catalogo',
-            'id_catalogo',
-            'id_articulo'
-        )->withTimestamps();
-    }
-
-
 }
