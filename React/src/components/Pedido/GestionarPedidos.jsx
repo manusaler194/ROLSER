@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { apiFetch } from "../../utils/api"; 
 
 const GestionarPedidos = () => {
@@ -11,7 +11,6 @@ const GestionarPedidos = () => {
 
     const [busquedaCliente, setBusquedaCliente] = useState('');
     const [busquedaEncargado, setBusquedaEncargado] = useState('');
-    const navigate = useNavigate();
 
     useEffect(() => {
         obtenerPedidos();
@@ -44,7 +43,6 @@ const GestionarPedidos = () => {
             const response = await apiFetch(`http://localhost/api/pedidos/borrar/${id}`, {
                 method: 'DELETE',
             });
-
             if (response.ok) {
                 setAbrirMenuAcciones(null);
                 alert("Pedido eliminado");
@@ -75,7 +73,6 @@ const GestionarPedidos = () => {
                 id_factura: pedido.id_factura
             }),
             });
-
             setAbrirMenuCambioEstado(null);
             obtenerPedidos();
 
@@ -173,7 +170,7 @@ const GestionarPedidos = () => {
                                         <div className="absolute right-0 mt-2 w-48 bg-white border-2 border-gray-400 z-50 shadow-xl">
                                             <div className="flex flex-col text-sm">
                                                 <button onClick={() => handleEliminar(pedido.id_pedido)} className="px-4 py-2 border-b border-gray-400 hover:bg-gray-100 text-left cursor-pointer text-red-600">Eliminar</button>
-                                                <button onClick={() => navigate(`/DetallesPedido/${pedido.id_pedido}`)} className="px-4 py-2 hover:bg-gray-100 text-left cursor-pointer">Ver detalles</button>
+                                                <Link to={`/DetallesPedido/${pedido.id_pedido}`} className="px-4 py-2 hover:bg-gray-100 text-left cursor-pointer">Ver detalles</Link>
                                             </div>
                                         </div>
                                     )}

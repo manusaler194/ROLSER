@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import iconoDesplegable from '/src/assets/desplegable.svg';
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { apiFetch } from "../../utils/api"; 
 
 const CrearAlmacen = () =>{
     const [almacen,setAlmacen] = useState({
@@ -12,7 +13,6 @@ const CrearAlmacen = () =>{
     const [encargados, setEncargados] = useState([]);
     const [menu, setMenu] = useState(false);
     const navigate = useNavigate();
-
     const handleDireccion = (e) =>{
         setAlmacen({...almacen, direccion : e.target.value})
     }
@@ -25,9 +25,10 @@ const CrearAlmacen = () =>{
     useEffect(() => {
         const cargarEncargados = async () => {
             try {
-                const response = await fetch('http://localhost/api/encargadoAlmacen');
+                const response = await apiFetch('http://localhost/api/encargadoAlmacen');
                 const data = await response.json();
-                setEncargados(data);
+                console.log(data);
+                setEncargados(data.encargadoAlmacen);
             } catch (error) {
                 console.error("Error:", error);
             }
@@ -35,19 +36,23 @@ const CrearAlmacen = () =>{
         cargarEncargados();
     }, []);
     
-    const handleSubmit = async (e) =>{
+    const handleSubmit = async (e) => {
         console.log("a");
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost/api/almacenes/guardar', almacen);
-            console.log("Funciona:", response.data);
+            const response = await apiFetch('http://localhost/api/almacenes/guardar', {
+                method: 'POST',
+                body: JSON.stringify(almacen)
+            });
+            const data = await response.json();
+            console.log("Funciona:", data);
             alert("Almacén creado con éxito");
             navigate('/GestionAlmacen');
         } catch (error) {
-            console.error("Error al enviar datos:", error.response?.data || error.message);
-            alert("Hubo un error al crear el almacén");
+            console.error("Error al enviar datos:", error.message);
+            alert(error.message);
         }
-    }
+    };
 
 
     const inputClasses = "w-full px-5 py-3 mb-10 border border-gray-400 rounded-full focus:outline-none focus:ring-2 focus:ring-red-800 appearance-none bg-white text-gray-700";
@@ -72,7 +77,7 @@ const CrearAlmacen = () =>{
             </div>
 
             <div className="absolute bottom-20 right-20">
-                <button onClick={()=> navigate('/GestionAlmacen')} className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Volver</button>
+                <Link to="/GestionAlmacen" className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Volver</Link>            
             </div>
         </div>
     )

@@ -16,4 +16,8 @@ class Proveedor extends Model
     public function encargados_de_almacen(){
         return $this->belongsTo(EncargadoAlmacen::class, 'id_encargado');
     }
+
+    public function pedidosReposicion() { 
+        return $this->hasMany(PedidoReposicion::class, 'id_proveedor'); 
+    }
 }

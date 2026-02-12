@@ -5,23 +5,26 @@ import { useAuth } from "../../context/AuthContext";
 const CrearPedidoRebastecimiento = () => {
     const { user, role } = useAuth(); 
     const [articulos, setArticulos] = useState([]);
+    const [proveedores, setProveedores] = useState([]);
+    const [idProveedor, setIdProveedor] = useState(""); 
 
     useEffect(() => {
-        const cargarArticulos = async () => {
-                    console.log(user)
-        
+        const cargarDatos = async () => {
             try {
-                const response = await apiFetch('http://localhost/api/articulo');
-                const data = await response.json();
-                console.log(data);
-                const articulosConCantidad = data.almacen.map(a => ({ ...a, cantidad: 0 }));
-                setArticulos(articulosConCantidad);
-                console.log(user);
+                const responseArt = await apiFetch('http://localhost/api/articulo');
+                const dataArt = await responseArt.json();
+                console.log(dataArt);
+                setArticulos(dataArt.almacen.map(a => ({ ...a, cantidad: 0 })));
+
+                const responseProv = await apiFetch('http://localhost/api/proveedor');
+                const dataProv = await responseProv.json();
+                console.log(dataProv);
+                setProveedores(dataProv.proveedor); 
             } catch (error) {
-                console.error("Error al cargar artículos:", error);
+                console.error("Error al cargar datos iniciales:", error);
             }
         };
-        cargarArticulos();
+        cargarDatos();
     }, []);
 
     const handleCantidad = (id, nuevaCantidad) => {
@@ -33,94 +36,72 @@ const CrearPedidoRebastecimiento = () => {
         );
     };
 
-    const añadirProducto = async () => {
-        const productos = articulos.filter(articulo => articulo.cantidad > 0);
+    const totalPedido = articulos.reduce((acc, art) => acc + ((art.cantidad || 0) * (art.precio || 0)), 0);
 
-        if (productos.length === 0) {
-            alert("Selecciona al menos un producto");
+    const crearReabastecimiento = async () => {
+        if (!idProveedor) {
+            alert("Por favor, selecciona un proveedor.");
             return;
         }
-
-
+        if (articulos.filter(a => a.cantidad > 0).length === 0) {
+            alert("Selecciona al menos un producto.");
+            return;
+        }
         try {
-            const totalPrecio = productos.reduce((acc, art) => acc + (art.cantidad * art.precio), 0);
-            const totalCantidad = productos.reduce((acc, art) => acc + art.cantidad, 0);
+            const datosParaLaravel = {
+                fecha_pedido: new Date().toISOString().split('T')[0],
+                estado: 'En preparación',
+                id_proveedor: idProveedor, 
+                id_administrador: role === 'admin' ? user.id : null,
+                id_encargado: role === 'encargado_almacen' ? user.id : null
+            };
 
-            const resFactura = await apiFetch('http://localhost/api/facturas/guardar', {
+            const response = await apiFetch('http://localhost/api/pedido-reabastecimiento/guardar', {
                 method: 'POST',
-                body: JSON.stringify({
-                    cantidad: totalCantidad,
-                    fecha: new Date().toISOString().split('T')[0],
-                    precio: totalPrecio,
-                    id_administrador: role === 'admin' ? user.id : null,
-                })
+                body: JSON.stringify(datosParaLaravel)
             });
-
-            if (!resFactura.ok) throw new Error("Error al generar la factura.");
-            const dataFactura = await resFactura.json();
-            const facturaId = dataFactura.factura.id_factura;
-
-            const resPedido = await apiFetch('http://localhost/api/pedidos/guardar', {
-                method: 'POST',
-                body: JSON.stringify({
-                    fecha_pedido: new Date().toISOString().split('T')[0],
-                    estado: 'En preparación',
-                    id_factura: facturaId,
-                    id_encargado: role === 'encargado_almacen' ? user?.id : null
-                })
-            });
-
-            if (!resPedido.ok) throw new Error("Error al generar el pedido.");
-            const dataPedido = await resPedido.json();
-            const pedidoId = dataPedido.pedidos?.id_pedido;
-
-            const promesasLineas = productos.map(articulo => 
-                apiFetch('http://localhost/api/lineasPedido/guardar', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        precio: articulo.precio,
-                        cantidad: articulo.cantidad,
-                        id_pedido: pedidoId,
-                        id_articulo: articulo.id_articulo
-                    })
-                }).then(res => {
-                    if (!res.ok) throw new Error(`Error en el producto: ${articulo.nombre}`);
-                    return res.json();
-                })
-            );
-
-            await Promise.all(promesasLineas);
-
-            alert(" Pedido de reabastecimiento registrado con éxito.");
-            
+            alert("Pedido de reposición creado con éxito.");
             setArticulos(prev => prev.map(art => ({ ...art, cantidad: 0 })));
-
+            setIdProveedor("");
         } catch (error) {
-            console.error("Error completo:", error);
-            alert(`Error: ${error.message}`);
+            alert("Error al crear el pedido");
         } 
     };
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">
             <div className="max-w-6xl mx-auto">
-                
-                <div className="flex justify-between items-center mb-8">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-800">Reabastecimiento de Inventario</h1>
+                        <h1 className="text-3xl font-bold text-gray-800">Crear Pedido Reposición</h1>
+                        <p className="text-gray-500">Gestiona la entrada de stock</p>
                     </div>
-                    <button onClick={añadirProducto} className={'font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 text-white bg-red-700 hover:bg-red-800'}>Confirmar Pedido</button>
+                    <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                        <div className="flex flex-col">
+                            <label className="text-sm font-semibold text-gray-600 mb-1">Proveedor:</label>
+                            <select value={idProveedor} onChange={(e) => setIdProveedor(e.target.value)} className="p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-red-600 outline-none">
+                                <option value="">Seleccione un proveedor...</option>
+                                {proveedores.map(prov => (
+                                    <option key={prov.id_proveedor} value={prov.id_proveedor}>
+                                        {prov.nombre_empresa}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <button onClick={crearReabastecimiento} className={`mt-auto font-semibold py-2 px-6 rounded-lg text-white shadow-md transition bg-red-700 hover:bg-red-800`}>Confirmar Pedido</button>
+                    </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-gray-100 text-gray-700 uppercase text-sm">
-                                <th className="px-6 py-4 font-semibold">Producto</th>
-                                <th className="px-6 py-4 font-semibold text-center">Stock Actual</th>
-                                <th className="px-6 py-4 font-semibold">Precio</th>
-                                <th className="px-6 py-4 font-semibold">Cantidad a Pedir</th>
-                                <th className="px-6 py-4 font-semibold">Total</th>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <table className="w-full text-left">
+                        <thead className="bg-gray-100 border-b border-gray-200">
+                            <tr>
+                                <th className="px-6 py-4 font-semibold text-gray-700">Producto</th>
+                                <th className="px-6 py-4 text-center font-semibold text-gray-700">Stock Actual</th>
+                                <th className="px-6 py-4 font-semibold text-gray-700">Precio Unit.</th>
+                                <th className="px-6 py-4 font-semibold text-gray-700 text-center">Cantidad</th>
+                                <th className="px-6 py-4 font-semibold text-gray-700">Subtotal</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
@@ -128,26 +109,26 @@ const CrearPedidoRebastecimiento = () => {
                                 <tr key={articulo.id_articulo} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-4 font-medium text-gray-900">{articulo.nombre}</td>
                                     <td className="px-6 py-4 text-center">
-                                        <span className={`px-3 py-1 text-xs font-bold rounded-full ${articulo.stock_actual < 50 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>{articulo.stock_actual} unidades</span>
+                                        <span className={`px-3 py-1 text-xs font-bold rounded-full ${articulo.stock_actual < 50 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>{articulo.stock_actual}</span>
                                     </td>
-                                    <td className="px-6 py-4 text-gray-700">{articulo.precio}€</td>
-                                    <td className="px-6 py-4">
-                                        <input type="number" min="0" value={articulo.cantidad}className="w-20 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#bc002d] outline-none" onChange={(e) => handleCantidad(articulo.id_articulo, e.target.value)} />
+                                    <td className="px-6 py-4 text-gray-600">{articulo.precio ? `${articulo.precio}€` : "0.00€"}</td>
+                                    <td className="px-6 py-4 text-center">
+                                        <input type="number" min="0"value={articulo.cantidad}onChange={(e) => handleCantidad(articulo.id_articulo, e.target.value)}className="w-24 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 outline-none text-center"/>
                                     </td>
-                                    <td className="px-6 py-4 font-semibold text-[#bc002d]">{((articulo.cantidad || 0) * articulo.precio).toFixed(2)}€</td>
+                                    <td className="px-6 py-4 font-semibold text-red-700">{((articulo.cantidad || 0) * (articulo.precio || 0)).toFixed(2)}€</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div className="mt-6 flex justify-end">
-                   <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                       <span className="text-gray-600 mr-4">Total Estimado:</span>
-                       <span className="text-2xl font-bold text-gray-800"> 
-                            {articulos.reduce((acc, art) => acc + ((art.cantidad || 0) * art.precio), 0).toFixed(2)}€
-                       </span>
-                   </div>
+                    <div className="bg-white p-4 rounded-xl shadow-md flex items-center gap-8">
+                        <div className="flex flex-col">
+                            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Total del Pedido</span>
+                            <span className="text-1xl font-black text-red-700">{totalPedido.toFixed(2)}€</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

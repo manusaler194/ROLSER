@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
+import { apiFetch } from "../../utils/api"; 
 
 const DatosAlmacen = () =>{
   const [almacen,setAlmacen] = useState([]);
   const { id } = useParams();
-  const navigate = useNavigate();
   const { user, role } = useAuth(); 
   
   useEffect(()=>{
     const cargarAlmacen = async () =>{
-      const response = await fetch(`http://localhost/api/almacenes/${id}`);
+      const response = await apiFetch(`http://localhost/api/almacenes/${id}`);
       const data = await response.json();
       setAlmacen(data.almacen[0]);
     }
@@ -40,13 +40,13 @@ return (
             <input type="text" value={almacen.encargado_almacen?.nombre || "Sin encargado asignado"} className={inputClasses} readOnly />
           </div>
           
-          <div onClick={() => navigate('/GestionAlmacen')} className="w-full py-4 bg-[#bc002d] text-white font-bold rounded-full text-center shadow-md hover:bg-red-800 transition-colors cursor-pointer" > Volver</div>
+          <Link to="/GestionAlmacen" className="block w-full py-4 bg-[#bc002d] text-white font-bold rounded-full text-center shadow-md hover:bg-red-800 transition-colors cursor-pointer" > Volver</Link>   
         </form>
       </div>
 
       
       <div className="absolute bottom-10 right-10 lg:bottom-20 lg:right-20">
-        <button onClick={() => navigate(`/ModificarAlmacen/${id}`)} className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Modificar </button>
+        <Link to={`/ModificarAlmacen/${id}`} className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Modificar </Link>
       </div>
     </div>
 );

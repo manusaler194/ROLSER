@@ -16,11 +16,13 @@ import DatosAlmacen from "./components/Almacen/DatosAlmacen";
 import DatosAlmacenEncargado from "./components/Almacen/DatosAlmacenEncargado";
 import ModificarAdministrador from "./components/Administrador/ModificarAdministrador";
 import GestionarPedidos from "./components/Pedido/GestionarPedidos";
+import GestionarPedidosEncargado from "./components/Pedido/GestionarPedidosEncargado";
 import ModificarCliente from "./components/Administrador/ModificarCliente";
 import ModificarClienteVip from "./components/Administrador/ModificarClienteVip";
 import ModificarComercial from "./components/Administrador/ModificarComercial";
 import ModificarEncargado from "./components/Administrador/ModificarEncargado";
 import DetallesPedido from "./components/Pedido/DetallesPedido";
+import DetallesPedidoEncargado from "./components/Pedido/DetallesPedidoEncargado";
 import CrearAdmin from "./components/Administrador/CrearAdmin";
 import CrearCliente from "./components/Administrador/CrearCliente";
 import CrearClienteVip from "./components/Administrador/CrearClienteVip";
@@ -85,10 +87,15 @@ const AppContent = () => {
                                 <Route path="/modificar-cliente/:id" element={<ModificarCliente />} />
                                 <Route path="/tarifas" element={<div>Página de Tarifas</div>} />
                                 <Route path="/estadisticas" element={<div>Estadísticas</div>} />
+                                <Route path="/pedidos" element={<GestionarPedidos />} />
+                                <Route path="/DetallesPedido/:id" element={<DetallesPedido />} />
+
                             </>
                         )}
                         {currentRole === 'encargado_almacen' && (
                             <>
+                                <Route path="/DetallesPedido/encargado/:id" element={<DetallesPedidoEncargado />} />
+                                <Route path="/pedidos/encargado" element={<GestionarPedidosEncargado />} />
                                 <Route path="/GestionAlmacenEncargado" element={<GestionAlmacenEncargado />} />
                                 <Route path="/DatosAlmacenEncargado/:id" element={<DatosAlmacenEncargado />} />    
                                 <Route path="/stock" element={<div>Stock</div>}/>                            
@@ -96,7 +103,6 @@ const AppContent = () => {
                         )}
                         {['admin', 'encargado_almacen'].includes(currentRole) && (
                             <>
-                                <Route path="/pedidos" element={<GestionarPedidos />} />
                                 <Route path="/crear-pedido-reabastecimiento" element={<CrearPedidoRebastecimiento />} />
                             </>
                         )}
@@ -120,7 +126,7 @@ const AppContent = () => {
                         <Route path="/" element={
                             <Navigate to={
                                 currentRole === 'admin' ? "/usuarios" :
-                                currentRole === 'encargado_almacen' ? "/pedidos" :
+                                currentRole === 'encargado_almacen' ? "/pedidos/encargado" :
                                 currentRole === 'comercial' ? "/pedidosRealizados" :
                                 currentRole === 'cliente' ? "//pedidosRealizados" :
                                 currentRole === 'clientevip' ? "//pedidosRealizados" :

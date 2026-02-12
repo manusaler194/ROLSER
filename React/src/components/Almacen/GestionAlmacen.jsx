@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import iconoDesplegable from '/src/assets/desplegable.svg';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
+import { apiFetch } from "../../utils/api"; 
 
 const GestionAlmacen = () => {
   const [abrirMenu, setAbrirMenu] = useState(null);
   const [almacenes,setAlmacenes] = useState([]);
-  const navigate = useNavigate();
-  
+    
   const cargarAlmacenes = async () => {
     try {
-        const response = await fetch('http://localhost/api/almacenes');
+        const response = await apiFetch('http://localhost/api/almacenes');
         const data = await response.json();
-        
+
         console.log(data);
         setAlmacenes(data.almacen); 
     } catch (error) {
@@ -27,10 +27,9 @@ const GestionAlmacen = () => {
 
   const handleEliminar = async (id) => {
     try {
-        const response = await fetch(`http://localhost/api/almacenes/borrar/${id}`, {
+        const response = await apiFetch(`http://localhost/api/almacenes/borrar/${id}`, {
             method: 'DELETE',
         });
-
         if (response.ok) {
             setAbrirMenu(null);
             alert("Almacén eliminado");
@@ -60,9 +59,9 @@ const GestionAlmacen = () => {
             {abrirMenu === almacen.id_almacen && (
               <div className="absolute left-full ml-10 bg-white border-2 border-gray-400">
                 <div className="flex flex-col text-xl">
-                  <button onClick={()=> navigate(`/ModificarAlmacen/${almacen.id_almacen}`)} className="px-6 py-2 border-b-2 border-gray-400 hover:bg-gray-100 text-left cursor-pointer">Modificar</button>
+                  <Link to={`/ModificarAlmacen/${almacen.id_almacen}`} className="px-6 py-2 border-b-2 border-gray-400 hover:bg-gray-100 text-left cursor-pointer">Modificar</Link>
                   <button onClick={() => handleEliminar(almacen.id_almacen)} className="px-6 py-2 border-b-2 border-gray-400 hover:bg-gray-100 text-left cursor-pointer">Eliminar</button>
-                  <button onClick={()=> navigate(`/DatosAlmacen/${almacen.id_almacen}`)} className="px-6 py-2 hover:bg-gray-100 text-left cursor-pointer">Ver datos</button>
+                  <Link to={`/DatosAlmacen/${almacen.id_almacen}`} className="px-6 py-2 hover:bg-gray-100 text-left cursor-pointer">Ver datos</Link>
                 </div>
               </div>
             )}
@@ -71,7 +70,7 @@ const GestionAlmacen = () => {
       </div>
 
       <div className="absolute bottom-20 right-20">
-        <button onClick={()=> navigate('/CrearAlmacen')} className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Crear</button>
+        <Link to='/CrearAlmacen' className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Crear</Link>
       </div>
     </div>
   );

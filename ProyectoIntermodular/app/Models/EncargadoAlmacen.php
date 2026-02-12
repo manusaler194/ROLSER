@@ -28,4 +28,7 @@ class EncargadoAlmacen extends Authenticatable{
     public function pedidos(){
         return $this->hasMany(Pedido::class, 'id_encargado');
     }
+    public function pedidosReposicion() { 
+        return $this->hasMany(PedidoReposicion::class, 'id_encargado'); 
+    }
 }

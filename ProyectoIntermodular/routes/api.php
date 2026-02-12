@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AlmacenController;
 use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\PedidoReposicionController;
 use App\Http\Controllers\ArticuloController;
 use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\EncargadoAlmacenController;
@@ -151,3 +152,9 @@ Route::get('/comerciales/{id_comercial}', [ComercialController::class, 'mostrarC
 /* -------------------------------------------------------------------------- */
 Route::post('/catalogo/guardar', [ArticuloController::class, 'guardarCatalogo']);
 
+//******************************************* */
+Route::post('/pedidos/reposicion/guardar', [PedidoReposicionController::class, 'guardar']);
+Route::get('/pedidos/reposicion', [PedidoReposicionController::class, 'mostrar']);
+Route::get('/pedidos/reposicion/{id_pedidoReposicion}', [PedidoReposicionController::class, 'mostrarPedido']);
+Route::put('/pedidos/reposicion/actualizar/{id_pedidoReposicion}', [PedidoReposicionController::class, 'actualizar']);
+Route::delete('/pedidos/reposicion/borrar/{id_pedidoReposicion}', [PedidoReposicionController::class, 'eliminar']);

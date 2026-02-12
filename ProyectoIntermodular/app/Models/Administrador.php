@@ -29,8 +29,17 @@ class Administrador extends Authenticatable
         return $this->hasMany(ClienteVip::class, 'id_administrador');
     }
 
-    // El resto de tus relaciones se mantienen igual
-    public function facturas() { return $this->hasMany(Facturas::class); }
-    public function articulos() { return $this->hasMany(Articulo::class); }
-    public function catalogos() { return $this->hasMany(Catalogo::class); }
+    public function facturas() {
+        return $this->hasMany(Facturas::class); 
+    }
+    public function articulos() {
+        return $this->hasMany(Articulo::class);
+    }
+    public function catalogos() { 
+        return $this->hasMany(Catalogo::class); 
+    }
+
+    public function pedidosReposicion() { 
+        return $this->hasMany(PedidoReposicion::class, 'id_administrador'); 
+    }
 }

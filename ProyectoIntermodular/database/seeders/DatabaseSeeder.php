@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             ClienteVipSeeder::class,
             FacturaSeeder::class,
             PedidoSeeder::class,
+            PedidoReposicionSeeder::class,
             LineaPedidoSeeder::class,
             CatalogoComercialSeeder::class,
             ArticuloCatalogoSeeder::class,

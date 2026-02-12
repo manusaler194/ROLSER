@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { apiFetch } from "../../utils/api"; 
 
-const DetallesPedido = () => {
+const DetallesPedidoEncargado = () => {
   const [pedido, setPedido] = useState(null);
   const { id } = useParams();
 
@@ -77,10 +77,10 @@ const DetallesPedido = () => {
             </table>
           </div>
         </div>
-        <Link to='/pedidos' className="block w-full py-4 bg-[#bc002d] text-white font-bold rounded-full text-center shadow-md hover:bg-red-800 transition-colors cursor-pointer">Volver al listado</Link>
+        <Link to='/pedidos/encargado' className="block w-full py-4 bg-[#bc002d] text-white font-bold rounded-full text-center shadow-md hover:bg-red-800 transition-colors cursor-pointer">Volver al listado</Link>
       </div>
     </div>
   );
 };
 
-export default DetallesPedido;
+export default DetallesPedidoEncargado;

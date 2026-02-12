@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { apiFetch } from '../../utils/api';
 
@@ -11,9 +11,8 @@ const ModificarAlmacen = () =>{
     });
     const [encargados, setEncargados] = useState([]);
     const [menu, setMenu] = useState(false);
-    const navigate = useNavigate();
     const { id } = useParams();
-
+    const navigate = useNavigate();
     const handleDireccion = (e) =>{
         setAlmacen({...almacen, direccion : e.target.value})
     }
@@ -52,12 +51,10 @@ const ModificarAlmacen = () =>{
         },[id]);
 
     const handleSubmit = async (e) =>{
-        console.log("a");
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost/api/almacenes/actualizar/${id}`, {
+            const response = await apiFetch(`http://localhost/api/almacenes/actualizar/${id}`, {
                 method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(almacen)
             });
             if (response.ok) {
@@ -93,12 +90,12 @@ const ModificarAlmacen = () =>{
                                 ))}
                         </select>
                     </div>
-                    <button type="submit" className="w-full py-4 mt-2 text-white font-bold bg-[#b3002d] rounded-full hover:bg-red-900 transition-all transform active:scale-95 shadow-lg"> MODIFICAR </button>
+                    <button type="submit" className="w-full bg-[#bc002d] text-white py-4 rounded-full text-2xl font-bold text-center shadow-lg hover:bg-red-800 transition-all active:scale-[0.98] cursor-pointer tracking-wide">MODIFICAR</button>
                 </form>
             </div>
 
             <div className="absolute bottom-20 right-20">
-                <button onClick={()=> navigate('/GestionAlmacen')} className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Volver</button>
+                <Link to='/GestionAlmacen' className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Volver</Link>
             </div>
         </div>
     )

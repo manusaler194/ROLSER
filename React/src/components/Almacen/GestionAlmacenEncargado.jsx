@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import iconoDesplegable from '/src/assets/desplegable.svg';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
+import { apiFetch } from "../../utils/api"; 
 
 const GestionAlmacenEncargado = () => {
   const [abrirMenu, setAbrirMenu] = useState(null);
   const [almacenes, setAlmacenes] = useState([]);
-  const navigate = useNavigate();
   const { user, role } = useAuth(); 
   
   const cargarAlmacenes = async () => {
     try {
         console.log(user);
-
-        const response = await fetch('http://localhost/api/almacenes');
+        const response = await apiFetch('http://localhost/api/almacenes');
         const data = await response.json();
         
         console.log(data);
@@ -30,25 +29,6 @@ const GestionAlmacenEncargado = () => {
 
   const almacenesFiltrados = almacenes.filter(almacen => almacen.id_encargado === user?.id_encargado);
   console.log(almacenesFiltrados)
-  const handleEliminar = async (id) => {
-    try {
-        const response = await fetch(`http://localhost/api/almacenes/borrar/${id}`, {
-            method: 'DELETE',
-        });
-
-        if (response.ok) {
-            setAbrirMenu(null);
-            alert("Almacén eliminado");
-            cargarAlmacenes();
-        } else {
-            alert("No se pudo eliminar el almacén.");
-        }
-    } catch (error) {
-        console.error("Error al eliminar:", error);
-        alert("Ocurrió un error de red al intentar eliminar.");
-    }
-  };
-  
   return (
     <div className="p-10 flex flex-col h-full">
       <div className="flex flex-col gap-6 w-72">
@@ -64,7 +44,7 @@ const GestionAlmacenEncargado = () => {
             {abrirMenu === almacen.id_almacen && (
               <div className="absolute left-full ml-10 bg-white border-2 border-gray-400">
                 <div className="flex flex-col text-xl">
-                  <button onClick={()=> navigate(`/DatosAlmacenEncargado/${almacen.id_almacen}`)} className="px-6 py-2 hover:bg-gray-100 text-left cursor-pointer">Ver datos</button>
+                  <Link to={`/DatosAlmacenEncargado/${almacen.id_almacen}`} className="px-6 py-2 hover:bg-gray-100 text-left cursor-pointer">Ver datos</Link>
                 </div>
               </div>
             )}
