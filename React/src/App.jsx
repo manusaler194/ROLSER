@@ -28,6 +28,8 @@ import CrearCliente from "./components/Administrador/CrearCliente";
 import CrearClienteVip from "./components/Administrador/CrearClienteVip";
 import CrearPedidoRebastecimiento from "./components/Pedido/CrearPedidoRebastecimiento";
 import CrearEncargado from "./components/Administrador/CrearEncargado";
+import MostrarFacturas from "./components/Factura/MostrarFacturas";
+import MostrarFactura from "./components/Factura/MostrarFactura";
 import CrearComercial from "./components/Administrador/CrearComercial";
 import ListadoAdministrador from "./components/Administrador/ListadoAdministrador";
 import ListadoCliente from "./components/Administrador/ListadoCliente";
@@ -109,7 +111,8 @@ const AppContent = () => {
                         {['comercial', 'clientevip', 'cliente', 'admin'].includes(role) && (
                             <>
                                 <Route path="/pedidosRealizados" element={<div>Pedidos Realizados</div>} />
-                                <Route path="/facturas" element={<div>Facturas</div>} />
+                                <Route path="/facturas" element={<MostrarFacturas />} />
+                                <Route path="/factura/:id" element={<MostrarFactura />} />
                                 {['comercial', 'clientevip'].includes(role) && (
                                     <>
                                         <Route path="/catalogo" element={<div>Por hacer</div>} />
