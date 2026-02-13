@@ -23,7 +23,7 @@ const ModificarClienteVip = () => {
     const cargarClienteVip = async () => {
       try {
         // Corregido: localhost por la IP real de tu API
-        const respuesta = await fetch(`http://192.168.0.14:8008/api/clientesVip/${id}`);
+        const respuesta = await fetch(`http://localhost/api/clientesVip/${id}`);
         
         if (!respuesta.ok) {
             throw new Error(`Error HTTP: ${respuesta.status}`);
@@ -80,7 +80,7 @@ const ModificarClienteVip = () => {
 
       // Corregido: localhost por la IP real
       await axios.put(
-        `http://192.168.0.14:8008/api/clientesVip/actualizar/${id}`,
+        `http://localhost/api/clientesVip/actualizar/${id}`,
         datosAEnviar
       );
       

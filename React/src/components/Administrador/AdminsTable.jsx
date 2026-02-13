@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AdminsTable = ({ usuario, onVolver }) => {
+  const navigate = useNavigate();
+
   // Verificamos que llegue el usuario
   if (!usuario) return <p className="text-center p-4">No hay datos de usuario.</p>;
 
@@ -72,14 +75,19 @@ const AdminsTable = ({ usuario, onVolver }) => {
             </div>
           </div>
 
-          {/* Botón Volver (Conectado a la función) */}
-          <div className="flex justify-center pt-4">
+          {/* Botones de acción */}
+          <div className="flex flex-col-reverse sm:flex-row justify-center pt-4 gap-3 sm:gap-4">
             <button 
               onClick={onVolver}
-              // El botón ocupa todo el ancho en móvil (w-full) y se adapta al contenido en pantallas más grandes (sm:w-auto)
-              className="bg-[#bd0026] text-white font-medium py-3 sm:py-2 px-12 w-full sm:w-auto rounded-full hover:bg-red-800 transition-colors shadow-md"
+              className="bg-white border border-gray-400 text-gray-700 font-medium py-3 sm:py-2 px-10 w-full sm:w-auto rounded-full hover:bg-gray-100 transition-colors shadow-sm"
             >
               Volver
+            </button>
+            <button 
+              onClick={() => navigate(`/modificar-admin/${usuario.id_administrador}`)}
+              className="bg-[#bd0026] text-white font-medium py-3 sm:py-2 px-10 w-full sm:w-auto rounded-full hover:bg-red-800 transition-colors shadow-md"
+            >
+              Modificar
             </button>
           </div>
 

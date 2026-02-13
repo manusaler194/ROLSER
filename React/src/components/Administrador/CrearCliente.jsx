@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const CrearCliente = () => {
   const navigate = useNavigate();
-  const URL_API_GUARDAR = "http://192.168.0.14:8008/api/clientes/guardar";
+  const URL_API_GUARDAR = "http://localhost/api/clientes/guardar";
 
   const [cliente, setCliente] = useState({
     nombre: "",
@@ -26,8 +26,8 @@ const CrearCliente = () => {
     const cargarListas = async () => {
       try {
         const [resAdmins, resComerciales] = await Promise.all([
-          axios.get("http://192.168.0.14:8008/api/administradores"),
-          axios.get("http://192.168.0.14:8008/api/comerciales"),
+          axios.get("http://localhost/api/administradores"),
+          axios.get("http://localhost/api/comerciales"),
         ]);
 
         const listaAdmins = resAdmins.data.admin || [];

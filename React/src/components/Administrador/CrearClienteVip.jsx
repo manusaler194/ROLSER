@@ -67,7 +67,7 @@ const CrearClienteVip = () => {
       };
 
       await axios.post(
-        "http://192.168.0.14:8008/api/clientesVip/guardar",
+        "http://localhost/api/clientesVip/guardar",
         datosEnviados
       );
       alert("Cliente VIP creado con éxito");

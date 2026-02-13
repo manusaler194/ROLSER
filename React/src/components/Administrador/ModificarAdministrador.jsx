@@ -21,7 +21,7 @@ const ModificarAdministrador = () => {
     useEffect(() => {
         const cargarAdmin = async () => {
             try {
-                const response = await fetch(`http://192.168.0.14:8008/api/administradores/${id}`);
+                const response = await fetch(`http://localhost/api/administradores/${id}`);
                 
                 if (!response.ok) {
                     throw new Error(`Error HTTP: ${response.status}`);
@@ -72,7 +72,7 @@ const ModificarAdministrador = () => {
             }
 
             // Ojo: Corregida la URL (tenías un doble http://http://)
-            await axios.put(`http://192.168.0.14:8008/api/administradores/actualizar/${id}`, datosAEnviar); 
+            await axios.put(`http://localhost/api/administradores/actualizar/${id}`, datosAEnviar); 
             
             alert("Administrador modificado con éxito");
             navigate('/usuarios');
