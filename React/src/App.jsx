@@ -41,6 +41,9 @@ import ListadoClienteVip from "./components/Administrador/ListadoClienteVip";
 import ListadoEncargado from "./components/Administrador/ListadoEncargado";
 import ListadoComerciales from "./components/Administrador/ListadoComercial";
 import Perfil from "./components/Conjunto/Perfil";
+import VerCatalogoCliente from "./components/Catalogo/VerCatalogoCliente";
+
+
 const AppContent = () => {
 
     const { token, role } = useAuth();
@@ -113,6 +116,11 @@ const AppContent = () => {
                                 <Route path="/stock" element={<div>Stock</div>}/>                            
                             </>
                         )}
+                        {role === 'cliente' && (
+                            <>
+                                <Route path="/verCatalogoCliente" element={<VerCatalogoCliente/>}/>                     
+                            </>
+                        )}
                         {['admin', 'encargado_almacen'].includes(role) && (
                             <>
                                 <Route path="/crear-pedido-reabastecimiento" element={<CrearPedidoRebastecimiento />} />
@@ -126,9 +134,9 @@ const AppContent = () => {
                                 <Route path="/facturas" element={<div>Facturas</div>} />
                                 {['comercial', 'clientevip'].includes(role) && (
                                     <>
-                                        <Route path="/catalogo" element={<div>Por hacer</div>} />
-                                        <Route path="/realizar-pedido" element={<div>Por hacer</div>} />
-                                        <Route path="/solicitar-bajas-altas" element={<div>Bajas y Altas</div>} />
+                                        
+                                        <Route path="/realizar-pedido" element={<div>Por hacer</div>}/>
+                                        <Route path="/solicitar-bajas-altas" element={<div>Bajas y Altas</div>}/>
                                     </>
                                 )}
                                 {role === 'comercial' && <Route path="/aplicar-descuento" element={<div>Descuentos</div>} />}
