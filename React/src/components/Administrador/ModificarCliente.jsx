@@ -21,7 +21,7 @@ const ModificarCliente = () => {
     useEffect(() => {
         const cargarCliente = async () => {
             try {
-                const respuesta = await fetch(`http://192.168.0.14:8008/api/clientes/${id}`);
+                const respuesta = await fetch(`http://localhost/api/clientes/${id}`);
                 
                 if (!respuesta.ok) {
                     throw new Error(`Error HTTP: ${respuesta.status}`);

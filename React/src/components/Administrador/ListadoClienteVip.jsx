@@ -17,7 +17,7 @@ const ListadoClienteVip = () => {
 
   // 1. CARGA DE DATOS
   useEffect(() => {
-    fetch("http://192.168.0.14:8008/api/clientesVip")
+    fetch("http://localhost/api/clientesVip")
       .then((res) => res.json())
       .then((data) => {
         setLista(data.clientesVip || []); 
@@ -35,7 +35,7 @@ const ListadoClienteVip = () => {
     }
 
     try {
-      const response = await fetch(`http://192.168.0.14:8008/api/clientesVip/borrar/${id}`, {
+      const response = await fetch(`http://localhost/api/clientesVip/borrar/${id}`, {
         method: "DELETE", 
         headers: {
           "Content-Type": "application/json",

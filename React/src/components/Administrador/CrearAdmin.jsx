@@ -5,7 +5,7 @@ const CrearAdmin = () => {
   const navegar = useNavigate();
 
   // URL de tu API
-  const URL_API = "http://192.168.0.14:8008/api/administradores/guardar";
+  const URL_API = "http://localhost/api/administradores/guardar";
 
   const [datos, setDatos] = useState({
     nombre: "",

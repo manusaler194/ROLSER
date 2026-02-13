@@ -21,7 +21,7 @@ const ModificarEncargado = () => {
         const cargarEncargado = async () => {
             try {
                 // CORRECCIÓN: Usamos la IP en lugar de localhost
-                const respuesta = await fetch(`http://192.168.0.14:8008/api/encargadoAlmacen/${id}`);
+                const respuesta = await fetch(`http://localhost/api/encargadoAlmacen/${id}`);
                 
                 if (!respuesta.ok) {
                     throw new Error(`Error HTTP: ${respuesta.status}`);
@@ -70,7 +70,7 @@ const ModificarEncargado = () => {
             }
             
             // CORRECCIÓN: Usamos la IP en lugar de localhost
-            await axios.put(`http://192.168.0.14:8008/api/encargadoAlmacen/actualizar/${id}`, datosAEnviar); 
+            await axios.put(`http://localhost/api/encargadoAlmacen/actualizar/${id}`, datosAEnviar); 
             
             alert("Encargado modificado con éxito");
             navegar('/usuarios'); 

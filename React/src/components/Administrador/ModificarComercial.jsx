@@ -21,7 +21,7 @@ const ModificarComercial = () => {
         const cargarComercial = async () => {
             try {
                 // CORRECCIÓN: Usamos la IP en lugar de localhost
-                const respuesta = await fetch(`http://192.168.0.14:8008/api/comerciales/${id}`);
+                const respuesta = await fetch(`http://localhost/api/comerciales/${id}`);
                 
                 if (!respuesta.ok) throw new Error("Error al conectar con la API");
 
@@ -74,7 +74,7 @@ const ModificarComercial = () => {
             }
 
             // CORRECCIÓN: Usamos axios.put con la IP en lugar del localhost que tenías en tu código original
-            await axios.put(`http://192.168.0.14:8008/api/comerciales/actualizar/${id}`, datosAEnviar); 
+            await axios.put(`http://localhost/api/comerciales/actualizar/${id}`, datosAEnviar); 
             
             alert("Comercial modificado con éxito");
             navegar('/usuarios'); // O al listado que corresponda

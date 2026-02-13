@@ -6,7 +6,7 @@ const CrearComercial = () => {
   const navigate = useNavigate();
 
   // URL unificada (igual que en los GET)
-  const URL_API_GUARDAR = "http://192.168.0.14:8008/api/comerciales/guardar";
+  const URL_API_GUARDAR = "http://localhost/api/comerciales/guardar";
 
   // Estado del formulario
   const [comercial, setComercial] = useState({
@@ -25,7 +25,7 @@ const CrearComercial = () => {
   useEffect(() => {
     const cargarAdmins = async () => {
       try {
-        const res = await axios.get("http://192.168.0.14:8008/api/administradores");
+        const res = await axios.get("http://localhost/api/administradores");
         
         // Carga robusta detectando la estructura de la respuesta
         const lista = res.data.admin || res.data.administradores || res.data;

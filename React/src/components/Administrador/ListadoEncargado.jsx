@@ -14,7 +14,7 @@ const ListadoEncargado = () => {
   const [encargadoSeleccionado, setEncargadoSeleccionado] = useState(null);
 
   useEffect(() => {
-    fetch("http://192.168.0.14:8008/api/encargadoAlmacen")
+    fetch("http://localhost/api/encargadoAlmacen")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -36,7 +36,7 @@ const ListadoEncargado = () => {
     }
 
     try {
-      const response = await fetch(`http://192.168.0.14:8008/api/encargadoAlmacen/borrar/${id}`, {
+      const response = await fetch(`http://localhost/api/encargadoAlmacen/borrar/${id}`, {
         method: "DELETE", 
         headers: {
           "Content-Type": "application/json",

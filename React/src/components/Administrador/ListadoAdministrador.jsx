@@ -231,7 +231,7 @@ const ListadoAdministrador = () => {
   const [adminSeleccionado, setAdminSeleccionado] = useState(null);
 
   useEffect(() => {
-    fetch("http://192.168.0.14:8008/api/administradores")
+    fetch("http://localhost/api/administradores")
       .then((res) => res.json())
       .then((data) => {
         setLista(data.admin || []); 
@@ -249,7 +249,7 @@ const ListadoAdministrador = () => {
     }
 
     try {
-      const response = await fetch(`http://192.168.0.14:8008/api/administradores/borrar/${id}`, {
+      const response = await fetch(`http://localhost/api/administradores/borrar/${id}`, {
         method: "DELETE", 
         headers: {
           "Content-Type": "application/json",

@@ -233,7 +233,7 @@ const ListadoCliente = () => {
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
 
   useEffect(() => {
-    fetch("http://192.168.0.14:8008/api/clientes")
+    fetch("http://localhost/api/clientes")
       .then((res) => res.json())
       .then((data) => {
         setLista(data.clientes || []); 
@@ -251,7 +251,7 @@ const ListadoCliente = () => {
     }
 
     try {
-      const response = await fetch(`http://192.168.0.14:8008/api/clientes/borrar/${id}`, {
+      const response = await fetch(`http://localhost/api/clientes/borrar/${id}`, {
         method: "DELETE", 
         headers: {
           "Content-Type": "application/json",

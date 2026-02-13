@@ -26,7 +26,7 @@ const CrearEncargado = () => {
     setCargando(true);
     
     try {
-      await axios.post("http://192.168.0.14:8008/api/encargadoAlmacen/guardar", encargado);
+      await axios.post("http://localhost/api/encargadoAlmacen/guardar", encargado);
       
       alert("Encargado creado con éxito");
       navigate("/usuarios"); 
