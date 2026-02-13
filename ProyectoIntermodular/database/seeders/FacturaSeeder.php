@@ -30,7 +30,6 @@ class FacturaSeeder extends Seeder
                 'metodo_pago' => $faker->randomElement(['tarjeta', 'transferencia', 'efectivo']),
                 'created_at' => now(),
                 'updated_at' => now(),
-                'id_pedido' => rand(1, 10),
                 'id_comercial' => rand(1, 10),
                 'id_cliente' => rand(1, 10),
                 'id_clientevip' => null
@@ -45,8 +44,7 @@ class FacturaSeeder extends Seeder
                 'metodo_pago' => $faker->randomElement(['tarjeta', 'transferencia', 'efectivo']),
                 'created_at' => now(),
                 'updated_at' => now(),
-                'id_pedido' => rand(1, 10),
-                'id_comercial' => rand(1, 10),
+                'id_comercial' => null,
                 'id_cliente' => null,
                 'id_clientevip' => rand(1, 10)
             ]);

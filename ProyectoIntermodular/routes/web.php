@@ -28,7 +28,5 @@ Route::middleware('auth')->group(function () {
 /* FACTURAS                                  */
 /* -------------------------------------------------------------------------- */
 Route::get('/mostrar/facturas', [FacturaController::class, 'mostrar'])->name("mostrarFacturas");
-Route::get('/mostrar/factura/{id_factura}', [FacturaController::class, 'mostrarFactura'])->name("mostrarFactura");
-
-
+Route::get('/mostrar/factura/{id_factura}', [FacturaController::class, 'mostrarFactura']);
 require __DIR__.'/auth.php';

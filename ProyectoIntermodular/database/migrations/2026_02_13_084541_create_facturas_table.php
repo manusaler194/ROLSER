@@ -19,7 +19,6 @@ return new class extends Migration
             $table->float('total_factura', 10, 2);
             $table->string('estado');
             $table->string('metodo_pago');
-            $table->foreignId('id_pedido')->nullable()->constrained('pedidos', 'id_pedido')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_comercial')->nullable()->constrained('comerciales', 'id_comercial')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_cliente')->nullable()->constrained('clientes', 'id_cliente')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_clientevip')->nullable()->constrained('clientes_vip', 'id_clientevip')->nullOnDelete()->cascadeOnUpdate();

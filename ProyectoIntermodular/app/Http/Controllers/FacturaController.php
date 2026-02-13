@@ -19,7 +19,6 @@ class FacturaController extends Controller{
             'total_factura'    => 'required|numeric|min:0',
             'estado'           => 'required|string',
             'metodo_pago'      => 'required|string',
-            'id_pedido'        => 'nullable|integer',
             'id_comercial'     => 'nullable|integer',
             'id_cliente'       => 'nullable|integer',
             'id_clientevip'    => 'nullable|integer',
@@ -60,9 +59,9 @@ class FacturaController extends Controller{
 
     public function mostrar(Request $request){
         try{
-            $facturas = Facturas::with(['pedido', 'cliente', 'comercial', 'clienteVip'])->get();
+            $facturas = Facturas::with(['cliente', 'comercial', 'clienteVip'])->get();
 
-            return view("mostrarFactura", compact("facturas"));
+            return view("mostrarFacturas", compact("facturas"));
 
         }catch(\Exception $e){
             return response()->json([
@@ -71,30 +70,21 @@ class FacturaController extends Controller{
         ], 500);
         }
     }
-    public function mostrarFactura(Request $request){
+
+    public function mostrarFactura($id_factura) {
         try {
-            $factura = Facturas::with(['pedido', 'cliente', 'comercial', 'clienteVip'])->where("id_factura", $request->id_factura)->get();
 
-            if (!$factura) {
-                return response()->json([
-                    'message' => 'Factura no encontrada'
-                ], 404);
-            }
-
-            return response()->json([
-                'message' => 'Datos recogidos',
-                'factura' => $factura
-            ], 200);
+            $factura = Facturas::where("id_factura", $id_factura)->get();
+            return view("mostrarFactura", compact("factura"));
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Error al obtener el almacén.',
+                'message' => 'Error al obtener la factura.',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
     public function actualizar (Request $request){
-
         $validatedData = $request->validate([
             'base_imponible'   => 'required|numeric|min:0',
             'iva_porcentaje'   => 'required|numeric|min:0',
@@ -102,7 +92,6 @@ class FacturaController extends Controller{
             'total_factura'    => 'required|numeric|min:0',
             'estado'           => 'required|string',
             'metodo_pago'      => 'required|string',
-            'id_pedido'        => 'nullable|integer',
             'id_comercial'     => 'nullable|integer',
             'id_cliente'       => 'nullable|integer',
             'id_clientevip'    => 'nullable|integer',
