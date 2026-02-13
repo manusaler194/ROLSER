@@ -1,10 +1,10 @@
-<<<<<<< HEAD
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-=======
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
->>>>>>> Manu-Rubio
+
 import { useAuth } from '../../context/AuthContext'; 
 import logo from "/src/assets/Header/logo.jpg";
 // Puedes mantener tu icono de signout si quieres usarlo dentro del menú
@@ -50,11 +50,11 @@ const Header = () => {
                 <h1 className="text-white text-xl sm:text-3xl font-bold tracking-wider">ROLSER</h1>
             </div>
 
-<<<<<<< HEAD
+
             <Link to="/login" onClick={()=> logout()}>
                 <img src={signout} alt="signout" className="rounded-full h-10 w-10 sm:h-12 sm:w-12 object-cover cursor-pointer hover:opacity-90 transition-opacity"/>
             </Link>
-=======
+
             {/* ZONA DEL PERFIL Y DESPLEGABLE */}
             <div className="relative">
                 {/* Botón/Icono del perfil */}
@@ -95,7 +95,7 @@ const Header = () => {
                     </div>
                 )}
             </div>
->>>>>>> Manu-Rubio
+
 
         </div>
     );

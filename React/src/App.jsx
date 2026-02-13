@@ -42,7 +42,7 @@ import ListadoEncargado from "./components/Administrador/ListadoEncargado";
 import ListadoComerciales from "./components/Administrador/ListadoComercial";
 import Perfil from "./components/Conjunto/Perfil";
 const AppContent = () => {
-<<<<<<< HEAD
+
     const { token, role } = useAuth();
     const navigate = useNavigate();
     
@@ -54,16 +54,15 @@ const AppContent = () => {
             </Routes>
         );
     }
-=======
-  const { token, role } = useAuth();
-  const navigate = useNavigate();
+
+
 
   const currentRole = role ? role.toLowerCase().trim() : "";
->>>>>>> Manu-Rubio
+
 
   if (!token) {
     return (
-<<<<<<< HEAD
+
         <div className="flex flex-col h-screen w-full bg-white overflow-hidden">
             <Header />
             <div className="flex flex-1 overflow-hidden">
@@ -158,12 +157,12 @@ const AppContent = () => {
                 </main>
             </div>
         </div>
-=======
-      <Routes>
+
+      /*<Routes>
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
->>>>>>> Manu-Rubio
+      </Routes>*/
+
     );
   }
 
