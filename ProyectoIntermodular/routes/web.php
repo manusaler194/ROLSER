@@ -2,9 +2,7 @@
 
 <?php
 
-use App\Http\Controllers\ComercialController;
-use App\Http\Controllers\AlmacenController;
-use App\Http\Controllers\AdministradorController;
+use App\Http\Controllers\FacturaController;
 use Illuminate\Http\Request;
 use App\Models\Almacen;
 use App\Http\Controllers\ProfileController;
@@ -26,18 +24,11 @@ Route::middleware('auth')->group(function () {
 //1 Crear la tabla 2Creaar el model 3 La ruta 4 el controlador 5 vista
 //Laravel extension pack
 
+/* -------------------------------------------------------------------------- */
+/* FACTURAS                                  */
+/* -------------------------------------------------------------------------- */
+Route::get('/mostrar/facturas', [FacturaController::class, 'mostrar'])->name("mostrarFacturas");
+Route::get('/mostrar/factura/{id_factura}', [FacturaController::class, 'mostrarFactura'])->name("mostrarFactura");
 
-
-Route::get('/almacen',[AlmacenController::class,'mostrar'])->name('almacenMostrar');
-
-// Route::view('/login', 'login')->name('logininicio');
-// Route::post('/login-usuario', [ComercialController::class, 'login'])->name('login');
-
-
-// Route::get('/almacenes', [AlmacenController::class, 'mostrar']);
-Route::get('/administradores', [AdministradorController::class, 'index']);
-Route::get('/encargado', [AlmacenController::class, 'encargado']);
-
-Route::post('/guardarComercial', [ComercialController::class, 'guardar'])->name('guardarComercial');
 
 require __DIR__.'/auth.php';

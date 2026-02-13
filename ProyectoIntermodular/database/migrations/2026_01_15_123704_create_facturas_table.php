@@ -13,15 +13,17 @@ return new class extends Migration
     {
         Schema::create('facturas', function (Blueprint $table) {
             $table->id('id_factura');
-            $table->unsignedInteger('cantidad');
-            $table->date('fecha');
-            $table->timestamps();
-            $table->decimal('precio',10,2);
-            $table->foreignId('id_administrador')->nullable()->constrained('administradores', 'id_administrador')->nullOnDelete()->cascadeOnUpdate();
+            $table->float('base_imponible', 10, 2);
+            $table->float('iva_porcentaje', 5, 2);
+            $table->float('total_iva', 10, 2);
+            $table->float('total_factura', 10, 2);
+            $table->string('estado');
+            $table->string('metodo_pago');
+            $table->foreignId('id_pedido')->nullable()->constrained('pedidos', 'id_pedido')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_comercial')->nullable()->constrained('comerciales', 'id_comercial')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_cliente')->nullable()->constrained('clientes', 'id_cliente')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('id_clientevip')->nullable()->constrained('clientes_vip', 'id_clientevip')->nullOnDelete()->cascadeOnUpdate();
-
+            $table->timestamps();
         });
     }
 

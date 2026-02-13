@@ -113,13 +113,6 @@ Route::post('/clientesVip/guardar', [ClienteVipController::class, 'guardar']);
 Route::put('/clientesVip/actualizar/{id_clientevip}', [ClienteVipController::class, 'actualizar']);
 Route::delete('/clientesVip/borrar/{id_clientevip}', [ClienteVipController::class, 'eliminar']);
 Route::get('/clientesVip/{id_clientevip}', [ClienteVipController::class, 'mostrarClienteVip']);
-/* -------------------------------------------------------------------------- */
-/* FACTURAS                                  */
-/* -------------------------------------------------------------------------- */
-Route::get('/facturas', [FacturaController::class, 'mostrar']);
-Route::post('/facturas/guardar', [FacturaController::class, 'guardar']);
-Route::put('/facturas/actualizar/{id_factura}', [FacturaController::class, 'actualizar']);
-Route::delete('/facturas/borrar/{id_factura}', [FacturaController::class, 'eliminar']);
 
 /* -------------------------------------------------------------------------- */
 /* LINEAS PEDIDO                               */

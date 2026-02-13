@@ -13,40 +13,42 @@ class FacturaController extends Controller{
 
     public function guardar(Request $request){
         $validatedData = $request->validate([
-            'cantidad'         => 'required|integer|min:0',
-            'fecha'            => 'required|date',
-            'precio'           => 'required|numeric|min:0',
-            'id_administrador' => 'nullable|integer',
+            'base_imponible'   => 'required|numeric|min:0',
+            'iva_porcentaje'   => 'required|numeric|min:0',
+            'total_iva'        => 'required|numeric|min:0',
+            'total_factura'    => 'required|numeric|min:0',
+            'estado'           => 'required|string',
+            'metodo_pago'      => 'required|string',
+            'id_pedido'        => 'nullable|integer',
             'id_comercial'     => 'nullable|integer',
             'id_cliente'       => 'nullable|integer',
             'id_clientevip'    => 'nullable|integer',
         ]);
-
         try {
             $factura = new Facturas([
-                'cantidad' => $validatedData["cantidad"],
-                'fecha'    => $validatedData["fecha"],
-                'precio'   => $validatedData["precio"]
+                'base_imponible'   => $validatedData["base_imponible"],
+                'iva_porcentaje'   => $validatedData["iva_porcentaje"],
+                'total_iva'        => $validatedData["total_iva"],
+                'total_factura'    => $validatedData["total_factura"],
+                'estado'           => $validatedData["estado"],
+                'metodo_pago'      => $validatedData["metodo_pago"],
             ]);
 
-            if ($request->id_administrador) {
-                $factura->administrador()->associate(Administrador::find($request->id_administrador));
+            if ($request->id_pedido) {
+                $factura->pedido()->associate(Pedido::find($request->id_pedido));
             }
             if ($request->id_comercial) {
                 $factura->comercial()->associate(Comercial::find($request->id_comercial));
             }
             if ($request->id_cliente) {
-                $factura->clientes()->associate(Cliente::find($request->id_cliente));
+                $factura->cliente()->associate(Cliente::find($request->id_cliente));
             }
             if ($request->id_clientevip) {
                 $factura->clienteVip()->associate(ClienteVip::find($request->id_clientevip));
             }
             $factura->save();
 
-            return response()->json([
-                'message' => 'Factura creada con éxito.',
-                'factura' => $factura,
-            ], 201);
+            return redirect()->route("mostrarFactura");
 
         } catch (\Exception $e) {
             return response()->json([
@@ -58,26 +60,49 @@ class FacturaController extends Controller{
 
     public function mostrar(Request $request){
         try{
-            $factura = Facturas::with(['pedidos', 'clientes', 'administrador', 'clienteVip'])->get();
-            return response()->json([
-                'message' => "Datos recogidos",
-                'almacen' => $factura
-            ], 200);
+            $facturas = Facturas::with(['pedido', 'cliente', 'comercial', 'clienteVip'])->get();
+
+            return view("mostrarFactura", compact("facturas"));
+
         }catch(\Exception $e){
             return response()->json([
-            'message' => 'Error al obtener los almacenes.',
+            'message' => 'Error al obtener las facturas.',
             'error' => $e->getMessage()
         ], 500);
         }
     }
+    public function mostrarFactura(Request $request){
+        try {
+            $factura = Facturas::with(['pedido', 'cliente', 'comercial', 'clienteVip'])->where("id_factura", $request->id_factura)->get();
 
+            if (!$factura) {
+                return response()->json([
+                    'message' => 'Factura no encontrada'
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Datos recogidos',
+                'factura' => $factura
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener el almacén.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     public function actualizar (Request $request){
 
         $validatedData = $request->validate([
-            'cantidad'         => 'required|integer|min:0',
-            'fecha'            => 'required|date',
-            'precio'           => 'required|numeric|min:0',
-            'id_administrador' => 'nullable|integer',
+            'base_imponible'   => 'required|numeric|min:0',
+            'iva_porcentaje'   => 'required|numeric|min:0',
+            'total_iva'        => 'required|numeric|min:0',
+            'total_factura'    => 'required|numeric|min:0',
+            'estado'           => 'required|string',
+            'metodo_pago'      => 'required|string',
+            'id_pedido'        => 'nullable|integer',
             'id_comercial'     => 'nullable|integer',
             'id_cliente'       => 'nullable|integer',
             'id_clientevip'    => 'nullable|integer',
@@ -100,15 +125,5 @@ class FacturaController extends Controller{
                 'error' => $e->getMessage(),
             ],500);
         }
-    }
-
-    public function eliminar(Request $request){
-
-        $factura = Facturas::destroy($request->id_factura);
-
-        return response()->json([
-            "message" => "Factura con id =" . $request->id_factura . " ha sido borrada con éxito"
-
-        ],201);
     }
 }

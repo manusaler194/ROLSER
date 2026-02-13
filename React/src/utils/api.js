@@ -18,6 +18,5 @@ export const apiFetch = async (url, options = {}) => {
         localStorage.clear();
         window.location.href = '/login';
     }
-
     return response;
 };

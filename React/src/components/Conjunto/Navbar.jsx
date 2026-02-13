@@ -38,37 +38,31 @@ const Navbar = ({ usuario }) => {
 
   return (
     <>
-      {/* BOTÓN FLOTANTE (Solo móvil): Totalmente independiente, pegado abajo a la derecha */}
       <button
         onClick={() => setMenuAbierto(!menuAbierto)}
         className="md:hidden fixed bottom-6 right-6 z-50 bg-[#454545] text-white p-4 rounded-full shadow-2xl focus:outline-none hover:bg-gray-700 transition-colors"
       >
         {menuAbierto ? (
-          // Icono X (Cerrar)
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         ) : (
-          // Icono Hamburguesa (Abrir)
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         )}
       </button>
 
-      {/* MENÚ LATERAL: Se desliza en móvil, estático en PC */}
       <div className={`
         fixed inset-y-0 left-0 z-40 w-64 bg-[#454545] transform transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none
         ${menuAbierto ? 'translate-x-0' : '-translate-x-full'}
         md:relative md:translate-x-0 md:min-h-screen border-r border-gray-600
       `}>
-        {/* Contenedor con scroll por si hay muchos enlaces */}
         <nav className="h-full overflow-y-auto pt-8 pb-24 md:pt-0 md:pb-0">
           {individual.map((item, index) => (
             <Link
               key={index}
               to={item.path}
-              // Al hacer clic, se cierra el menú en móvil
               onClick={() => setMenuAbierto(false)} 
               className="flex items-center gap-4 p-4 md:p-5 text-gray-200 hover:bg-[#575757] border-b border-gray-600 transition-colors w-full"
             >

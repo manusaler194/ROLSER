@@ -39,8 +39,6 @@ const AppContent = () => {
     const { token, role } = useAuth();
     const navigate = useNavigate();
     
-    const currentRole = role ? role.toLowerCase().trim() : '';
-
     if (!token) {
         return (
             <Routes>
@@ -54,14 +52,14 @@ const AppContent = () => {
         <div className="flex flex-col h-screen w-full bg-white overflow-hidden">
             <Header />
             <div className="flex flex-1 overflow-hidden">
-                <Navbar usuario={currentRole} />
+                <Navbar usuario={role} />
 
                 <main className="flex-1 overflow-auto p-6 bg-gray-50">
                     <Routes>
 
 
 
-                        {currentRole === 'admin' && (
+                        {role === 'admin' && (
                             <>
                                 <Route path="/GestionAlmacen" element={<GestionAlmacen />} />
                                 <Route path="/crear-catalogo" element={<Catalogos />} />
@@ -92,7 +90,7 @@ const AppContent = () => {
 
                             </>
                         )}
-                        {currentRole === 'encargado_almacen' && (
+                        {role === 'encargado_almacen' && (
                             <>
                                 <Route path="/DetallesPedido/encargado/:id" element={<DetallesPedidoEncargado />} />
                                 <Route path="/pedidos/encargado" element={<GestionarPedidosEncargado />} />
@@ -101,44 +99,43 @@ const AppContent = () => {
                                 <Route path="/stock" element={<div>Stock</div>}/>                            
                             </>
                         )}
-                        {['admin', 'encargado_almacen'].includes(currentRole) && (
+                        {['admin', 'encargado_almacen'].includes(role) && (
                             <>
                                 <Route path="/crear-pedido-reabastecimiento" element={<CrearPedidoRebastecimiento />} />
                             </>
                         )}
 
                         
-                        {['comercial', 'clientevip', 'cliente', 'admin'].includes(currentRole) && (
+                        {['comercial', 'clientevip', 'cliente', 'admin'].includes(role) && (
                             <>
                                 <Route path="/pedidosRealizados" element={<div>Pedidos Realizados</div>} />
                                 <Route path="/facturas" element={<div>Facturas</div>} />
-                                {['comercial', 'clientevip'].includes(currentRole) && (
+                                {['comercial', 'clientevip'].includes(role) && (
                                     <>
                                         <Route path="/catalogo" element={<div>Por hacer</div>} />
                                         <Route path="/realizar-pedido" element={<div>Por hacer</div>} />
                                         <Route path="/solicitar-bajas-altas" element={<div>Bajas y Altas</div>} />
                                     </>
                                 )}
-                                {currentRole === 'comercial' && <Route path="/aplicar-descuento" element={<div>Descuentos</div>} />}
+                                {role === 'comercial' && <Route path="/aplicar-descuento" element={<div>Descuentos</div>} />}
                             </>
                         )}
 
                         <Route path="/" element={
                             <Navigate to={
-                                currentRole === 'admin' ? "/usuarios" :
-                                currentRole === 'encargado_almacen' ? "/pedidos/encargado" :
-                                currentRole === 'comercial' ? "/pedidosRealizados" :
-                                currentRole === 'cliente' ? "//pedidosRealizados" :
-                                currentRole === 'clientevip' ? "//pedidosRealizados" :
-
-                                "/catalogos"
+                                role === 'admin' ? "/usuarios" :
+                                role === 'encargado_almacen' ? "/pedidos/encargado" :
+                                role === 'comercial' ? "/pedidosRealizados" :
+                                role === 'cliente' ? "/pedidosRealizados" :
+                                role === 'clientevip' ? "//pedidosRealizados" :
+                                "/login"
                             } replace />
                         } />
 
                         <Route path="*" element={
                             <div className="flex flex-col items-center justify-center h-full text-center">
                                 <h1 className="text-3xl font-bold text-gray-800">Acceso restringido</h1>
-                                <p className="text-gray-500 mt-2">Tu perfil [{currentRole}] no tiene permiso aquí.</p>
+                                <p className="text-gray-500 mt-2">Tu perfil [{role}] no tiene permiso aquí.</p>
                                 <button onClick={() => navigate("/")} className="mt-6 bg-[#bc002d] text-white px-6 py-2 rounded-full shadow-lg">Volver al Inicio</button>
                             </div>
                         } />

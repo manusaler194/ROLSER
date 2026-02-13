@@ -33,14 +33,12 @@ export const AuthProvider = ({ children }) => {
             return;
         }
 
-        const roleNormalizado = userData.role.toLowerCase().trim(); 
-
         setToken(userToken);
-        setRole(roleNormalizado);
+        setRole(userData.role);
         setUser(userData);
 
         localStorage.setItem('token', userToken);
-        localStorage.setItem('role', roleNormalizado);
+        localStorage.setItem('role', userData.role);
         localStorage.setItem('user', JSON.stringify(userData));
     };
 
