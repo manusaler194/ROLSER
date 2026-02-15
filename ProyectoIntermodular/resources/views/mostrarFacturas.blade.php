@@ -1,92 +1,56 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Facturas</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
     @vite('resources/css/app.css')
 </head>
-
-<body class="bg-gray-50 p-8">
-
-    <div class="max-w-6xl mx-auto">
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 class="text-xl font-semibold text-gray-800">Gestión de Facturas</h2>
-            </div>
-
+<body class="bg-gray-50">
+    
+    <div class="p-4 flex flex-col gap-6 max-w-4xl mx-auto">
+        <div class="border border-gray-400 rounded-sm shadow-sm overflow-hidden bg-white">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 font-bold">ID</th>
-                        <th class="py-3 px-6 font-bold">Cliente VIP</th>
-                        <th class="py-3 px-6 font-bold text-right">Base Imp.</th>
-                        <th class="py-3 px-6 font-bold text-center">IVA</th>
-                        <th class="py-3 px-6 font-bold text-right">Total</th>
-                        <th class="py-3 px-6 font-bold text-center">Estado</th>
-                        <th class="py-3 px-6 font-bold text-center">Acciones</th>
+                    <tr class="bg-gray-200 text-gray-800">
+                        <th class="border border-gray-400 px-2 py-2 font-bold text-3xl">ID</th>
+                        <th class="border border-gray-400 px-2 py-2 font-bold text-3xl">Cliente</th>
+                        <th class="border border-gray-400 px-2 py-2 font-bold text-3xl text-center">Estado</th>
+                        <th class="border border-gray-400 px-2 py-2 font-bold text-3xl text-center">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="text-gray-600 text-sm font-light">
+                <tbody>
                     @forelse ($facturas as $factura)
-                        <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                            <td class="py-3 px-6 text-left whitespace-nowrap font-medium">
-                                #{{ $factura->id_factura }}
-                            </td>
-                            <td class="py-3 px-6 text-left">
+                        <tr class="bg-gray-100 hover:bg-white transition-colors">
+                            <td class="border border-gray-400 px-2 py-1 font-medium text-2xl italic text-gray-700">F-{{$factura->id_factura}}</td>
+                            <td class="border border-gray-400 px-2 py-1">
                                 <div class="flex flex-col">
-                                    <span class="font-semibold text-gray-800">
-                                        {{ $factura->cliente_vip->nombre ?? 'N/A' }}
-                                    </span>
-                                    <span class="text-xs text-gray-400">
-                                        {{ $factura->cliente_vip->email ?? '' }}
-                                    </span>
+                                    @if($factura->clienteVip)
+                                        <span class="font-black text-gray-900 text-xl">{{$factura->clienteVip->nombre}}</span>
+                                        <span class="text-l uppercase tracking-tight font-extrabold text-red-600">Cliente VIP</span>
+                                    @elseif($factura->cliente)
+                                        <span class="font-black text-gray-900 text-xl">{{$factura->cliente->nombre}}</span>
+                                        <span class="text-l text-gray-600 font-bold uppercase">Comercial: {{$factura->cliente->comercial->nombre}}</span>
+                                    @endif
                                 </div>
                             </td>
-                            <td class="py-3 px-6 text-right font-mono">
-                                {{ number_format($factura->base_imponible, 2) }}€
+                            <td class="border border-gray-400 px-2 py-1 text-center">
+                                <span class="px-2 py-0.5 rounded text-xl font-black shadow-sm">{{$factura->estado}}</span>
                             </td>
-                            <td class="py-3 px-6 text-center">
-                                <span class="bg-blue-100 text-blue-700 py-1 px-3 rounded-full text-xs">
-                                    {{ $factura->iva_porcentaje }}%
-                                </span>
+    
+                            <td class="border border-gray-400 px-2 py-1 text-center relative">
+                                <a href="/mostrar/factura/{{$factura->id_factura}}" class="bg-red-600 text-white px-4 py-1 rounded text-xl font-black shadow-md">Detalles</a>
                             </td>
-                            <td class="py-3 px-6 text-right font-bold text-gray-800 font-mono">
-                                {{ number_format($factura->total_factura, 2) }}€
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                @php
-                                    $statusColor =
-                                        $factura->estado === 'pagada'
-                                            ? 'bg-green-200 text-green-800'
-                                            : 'bg-yellow-200 text-yellow-800';
-                                @endphp
-                                <span class="{{ $statusColor }} py-1 px-3 rounded-full text-xs font-bold uppercase">
-                                    {{ $factura->estado }}
-                                </span>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-
-                                <a href="/mostrar/factura/{{ $factura->id_factura }}"
-                                    class="bg-indigo-500 text-white py-2 px-4 rounded">
-                                    Ver Detalles
-                                </a>
-                            </td>
-
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="py-10 text-center text-gray-500 italic">
-                                No se encontraron facturas registradas.
-                            </td>
+                            <td colspan="4" class="p-8 text-center text-4xl text-gray-400 font-bold">No hay facturas.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </div>
-
 </body>
-
 </html>

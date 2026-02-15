@@ -10,9 +10,9 @@ const ModificarAlmacen = () =>{
         id_encargado: ''
     });
     const [encargados, setEncargados] = useState([]);
-    const [menu, setMenu] = useState(false);
     const { id } = useParams();
     const navigate = useNavigate();
+    
     const handleDireccion = (e) =>{
         setAlmacen({...almacen, direccion : e.target.value})
     }

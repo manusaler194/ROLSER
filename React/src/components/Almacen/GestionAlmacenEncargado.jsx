@@ -8,14 +8,13 @@ import { apiFetch } from "../../utils/api";
 const GestionAlmacenEncargado = () => {
   const [abrirMenu, setAbrirMenu] = useState(null);
   const [almacenes, setAlmacenes] = useState([]);
-  const { user, role } = useAuth(); 
+  const { user } = useAuth(); 
   
   const cargarAlmacenes = async () => {
     try {
         console.log(user);
         const response = await apiFetch('http://localhost/api/almacenes');
         const data = await response.json();
-        
         console.log(data);
         setAlmacenes(data.almacen); 
     } catch (error) {

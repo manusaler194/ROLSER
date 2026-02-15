@@ -11,9 +11,9 @@ const DetallesPedidoEncargado = () => {
       try {
         const response = await apiFetch(`http://localhost/api/pedidos/${id}`);
         const data = await response.json();
-        if (data.pedido && data.pedido.length > 0) {
-          setPedido(data.pedido[0]);
-        }
+        console.log(data.pedido);
+
+        setPedido(data.pedido[0]);
       } catch (error) {
         console.error("Error al cargar el pedido:", error);
       }
@@ -59,18 +59,10 @@ const DetallesPedidoEncargado = () => {
               <tbody className="divide-y divide-gray-200">
                 {pedido.linea_pedidos && pedido.linea_pedidos.map((linea) => (
                   <tr key={linea.id_linea} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-gray-700 font-medium">
-                      {linea.articulo?.nombre || "Artículo no disponible"}
-                    </td>
-                    <td className="px-6 py-4 text-gray-700 text-center">
-                      {linea.cantidad}
-                    </td>
-                    <td className="px-6 py-4 text-gray-700 text-right">
-                      {linea.precio} €
-                    </td>
-                    <td className="px-6 py-4 text-gray-700 text-right">
-                      {(linea.precio * linea.cantidad).toFixed(2)} €
-                    </td>
+                    <td className="px-6 py-4 text-gray-700 font-medium">{linea.articulo.nombre}</td>
+                    <td className="px-6 py-4 text-gray-700 text-center">{linea.cantidad}</td>
+                    <td className="px-6 py-4 text-gray-700 text-right">{linea.precio} €</td>
+                    <td className="px-6 py-4 text-gray-700 text-right">{(linea.precio * linea.cantidad).toFixed(2)} €</td>
                   </tr>
                 ))}
               </tbody>

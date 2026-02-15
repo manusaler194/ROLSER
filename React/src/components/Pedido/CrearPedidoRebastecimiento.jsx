@@ -14,7 +14,7 @@ const CrearPedidoRebastecimiento = () => {
                 const responseArt = await apiFetch('http://localhost/api/articulo');
                 const dataArt = await responseArt.json();
                 console.log(dataArt);
-                setArticulos(dataArt.almacen.map(a => ({ ...a, cantidad: 0 })));
+                setArticulos(dataArt.almacen);
 
                 const responseProv = await apiFetch('http://localhost/api/proveedor');
                 const dataProv = await responseProv.json();
@@ -36,7 +36,7 @@ const CrearPedidoRebastecimiento = () => {
         );
     };
 
-    const totalPedido = articulos.reduce((acc, art) => acc + ((art.cantidad || 0) * (art.precio || 0)), 0);
+    const totalPedido = articulos.reduce((contador, articulo) => contador + ((articulo.cantidad || 0) * (articulo.precio || 0)), 0);
 
     const crearReabastecimiento = async () => {
         if (!idProveedor) {
@@ -53,7 +53,7 @@ const CrearPedidoRebastecimiento = () => {
                 estado: 'En preparación',
                 id_proveedor: idProveedor, 
                 id_administrador: role === 'admin' ? user.id : null,
-                id_encargado: role === 'encargado_almacen' ? user.id : null
+                id_encargado: role === 'encargado de almacen' ? user.id : null
             };
 
             const response = await apiFetch('http://localhost/api/pedido-reabastecimiento/guardar', {
@@ -61,13 +61,12 @@ const CrearPedidoRebastecimiento = () => {
                 body: JSON.stringify(datosParaLaravel)
             });
             alert("Pedido de reposición creado con éxito.");
-            setArticulos(prev => prev.map(art => ({ ...art, cantidad: 0 })));
+            setArticulos(prev => prev.map(articulo => ({ ...articulo, cantidad: 0 })));
             setIdProveedor("");
         } catch (error) {
             alert("Error al crear el pedido");
         } 
     };
-
     return (
         <div className="min-h-screen bg-gray-50 p-8">
             <div className="max-w-6xl mx-auto">
@@ -80,11 +79,9 @@ const CrearPedidoRebastecimiento = () => {
                         <div className="flex flex-col">
                             <label className="text-sm font-semibold text-gray-600 mb-1">Proveedor:</label>
                             <select value={idProveedor} onChange={(e) => setIdProveedor(e.target.value)} className="p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-red-600 outline-none">
-                                <option value="">Seleccione un proveedor...</option>
+                                <option value="">Seleccione un proveedor</option>
                                 {proveedores.map(prov => (
-                                    <option key={prov.id_proveedor} value={prov.id_proveedor}>
-                                        {prov.nombre_empresa}
-                                    </option>
+                                    <option key={prov.id_proveedor} value={prov.id_proveedor}>{prov.nombre_empresa}</option>
                                 ))}
                             </select>
                         </div>
@@ -108,13 +105,9 @@ const CrearPedidoRebastecimiento = () => {
                             {articulos.map((articulo) => (
                                 <tr key={articulo.id_articulo} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-4 font-medium text-gray-900">{articulo.nombre}</td>
-                                    <td className="px-6 py-4 text-center">
-                                        <span className={`px-3 py-1 text-xs font-bold rounded-full ${articulo.stock_actual < 50 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>{articulo.stock_actual}</span>
-                                    </td>
+                                    <td className="px-6 py-4 text-center"><span className={`px-3 py-1 text-xs font-bold rounded-full ${articulo.stock_actual < 50 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>{articulo.stock_actual}</span></td>
                                     <td className="px-6 py-4 text-gray-600">{articulo.precio ? `${articulo.precio}€` : "0.00€"}</td>
-                                    <td className="px-6 py-4 text-center">
-                                        <input type="number" min="0"value={articulo.cantidad}onChange={(e) => handleCantidad(articulo.id_articulo, e.target.value)}className="w-24 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 outline-none text-center"/>
-                                    </td>
+                                    <td className="px-6 py-4 text-center"><input type="number" min="0" value={articulo.cantidad || 0} onChange={(e) => handleCantidad(articulo.id_articulo, e.target.value)} className="w-24 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-600 outline-none text-center"/></td>
                                     <td className="px-6 py-4 font-semibold text-red-700">{((articulo.cantidad || 0) * (articulo.precio || 0)).toFixed(2)}€</td>
                                 </tr>
                             ))}

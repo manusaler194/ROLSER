@@ -73,8 +73,7 @@ class FacturaController extends Controller{
 
     public function mostrarFactura($id_factura) {
         try {
-
-            $factura = Facturas::where("id_factura", $id_factura)->get();
+            $factura = Facturas::with(['cliente', 'comercial', 'clienteVip'])->where("id_factura", $id_factura)->get();
             return view("mostrarFactura", compact("factura"));
 
         } catch (\Exception $e) {

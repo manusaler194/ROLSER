@@ -1,7 +1,4 @@
-
-import React from 'react';
 import { Link } from 'react-router-dom';
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,20 +11,8 @@ const Header = () => {
     const { logout } = useAuth(); 
 
     const navigate = useNavigate();
-    
-    
-    
-    
-
-
-
-
     // Estado para controlar si el desplegable está abierto o no
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-
-
-
 
     const handleLogout = (e) => {
         e.preventDefault();
@@ -51,9 +36,6 @@ const Header = () => {
             </div>
 
 
-            <Link to="/login" onClick={()=> logout()}>
-                <img src={signout} alt="signout" className="rounded-full h-10 w-10 sm:h-12 sm:w-12 object-cover cursor-pointer hover:opacity-90 transition-opacity"/>
-            </Link>
 
             {/* ZONA DEL PERFIL Y DESPLEGABLE */}
             <div className="relative">

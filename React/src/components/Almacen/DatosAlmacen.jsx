@@ -7,7 +7,6 @@ import { apiFetch } from "../../utils/api";
 const DatosAlmacen = () =>{
   const [almacen,setAlmacen] = useState([]);
   const { id } = useParams();
-  const { user, role } = useAuth(); 
   
   useEffect(()=>{
     const cargarAlmacen = async () =>{

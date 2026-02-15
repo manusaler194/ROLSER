@@ -12,16 +12,13 @@ const GestionarPedidosEncargado = () => {
     const [busquedaCliente, setBusquedaCliente] = useState('');
     const [busquedaEncargado, setBusquedaEncargado] = useState('');
 
-    useEffect(() => {
-        obtenerPedidos();
-    }, []);
 
    const obtenerPedidos = async () => {
         try {
             const response = await apiFetch('http://localhost/api/pedidos');
             const data = await response.json();
             console.log(data);
-            setPedidos(data.pedidos || []);
+            setPedidos(data.pedidos);
         } catch (err) {
             console.error("Error al cargar:", err);
         }
@@ -30,13 +27,14 @@ const GestionarPedidosEncargado = () => {
         const coincideEstado = filtro !== "Todos" ? pedido.estado === filtro : true;
         
         const tipoCliente = pedido.cliente_vip || pedido.cliente || pedido.comercial;
-        const nombreCliente = tipoCliente ? tipoCliente.nombre.toLowerCase() : "";
+        const nombreCliente = tipoCliente.nombre.toLowerCase();
         const coincideNombre = nombreCliente.includes(busquedaCliente.toLowerCase());
 
-        
         return coincideEstado && coincideNombre && pedido.id_encargado === user.id_encargado;
     })
     console.log(pedidosFiltrados);
+
+    
     const handleEliminar = async (id) => {
         try {
             const response = await apiFetch(`http://localhost/api/pedidos/borrar/${id}`, {
@@ -59,9 +57,9 @@ const GestionarPedidosEncargado = () => {
         console.log(pedido);
         try {
             const response = await apiFetch(`http://localhost/api/pedidos/actualizar/${pedido.id_pedido}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
                 id_pedido: pedido.id_pedido,
                 fecha_pedido: pedido.fecha_pedido,
                 estado: nuevoEstado,
@@ -74,13 +72,16 @@ const GestionarPedidosEncargado = () => {
             });
             setAbrirMenuCambioEstado(null);
             obtenerPedidos();
-
+            
         } catch (error) {
-        console.error("Error al enviar datos:", error);
-        alert("Hubo un error al modificar el pedido");
+            console.error("Error al enviar datos:", error);
+            alert("Hubo un error al modificar el pedido");
         }
-
     };
+    useEffect(() => {
+        obtenerPedidos();
+    }, []);
+
     return (
         <div className="p-8 flex flex-col gap-6 max-w-4xl">
             <div className="flex flex-row flex-wrap items-end gap-4 bg-gray-50 p-4 border border-gray-200 rounded-lg">
@@ -113,8 +114,8 @@ const GestionarPedidosEncargado = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {pedidosFiltrados.length > 0 ? (
-                            pedidosFiltrados.map((pedido) => (
+                        {pedidosFiltrados.length > 0 ? 
+                        (pedidosFiltrados.map((pedido) => (
                                 <tr key={pedido.id_pedido} className="bg-gray-100 hover:bg-white transition-colors">
                                     
                                     <td className="border border-gray-400 px-4 py-2">

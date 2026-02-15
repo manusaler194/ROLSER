@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { Link } from 'react-router-dom';
+import Paginacion from '../Conjunto/Paginacion';
 import { apiFetch } from "../../utils/api"; 
 
 const GestionarPedidos = () => {
@@ -8,20 +9,15 @@ const GestionarPedidos = () => {
     const [filtro, setFiltro] = useState('Todos');
     const [abrirMenuAcciones, setAbrirMenuAcciones] = useState(null);
     const [abrirMenuCambioEstado, setAbrirMenuCambioEstado] = useState(null);
-
     const [busquedaCliente, setBusquedaCliente] = useState('');
     const [busquedaEncargado, setBusquedaEncargado] = useState('');
-
-    useEffect(() => {
-        obtenerPedidos();
-    }, []);
 
    const obtenerPedidos = async () => {
         try {
             const response = await apiFetch('http://localhost/api/pedidos');
             const data = await response.json();
             console.log(data);
-            setPedidos(data.pedidos || []);
+            setPedidos(data.pedidos);
         } catch (err) {
             console.error("Error al cargar:", err);
         }
@@ -30,7 +26,7 @@ const GestionarPedidos = () => {
         const coincideEstado = filtro !== "Todos" ? pedido.estado === filtro : true;
         
         const tipoCliente = pedido.cliente_vip || pedido.cliente || pedido.comercial;
-        const nombreCliente = tipoCliente ? tipoCliente.nombre.toLowerCase() : "";
+        const nombreCliente = tipoCliente.nombre.toLowerCase();
         const coincideNombre = nombreCliente.includes(busquedaCliente.toLowerCase());
 
         const nombreEncargado = pedido.encargado_almacen ? pedido.encargado_almacen.nombre.toLowerCase() : "";
@@ -77,11 +73,15 @@ const GestionarPedidos = () => {
             obtenerPedidos();
 
         } catch (error) {
-        console.error("Error al enviar datos:", error);
-        alert("Hubo un error al modificar el pedido");
+            console.error("Error al enviar datos:", error);
+            alert("Hubo un error al modificar el pedido");
         }
-
+    
     };
+    useEffect(() => {
+        obtenerPedidos();
+    }, []);
+    
     return (
         <div className="p-8 flex flex-col gap-6 max-w-4xl">
             <div className="flex flex-row flex-wrap items-end gap-4 bg-gray-50 p-4 border border-gray-200 rounded-lg">
@@ -184,6 +184,7 @@ const GestionarPedidos = () => {
                         )}
                     </tbody>
                 </table>
+                
             </div>
         </div>
     );

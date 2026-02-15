@@ -22,9 +22,9 @@ class FacturaSeeder extends Seeder
 
         if ($opcion == 1) {
             DB::table('facturas')->insert([
-                'base_imponible' => $faker->randomFloat(2, 50, 1000),
+                'base_imponible' => $base_imponible,
                 'iva_porcentaje' => 21.00,
-                'total_iva' => $base_imponible * (21 / 100),
+                'total_iva' => $total_iva,
                 'total_factura' => $base_imponible + $total_iva,
                 'estado' => $faker->randomElement(['pendiente', 'pagada', 'anulada']),
                 'metodo_pago' => $faker->randomElement(['tarjeta', 'transferencia', 'efectivo']),

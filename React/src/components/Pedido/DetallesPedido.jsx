@@ -59,18 +59,10 @@ const DetallesPedido = () => {
               <tbody className="divide-y divide-gray-200">
                 {pedido.linea_pedidos && pedido.linea_pedidos.map((linea) => (
                   <tr key={linea.id_linea} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-gray-700 font-medium">
-                      {linea.articulo?.nombre || "Artículo no disponible"}
-                    </td>
-                    <td className="px-6 py-4 text-gray-700 text-center">
-                      {linea.cantidad}
-                    </td>
-                    <td className="px-6 py-4 text-gray-700 text-right">
-                      {linea.precio} €
-                    </td>
-                    <td className="px-6 py-4 text-gray-700 text-right">
-                      {(linea.precio * linea.cantidad).toFixed(2)} €
-                    </td>
+                    <td className="px-6 py-4 text-gray-700 font-medium">{linea.articulo.nombre}</td>
+                    <td className="px-6 py-4 text-gray-700 text-center">{linea.cantidad}</td>
+                    <td className="px-6 py-4 text-gray-700 text-right">{linea.precio} €</td>
+                    <td className="px-6 py-4 text-gray-700 text-right">{(linea.precio * linea.cantidad).toFixed(2)} €</td>
                   </tr>
                 ))}
               </tbody>

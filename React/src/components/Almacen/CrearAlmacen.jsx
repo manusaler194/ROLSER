@@ -11,8 +11,8 @@ const CrearAlmacen = () =>{
         id_encargado: ''
     });
     const [encargados, setEncargados] = useState([]);
-    const [menu, setMenu] = useState(false);
     const navigate = useNavigate();
+    
     const handleDireccion = (e) =>{
         setAlmacen({...almacen, direccion : e.target.value})
     }
