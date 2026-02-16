@@ -7,7 +7,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 
 class EncargadoAlmacen extends Authenticatable{
-    
+
     use HasApiTokens, Notifiable;
 
     protected $table = 'encargados_de_almacen';
@@ -28,7 +28,8 @@ class EncargadoAlmacen extends Authenticatable{
     public function pedidos(){
         return $this->hasMany(Pedido::class, 'id_encargado');
     }
-    public function pedidosReposicion() { 
-        return $this->hasMany(PedidoReposicion::class, 'id_encargado'); 
+
+    public function pedidosReposicion() {
+        return $this->hasMany(PedidoReposicion::class, 'id_encargado');
     }
 }

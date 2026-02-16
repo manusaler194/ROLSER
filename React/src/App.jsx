@@ -36,6 +36,8 @@ import ListadoEncargado from "./components/Administrador/ListadoEncargado";
 import ListadoComerciales from "./components/Administrador/ListadoComercial";
 import Perfil from "./components/Conjunto/Perfil";
 import VerCatalogoCliente from "./components/Catalogo/VerCatalogoCliente";
+import VerArticulosCliente from "./components/Catalogo/VerArticulosCliente";
+
 
 const AppContent = () => {
   const { token, role } = useAuth();
@@ -116,7 +118,10 @@ const AppContent = () => {
                 <Route path="/factura/:id" element={<MostrarFactura />} />
                 
                 {role === "cliente" && (
-                   <Route path="/verCatalogoCliente" element={<VerCatalogoCliente/>}/>
+                  <>
+                    <Route path="/VerCatalogoCliente" element={<VerCatalogoCliente/>}/>
+                    <Route path="/VerArticulosCliente/:id_catalogo" element={<VerArticulosCliente/>}/>
+                  </>
                 )}
 
                 {["comercial", "clientevip"].includes(role) && (

@@ -143,7 +143,9 @@ Route::get('/comerciales/{id_comercial}', [ComercialController::class, 'mostrarC
 /* -------------------------------------------------------------------------- */
 /* ARTICULO-CATÁLOGO                               */
 /* -------------------------------------------------------------------------- */
+Route::get('/catalogo/{id_catalogo}/articulos', [ArticuloController::class, 'mostrarArticulosPorCatalogo']);
 Route::post('/catalogo/guardar', [ArticuloController::class, 'guardarCatalogo']);
+
 
 //******************************************* */
 Route::post('/pedidos/reposicion/guardar', [PedidoReposicionController::class, 'guardar']);

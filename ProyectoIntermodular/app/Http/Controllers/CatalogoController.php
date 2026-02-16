@@ -91,9 +91,9 @@ class CatalogoController extends Controller{
 
     public function guardarArticuloCatalogo(Request $request){
         $catalogo = Catalogo::find($request->catalogo_id);
-        $articulos = Articulo::find($request->articulos);
+        $articulo = Articulo::find($request->articulos);
 
-        $catalogo->articulos()->attach($articulos, [
+        $catalogo->articulos()->attach($articulo, [
             'created_at' => now(),
             'updated_at' => now(),
         ]);

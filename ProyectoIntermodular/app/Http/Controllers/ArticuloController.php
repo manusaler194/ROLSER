@@ -127,4 +127,20 @@ class ArticuloController extends Controller {
             'id_catalogo' => $catalogo->id,
         ]);
     }
+
+    public function mostrarArticulosPorCatalogo($id_catalogo){
+        $catalogo = Catalogo::with('articulos')->find($id_catalogo);
+
+        if (!$catalogo) {
+            return response()->json(['error' => 'Catálogo no encontrado'], 404);
+        }
+
+        return response()->json([
+            'catalogoNombre' => $catalogo->nombre_catalogo,
+            'articulos' => $catalogo->articulos
+        ]);
+    }
+
+
+
 }

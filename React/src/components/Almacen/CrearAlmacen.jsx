@@ -77,7 +77,7 @@ const CrearAlmacen = () =>{
             </div>
 
             <div className="absolute bottom-20 right-20">
-                <Link to="/GestionAlmacen" className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Volver</Link>            
+                <Link to="/GestionAlmacen" className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer">Volver</Link>
             </div>
         </div>
     )
