@@ -23,6 +23,6 @@ class Articulo extends Model
     }
 
     public function catalogos(){
-        return $this->belongsToMany(Catalogo::class, 'id_catalogo');
+        return $this->belongsToMany(Catalogo::class, "articulos_catalogos" ,'id_articulo','id_catalogo');
     }
 }

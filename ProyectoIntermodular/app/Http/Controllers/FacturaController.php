@@ -8,6 +8,7 @@ use App\Models\Comercial;
 use App\Models\Cliente;
 use App\Models\ClienteVip;
 use App\Models\Pedido;
+use Illuminate\Support\Facades\Auth;
 
 class FacturaController extends Controller{
 
@@ -57,32 +58,43 @@ class FacturaController extends Controller{
         }
     }
 
-    public function mostrar(Request $request){
-        try{
-            $facturas = Facturas::with(['cliente', 'comercial', 'clienteVip'])->get();
+
+    public function mostrar($tipo, $id){
+        try {
+            $factura = Facturas::with(['cliente', 'comercial', 'clienteVip']);
+
+            if ($tipo === 'cliente') {
+                $factura->where('id_cliente', $id);
+            } else
+                if ($tipo === 'clientevip') {
+                    $factura->where('id_clientevip', $id);
+                }else
+                    if($tipo === 'comercial'){
+                        $factura->where('id_comercial', $id);
+                    }
+            $facturas = $factura->get();
+
 
             return view("mostrarFacturas", compact("facturas"));
 
-        }catch(\Exception $e){
-            return response()->json([
-            'message' => 'Error al obtener las facturas.',
-            'error' => $e->getMessage()
-        ], 500);
+        } catch(\Exception $e) {
+            return "Error: " . $e->getMessage();
         }
     }
 
-    public function mostrarFactura($id_factura) {
-        try {
-            $factura = Facturas::with(['cliente', 'comercial', 'clienteVip'])->where("id_factura", $id_factura)->get();
-            return view("mostrarFactura", compact("factura"));
+   public function mostrarFactura($id_factura) {
+        $factura = Facturas::with(['cliente', 'clienteVip'])->where('id_factura', $id_factura)->firstOrFail();
 
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error al obtener la factura.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        $tipo = $factura->id_clientevip ? 'clientevip' : 'cliente';
+        $id_usuario = $factura->id_clientevip ?? $factura->id_cliente;
+
+        return view("mostrarFactura", [
+            'factura' => [$factura],
+            'tipo' => $tipo,
+            'id_retorno' => $id_usuario
+        ]);
     }
+
     public function actualizar (Request $request){
         $validatedData = $request->validate([
             'base_imponible'   => 'required|numeric|min:0',

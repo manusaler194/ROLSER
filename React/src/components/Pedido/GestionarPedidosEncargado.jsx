@@ -10,8 +10,6 @@ const GestionarPedidosEncargado = () => {
     const [abrirMenuCambioEstado, setAbrirMenuCambioEstado] = useState(null);
     const { user } = useAuth(); 
     const [busquedaCliente, setBusquedaCliente] = useState('');
-    const [busquedaEncargado, setBusquedaEncargado] = useState('');
-
 
    const obtenerPedidos = async () => {
         try {
@@ -101,7 +99,7 @@ const GestionarPedidosEncargado = () => {
                 <input type="text"placeholder="Buscar cliente..."value={busquedaCliente}onChange={(e) => setBusquedaCliente(e.target.value)}className="w-56 p-2 border border-gray-300 rounded bg-white text-sm focus:ring-2 focus:ring-red-800 outline-none"/>
             </div>
 
-            <button onClick={() => {setFiltro('Todos'); setBusquedaCliente(''); setBusquedaEncargado('');}}className="ml-auto text-xs text-gray-500 hover:text-red-700 font-semibold underline">Limpiar filtros</button>
+            <button onClick={() => {setFiltro('Todos'); setBusquedaCliente('');}}className="ml-auto text-xs text-gray-500 hover:text-red-700 font-semibold underline">Limpiar filtros</button>
         </div>
             <div className="border border-gray-400 rounded-sm shadow-sm">
                 <table className="w-full text-left border-collapse">

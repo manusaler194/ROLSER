@@ -11,7 +11,7 @@ class Catalogo extends Model
     protected $fillable = ['nombre_catalogo', 'anyo', 'id_administrador'];
 
     public function articulos(){
-        return $this->belongsToMany(Articulo::class, 'id_articulo');
+        return $this->belongsToMany(Articulo::class, 'articulos_catalogos','id_catalogo','id_articulo');
     }
 
     public function comerciales(){
