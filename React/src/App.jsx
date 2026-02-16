@@ -110,7 +110,7 @@ const AppContent = () => {
               </>
             )}
 
-            {["comercial", "clientevip", "cliente", "admin"].includes(role) && (
+            {["comercial", "clientevip", "cliente"].includes(role) && (
               <>
                 <Route path="/pedidosRealizados" element={<div>Pedidos Realizados</div>} />
                 

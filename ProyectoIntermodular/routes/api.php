@@ -153,3 +153,4 @@ Route::get('/pedidos/reposicion', [PedidoReposicionController::class, 'mostrar']
 Route::get('/pedidos/reposicion/{id_pedidoReposicion}', [PedidoReposicionController::class, 'mostrarPedido']);
 Route::put('/pedidos/reposicion/actualizar/{id_pedidoReposicion}', [PedidoReposicionController::class, 'actualizar']);
 Route::delete('/pedidos/reposicion/borrar/{id_pedidoReposicion}', [PedidoReposicionController::class, 'eliminar']);
+

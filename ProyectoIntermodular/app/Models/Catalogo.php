@@ -10,6 +10,8 @@ class Catalogo extends Model
     protected $primaryKey = 'id_catalogo';
     protected $fillable = ['nombre_catalogo', 'anyo', 'id_administrador'];
 
+   
+
     public function comerciales(){
         return $this->belongsToMany(Comercial::class, 'id_comercial');
     }

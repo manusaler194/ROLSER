@@ -18,7 +18,6 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // Mapeo de Rol => Modelo
         $roles = [
             'admin' => \App\Models\Administrador::class,
             'comercial' => \App\Models\Comercial::class,
@@ -31,14 +30,13 @@ class AuthController extends Controller
             $user = $modelo::where('email', $request->email)->first();
 
             if ($user && Hash::check($request->password, $user->password)) {
-                // Creamos el token
                 $token = $user->createToken('token-name')->plainTextToken;
 
                 return response()->json([
                     'status' => 'success',
                     'token' => $token,
                     'user' => $user,
-                    'role' => $rolNombre // Esto es lo que usará React para el Navbar
+                    'role' => $rolNombre
                 ]);
             }
         }
