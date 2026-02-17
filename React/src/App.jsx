@@ -37,6 +37,7 @@ import ListadoComerciales from "./components/Administrador/ListadoComercial";
 import Perfil from "./components/Conjunto/Perfil";
 import VerCatalogoCliente from "./components/Catalogo/VerCatalogoCliente";
 import VerArticulosCliente from "./components/Catalogo/VerArticulosCliente";
+import CarritoCatalogo from "./components/Catalogo/CarritoCatalogo";
 
 
 const AppContent = () => {
@@ -121,6 +122,7 @@ const AppContent = () => {
                   <>
                     <Route path="/VerCatalogoCliente" element={<VerCatalogoCliente/>}/>
                     <Route path="/VerArticulosCliente/:id_catalogo" element={<VerArticulosCliente/>}/>
+                    <Route path="/CarritoCatalogo" element={<CarritoCatalogo/>}/>
                   </>
                 )}
 
