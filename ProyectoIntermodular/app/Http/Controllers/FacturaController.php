@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Facturas;
 use Illuminate\Http\Request;
 use App\Models\Administrador;
@@ -10,9 +11,11 @@ use App\Models\ClienteVip;
 use App\Models\Pedido;
 use Illuminate\Support\Facades\Auth;
 
-class FacturaController extends Controller{
+class FacturaController extends Controller
+{
 
-    public function guardar(Request $request){
+    public function guardar(Request $request)
+    {
         $validatedData = $request->validate([
             'base_imponible'   => 'required|numeric|min:0',
             'iva_porcentaje'   => 'required|numeric|min:0',
@@ -49,7 +52,6 @@ class FacturaController extends Controller{
             $factura->save();
 
             return redirect()->route("mostrarFactura");
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al crear la factura.',
@@ -59,43 +61,44 @@ class FacturaController extends Controller{
     }
 
 
-    public function mostrar($tipo, $id){
+    public function mostrar($tipo, $id)
+    {
         try {
-            $factura = Facturas::with(['cliente', 'comercial', 'clienteVip']);
-
             if ($tipo === 'cliente') {
-                $factura->where('id_cliente', $id);
+                $facturas = Facturas::with(['cliente', 'comercial', 'clienteVip'])->where("id_cliente", $id)->get();
             } else
                 if ($tipo === 'clientevip') {
-                    $factura->where('id_clientevip', $id);
-                }else
-                    if($tipo === 'comercial'){
-                        $factura->where('id_comercial', $id);
-                    }
-            $facturas = $factura->get();
+                $facturas = Facturas::with(['cliente', 'comercial', 'clienteVip'])->where("id_clientevip", $id)->get();
+            } else
+                    if ($tipo === 'comercial') {
+                $facturas = Facturas::with(['cliente', 'comercial', 'clienteVip'])->where("id_comercial", $id)->get();
+            }
 
 
             return view("mostrarFacturas", compact("facturas"));
-
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return "Error: " . $e->getMessage();
         }
     }
 
-   public function mostrarFactura($id_factura) {
+    public function mostrarFactura($id_factura)
+    {
+
         $factura = Facturas::with(['cliente', 'clienteVip'])->where('id_factura', $id_factura)->firstOrFail();
 
-        $tipo = $factura->id_clientevip ? 'clientevip' : 'cliente';
-        $id_usuario = $factura->id_clientevip ?? $factura->id_cliente;
+        if ($factura->id_clientevip) {
+            $tipo = 'clientevip';
+            $id = $factura->id_clientevip;
+        } else {
+            $tipo = 'cliente';
+            $id = $factura->id_cliente;
+        }
 
-        return view("mostrarFactura", [
-            'factura' => [$factura],
-            'tipo' => $tipo,
-            'id_retorno' => $id_usuario
-        ]);
+        return view("mostrarFactura", compact("facturas", "tipo", "id"));
     }
 
-    public function actualizar (Request $request){
+    public function actualizar(Request $request)
+    {
         $validatedData = $request->validate([
             'base_imponible'   => 'required|numeric|min:0',
             'iva_porcentaje'   => 'required|numeric|min:0',
@@ -108,7 +111,7 @@ class FacturaController extends Controller{
             'id_clientevip'    => 'nullable|integer',
         ]);
 
-        try{
+        try {
 
             $factura = Facturas::findOrFail($request->id_factura);
             $factura->update($validatedData);
@@ -117,13 +120,12 @@ class FacturaController extends Controller{
                 'message' => 'Factura actualizada con éxito.',
                 'factura' => $factura,
             ], 200);
+        } catch (\Exception $e) {
 
-        }catch (\Exception $e){
-
-            return response()->json ([
+            return response()->json([
                 'message' => 'Error al actualizar la factura.',
                 'error' => $e->getMessage(),
-            ],500);
+            ], 500);
         }
     }
 }

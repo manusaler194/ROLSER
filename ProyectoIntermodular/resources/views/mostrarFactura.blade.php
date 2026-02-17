@@ -85,7 +85,7 @@
                         <p class="text-[10px] font-bold text-gray-300 uppercase tracking-[0.4em] mb-8 italic">Documento
                             Oficial de Venta</p>
                         <div class="no-print">
-                            <a href="/mostrar/facturas/{{ $tipo }}/{{ $id_retorno }}"
+                            <a href="/mostrar/facturas/{{ $tipo }}/{{ $id }}"
                             class="btn-rojo inline-block w-full text-[11px] font-black uppercase tracking-widest px-8 py-4 rounded-lg shadow-lg hover:brightness-110 transition-all">
                             Cerrar y Volver
                             </a>

@@ -125,19 +125,6 @@ return (
           </div>
         )}
       </div>
-
-      {totalPaginas > 1 && (
-        <div className="mt-6">
-          <Paginacion
-            paginaActual={paginaActual}
-            totalPaginas={totalPaginas}
-            onCambiarPagina={(n) => {
-              setPaginaActual(n);
-              setAbrirMenu(null);
-            }}
-          />
-        </div>
-      )}
     </div>
   </div>
 );

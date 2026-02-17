@@ -31,8 +31,6 @@ class ProveedorController extends Controller {
             'id_encargado' => 'nullable|integer',
         ]);
 
-
-
         try {
             $encargado = EncargadoAlmacen::findOrFail($validatedData['id_encargado']);
 

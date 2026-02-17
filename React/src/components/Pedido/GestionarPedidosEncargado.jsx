@@ -80,102 +80,154 @@ const GestionarPedidosEncargado = () => {
         obtenerPedidos();
     }, []);
 
-    return (
-        <div className="p-8 flex flex-col gap-6 max-w-4xl">
-            <div className="flex flex-row flex-wrap items-end gap-4 bg-gray-50 p-4 border border-gray-200 rounded-lg">
+return (
+    <div className="p-4 sm:p-8 flex flex-col gap-6 max-w-6xl mx-auto min-h-screen bg-gray-50">
+        
+        <div className="flex flex-col gap-4 bg-white p-6 border border-gray-200 rounded-4xl shadow-sm">
+            <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                <span className="w-1 h-5 bg-[#bc002d] rounded-full"></span>
+                Gestión de Pedidos (Encargado)
+            </h2>
             
-            <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-gray-600 uppercase">Estado:</label>
-                <select value={filtro} onChange={(e) => setFiltro(e.target.value)} className="w-44 p-2 border border-gray-300 rounded bg-white text-sm focus:ring-2 focus:ring-red-800 outline-none">
-                    <option value="Todos">Todos</option>
-                    <option value="En preparación">En preparación</option>
-                    <option value="En proceso de entrega">En proceso de entrega</option>
-                    <option value="Entregado">Entregado</option>
-                </select>
-            </div>
+            <div className="flex flex-wrap items-end gap-4">
+                <div className="flex flex-col gap-1 w-full sm:w-44">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-2">Estado</label>
+                    <select 
+                        value={filtro} 
+                        onChange={(e) => setFiltro(e.target.value)} 
+                        className="w-full p-2.5 border border-gray-300 rounded-full bg-gray-50 text-sm focus:ring-2 focus:ring-red-800 outline-none transition-all"
+                    >
+                        <option value="Todos">Todos</option>
+                        <option value="En preparación">En preparación</option>
+                        <option value="En proceso de entrega">En proceso de entrega</option>
+                        <option value="Entregado">Entregado</option>
+                    </select>
+                </div>
 
-            <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-gray-600 uppercase">Cliente:</label>
-                <input type="text"placeholder="Buscar cliente..."value={busquedaCliente}onChange={(e) => setBusquedaCliente(e.target.value)}className="w-56 p-2 border border-gray-300 rounded bg-white text-sm focus:ring-2 focus:ring-red-800 outline-none"/>
-            </div>
+                <div className="flex flex-col gap-1 w-full sm:w-64">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-2">Cliente</label>
+                    <input 
+                        type="text"
+                        placeholder="Buscar cliente..."
+                        value={busquedaCliente}
+                        onChange={(e) => setBusquedaCliente(e.target.value)}
+                        className="w-full p-2.5 border border-gray-300 rounded-full bg-gray-50 text-sm focus:ring-2 focus:ring-red-800 outline-none transition-all"
+                    />
+                </div>
 
-            <button onClick={() => {setFiltro('Todos'); setBusquedaCliente('');}}className="ml-auto text-xs text-gray-500 hover:text-red-700 font-semibold underline">Limpiar filtros</button>
+                <button 
+                    onClick={() => {setFiltro('Todos'); setBusquedaCliente('');}}
+                    className="ml-auto text-xs text-gray-400 hover:text-[#bc002d] font-bold uppercase tracking-tighter transition-colors p-2 underline"
+                >
+                    Limpiar filtros
+                </button>
+            </div>
         </div>
-            <div className="border border-gray-400 rounded-sm shadow-sm">
-                <table className="w-full text-left border-collapse">
-                    <thead>
-                        <tr className="bg-gray-200 text-gray-800">
-                            <th className="border border-gray-400 px-4 py-2 font-bold">Cliente</th>
-                            <th className="border border-gray-400 px-4 py-2 font-bold">Estado</th>
-                            <th className="border border-gray-400 px-4 py-2 font-bold">Acciones</th>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {pedidosFiltrados.length > 0 ? 
-                        (pedidosFiltrados.map((pedido) => (
-                                <tr key={pedido.id_pedido} className="bg-gray-100 hover:bg-white transition-colors">
-                                    
-                                    <td className="border border-gray-400 px-4 py-2">
-                                        <div className="flex flex-col">
-                                            <span className="font-medium">{pedido.cliente_vip?.nombre || pedido.cliente?.nombre  || 'Sin asignar'}</span>
-                                            {pedido.cliente && pedido.comercial && <span className="text-[10px] text-gray-500 uppercase">Comercial: {pedido.comercial.nombre}</span>}
-                                            {pedido.cliente_vip && <span className="text-[10px] text-yellow-600 font-bold uppercase">Cliente VIP</span>}
-                                        </div>
-                                    </td>
-
-                                    <td className="border border-gray-400 px-4 py-2"> 
-                                        <button onClick={()=>{
-                                                    const idActual = pedido.id_pedido;
-                                                    setAbrirMenuCambioEstado(prevId =>(prevId == idActual ? null: idActual))
-                                                        }} className='"bg-gray-200 px-3 py-1 rounded cursor-pointer'>
-                                            <span className={`px-2 py-1 rounded text-xs font-bold ${pedido.estado === 'En preparación' ? 'bg-red-200' : pedido.estado ===  'En proceso de entrega' ? 'bg-orange-200' : 'bg-green-200'}`}>{pedido.estado}</span>
-                                        </button>
-                                         {abrirMenuCambioEstado === pedido.id_pedido && (
-                                        <div className="absolute mt-2 w-48 bg-white border-2 border-gray-400 z-50 shadow-xl">
-                                            <div className="flex flex-col text-sm">
-                                                <button onClick={()=>{ modificarEstado(pedido, "En proceso de entrega")
-                                                                         setAbrirMenuCambioEstado(null)
-                                                                        }} className="px-4 py-2 border-b border-gray-400 hover:bg-gray-100 text-left cursor-pointer">En proceso de entrega</button>
-                                                <button onClick={()=>{ modificarEstado(pedido,"En preparación")
-                                                                         setAbrirMenuCambioEstado(null)
-                                                                        }} className="px-4 py-2 border-b border-gray-400 hover:bg-gray-100 text-left cursor-pointer">En preparacion</button>
-                                                <button  onClick={()=>{ modificarEstado(pedido,"Entregado")
-                                                                         setAbrirMenuCambioEstado(null)
-                                                                        }} className="px-4 py-2 border-b border-gray-400 hover:bg-gray-100 text-left cursor-pointer">Entregado</button>
-
-                                            </div>
-                                        </div>
-                                    )}
-                                    </td>
-                                    <td className="border border-gray-400 px-4 py-2 relative">
-                                    <button onClick={() => {
-                                                                const idActual = pedido.id_pedido;
-                                                                setAbrirMenuAcciones(prevId => (prevId == idActual ? null : idActual));
-                                                            }}  className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 cursor-pointer">...
+        <div className="hidden lg:block bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+            <table className="w-full text-left border-collapse">
+                <thead>
+                    <tr className="bg-gray-100 text-gray-600 text-xs uppercase tracking-widest">
+                        <th className="px-6 py-4 font-black">Cliente / Comercial</th>
+                        <th className="px-6 py-4 font-black">Estado del Pedido</th>
+                        <th className="px-6 py-4 font-black text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                    {pedidosFiltrados.length > 0 ? (
+                        pedidosFiltrados.map((pedido) => (
+                            <tr key={pedido.id_pedido} className="hover:bg-gray-50 transition-colors">
+                                <td className="px-6 py-4">
+                                    <div className="flex flex-col">
+                                        <span className="font-bold text-gray-800">{pedido.cliente_vip?.nombre || pedido.cliente?.nombre || 'Sin asignar'}</span>
+                                        {pedido.cliente_vip && <span className="text-[9px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full w-fit font-black mt-1 uppercase">VIP</span>}
+                                        {pedido.comercial && <span className="text-[10px] text-gray-400 mt-1">Vendedor: {pedido.comercial.nombre}</span>}
+                                    </div>
+                                </td>
+                                <td className="px-6 py-4 relative">
+                                    <button 
+                                        onClick={() => setAbrirMenuCambioEstado(abrirMenuCambioEstado === pedido.id_pedido ? null : pedido.id_pedido)}
+                                        className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase cursor-pointer transition-all active:scale-95 flex items-center gap-2 ${
+                                            pedido.estado === 'En preparación' ? 'bg-red-100 text-red-700' : 
+                                            pedido.estado === 'En proceso de entrega' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'
+                                        }`}
+                                    >
+                                        {pedido.estado} <span>▼</span>
                                     </button>
-
-                                    {abrirMenuAcciones === pedido.id_pedido && (
-                                        <div className="absolute right-0 mt-2 w-48 bg-white border-2 border-gray-400 z-50 shadow-xl">
-                                            <div className="flex flex-col text-sm">
-                                                <button onClick={() => handleEliminar(pedido.id_pedido)} className="px-4 py-2 border-b border-gray-400 hover:bg-gray-100 text-left cursor-pointer text-red-600">Eliminar</button>
-                                                <Link to={`/DetallesPedido/encargado/${pedido.id_pedido}`} className="px-4 py-2 hover:bg-gray-100 text-left cursor-pointer">Ver detalles</Link>
-                                            </div>
+                                    {abrirMenuCambioEstado === pedido.id_pedido && (
+                                        <div className="absolute left-6 mt-2 w-48 bg-white border border-gray-200 z-50 shadow-2xl rounded-xl overflow-hidden animate-in fade-in zoom-in duration-200">
+                                            {["En preparación", "En proceso de entrega", "Entregado"].map((est) => (
+                                                <button 
+                                                    key={est}
+                                                    onClick={() => { modificarEstado(pedido, est); setAbrirMenuCambioEstado(null); }}
+                                                    className="w-full px-4 py-3 text-xs text-left hover:bg-gray-50 text-gray-700 font-bold border-b border-gray-50 last:border-0"
+                                                >
+                                                    {est}
+                                                </button>
+                                            ))}
                                         </div>
                                     )}
                                 </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="4" className="text-center py-4">No hay pedidos registrados.</td>
+                                <td className="px-6 py-4 text-right relative">
+                                    <button 
+                                        onClick={() => setAbrirMenuAcciones(abrirMenuAcciones === pedido.id_pedido ? null : pedido.id_pedido)}
+                                        className="bg-gray-100 hover:bg-gray-200 text-gray-600 w-10 h-10 rounded-full font-bold transition-colors cursor-pointer"
+                                    >
+                                        •••
+                                    </button>
+                                    {abrirMenuAcciones === pedido.id_pedido && (
+                                        <div className="absolute right-6 mt-2 w-44 bg-white border border-gray-200 z-50 shadow-2xl rounded-xl overflow-hidden">
+                                            <Link to={`/DetallesPedido/encargado/${pedido.id_pedido}`} className="block px-4 py-3 text-xs hover:bg-gray-50 text-gray-700 font-bold border-b border-gray-50">Ver detalles</Link>
+                                            <button onClick={() => handleEliminar(pedido.id_pedido)} className="w-full px-4 py-3 text-xs text-left hover:bg-red-50 text-red-600 font-bold">Eliminar</button>
+                                        </div>
+                                    )}
+                                </td>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                        ))
+                    ) : (
+                        <tr><td colSpan="3" className="text-center py-10 text-gray-400 italic">No se encontraron pedidos.</td></tr>
+                    )}
+                </tbody>
+            </table>
         </div>
-    );
+
+        <div className="lg:hidden space-y-4">
+            {pedidosFiltrados.map((pedido) => (
+                <div key={pedido.id_pedido} className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm relative">
+                    <div className="flex justify-between items-start">
+                        <div className="flex flex-col">
+                            <span className="font-black text-gray-900 leading-tight">{pedido.cliente_vip?.nombre || pedido.cliente?.nombre || 'Sin asignar'}</span>
+                            {pedido.cliente_vip && <span className="text-[9px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full w-fit font-black uppercase mt-1">VIP</span>}
+                        </div>
+                        <button onClick={() => setAbrirMenuAcciones(abrirMenuAcciones === pedido.id_pedido ? null : pedido.id_pedido)} className="text-gray-400 p-2">•••</button>
+                    </div>
+
+                    <div className="mt-4 pt-4 border-t border-gray-50 flex flex-col gap-3">
+                        <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Estado</span>
+                            <button 
+                                onClick={() => setAbrirMenuCambioEstado(abrirMenuCambioEstado === pedido.id_pedido ? null : pedido.id_pedido)}
+                                className={`text-[10px] font-black uppercase px-3 py-1 rounded-full ${
+                                    pedido.estado === 'En preparación' ? 'bg-red-100 text-red-700' : 
+                                    pedido.estado === 'En proceso de entrega' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'
+                                }`}
+                            >
+                                {pedido.estado}
+                            </button>
+                        </div>
+                    </div>
+
+                    {abrirMenuAcciones === pedido.id_pedido && (
+                        <div className="absolute right-4 top-12 w-40 bg-white border border-gray-200 z-50 shadow-xl rounded-xl overflow-hidden">
+                            <Link to={`/DetallesPedido/encargado/${pedido.id_pedido}`} className="block px-4 py-3 text-xs font-bold text-gray-700 hover:bg-gray-50">Ver detalles</Link>
+                            <button onClick={() => handleEliminar(pedido.id_pedido)} className="w-full px-4 py-3 text-xs text-left font-bold text-red-600 hover:bg-red-50 border-t border-gray-50">Eliminar</button>
+                        </div>
+                    )}
+                </div>
+            ))}
+        </div>
+    </div>
+);
 }
 
 export default GestionarPedidosEncargado;

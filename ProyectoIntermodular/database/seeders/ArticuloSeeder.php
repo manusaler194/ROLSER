@@ -19,7 +19,7 @@ class ArticuloSeeder extends Seeder
 
         for ($i = 1; $i < 11; $i++) {
             DB::table('articulos')->insert([
-            'nombre'=>$faker->randomElement(["Plancha", "Carrito", "Bolsas", "Escaleras"]),
+            'nombre'=>$faker->randomElement(["Plancha", "Carrito", "Bolsas", "Escaleras", "Tabla de planchar", "Taburete", "funda de tabla", "carro plegable", "carro no plegable", "bolsas no adaptables"]),
             'descripcion' => $faker->text(),
             'precio' => $faker->randomFloat(2, 1, 30), // Float random: 2 decimales, minimo 1 maximo 1000
             'stock_actual' => $faker->numberBetween(0, 500),

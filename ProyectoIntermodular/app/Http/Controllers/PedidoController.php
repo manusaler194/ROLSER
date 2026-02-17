@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Administrador;
 use App\Models\Cliente;
 use App\Models\ClienteVip;
@@ -12,12 +13,14 @@ use App\Models\Pedido;
 use Exception;
 use Illuminate\Http\Request;
 
-class PedidoController extends Controller{
+class PedidoController extends Controller
+{
 
-    public function guardar(Request $request){
+    public function guardar(Request $request)
+    {
         $validatedData = $request->validate([
-            'fecha_pedido'=> 'required|date',
-            'estado'=>'required|string',
+            'fecha_pedido' => 'required|date',
+            'estado' => 'required|string',
             'id_comercial' => 'nullable|integer',
             'id_cliente' => 'nullable|integer',
             'id_clientevip' => 'nullable|integer',
@@ -29,28 +32,28 @@ class PedidoController extends Controller{
                 'fecha_pedido' => $validatedData["fecha_pedido"],
                 'estado' => $validatedData["estado"]
             ]);
-                if ($request->id_factura) {
-                    $pedido->factura()->associate(Facturas::find($request->id_factura));
-                }
-                if ($request->id_comercial) {
-                    $pedido->comercial()->associate(Comercial::find($request->id_comercial));
-                }
-                if ($request->id_cliente) {
-                    $pedido->cliente()->associate(Cliente::find($request->id_cliente));
-                }
-                if ($request->id_clientevip) {
-                    $pedido->clienteVip()->associate(ClienteVip::find($request->id_clientevip));
-                }
-                if ($request->id_encargado) {
-                    $pedido->encargadoAlmacen()->associate(EncargadoAlmacen::find($request->id_encargado));
-                }
+            if ($request->id_factura) {
+                $pedido->factura()->associate(Facturas::find($request->id_factura));
+            }
+            if ($request->id_comercial) {
+                $pedido->comercial()->associate(Comercial::find($request->id_comercial));
+            }
+            if ($request->id_cliente) {
+                $pedido->cliente()->associate(Cliente::find($request->id_cliente));
+            }
+            if ($request->id_clientevip) {
+                $pedido->clienteVip()->associate(ClienteVip::find($request->id_clientevip));
+            }
+            if ($request->id_encargado) {
+                $pedido->encargadoAlmacen()->associate(EncargadoAlmacen::find($request->id_encargado));
+            }
             $pedido->save();
 
             return response()->json([
                 'message' => 'Pedido creado con éxito.',
                 'pedidos' => $pedido,
             ], 201); // Código HTTP 201: Creado
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al crear el pedido.',
@@ -59,24 +62,26 @@ class PedidoController extends Controller{
         }
     }
 
-    public function mostrar(Request $request){
-        try{
+    public function mostrar(Request $request)
+    {
+        try {
             $pedidos = Pedido::with(['cliente', 'clienteVip', 'comercial', 'encargadoAlmacen'])->get();
             return response()->json([
                 'message' => "Datos recogidos",
                 'pedidos' => $pedidos
             ], 200);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
-            'message' => 'Error al obtener los pedidos.',
-            'error' => $e->getMessage()
-        ], 500);
+                'message' => 'Error al obtener los pedidos.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
-    public function mostrarPedido(Request $request){
-        try{
-            $pedido = Pedido::with(['LineaPedidos.articulo'])->where("id_pedido", $request->id_pedido)->get();
-             if (!$pedido) {
+    public function mostrarPedido(Request $request)
+    {
+        try {
+            $pedido = Pedido::with(['LineaPedidos.articulo', 'comercial','cliente'])->where("id_pedido", $request->id_pedido)->get();
+            if (!$pedido) {
                 return response()->json([
                     'message' => 'Pedido no encontrado'
                 ], 404);
@@ -86,17 +91,18 @@ class PedidoController extends Controller{
                 'message' => "Pedido recogido",
                 'pedido' => $pedido
             ], 200);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
-            'message' => 'Error al obtener el pedido.',
-            'error' => $e->getMessage()
-        ], 500);
+                'message' => 'Error al obtener el pedido.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
-    public function actualizar(Request $request){
+    public function actualizar(Request $request)
+    {
         $validatedData = $request->validate([
-            'fecha_pedido'=> 'required|date',
-            'estado'=>'required|string',
+            'fecha_pedido' => 'required|date',
+            'estado' => 'required|string',
             'id_comercial' => 'nullable|integer',
             'id_cliente' => 'nullable|integer',
             'id_clientevip' => 'nullable|integer',
@@ -112,14 +118,15 @@ class PedidoController extends Controller{
                 'pedido' => $pedido,
             ], 200);
         } catch (\Exception $e) {
-            return response()->json ([
+            return response()->json([
                 'message' => 'Error al actualizar el pedido.',
                 'error' => $e->getMessage(),
-            ],500);
+            ], 500);
         }
     }
-    public function eliminar(Request $request){
-        try{
+    public function eliminar(Request $request)
+    {
+        try {
             $pedido = Pedido::destroy($request->id_pedido);
 
             if ($pedido === 0) {
@@ -130,13 +137,12 @@ class PedidoController extends Controller{
             return response()->json([
                 "message" => "Pedido con id =" . $request->id_pedido . " ha sido borrado con éxito"
 
-            ],201);
-        }catch(\Exception $e){
+            ], 201);
+        } catch (\Exception $e) {
             return response()->json([
                 "message" => "Error de base de datos al eliminar",
                 "error" => $e->getMessage()
             ], 500);
         }
-
     }
 }

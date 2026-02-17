@@ -1,15 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Almacen;
 use App\Models\EncargadoAlmacen;
 use Database\Seeders\EncargadoAlmacenSeeder;
 
-class AlmacenController extends Controller{
+class AlmacenController extends Controller
+{
 
-    public function guardar(Request $request){
+    public function guardar(Request $request)
+    {
         $validatedData = $request->validate([
             'direccion' => 'required|string|max:255',
             'capacidad' => 'required|integer|min:0',
@@ -30,8 +33,7 @@ class AlmacenController extends Controller{
             return response()->json([
                 'message' => 'Almacen creado con éxito.',
                 'almacen' => $almacen,
-            ], 201); 
-
+            ], 201);
         } catch (\Exception $e) {
 
             return response()->json([
@@ -41,23 +43,25 @@ class AlmacenController extends Controller{
         }
     }
 
-    public function mostrar(Request $request){
-        try{
+    public function mostrar(Request $request)
+    {
+        try {
             $almacen = Almacen::all();
             return response()->json([
                 'message' => "Datos recogidos",
                 'almacen' => $almacen
             ], 200);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
-            'message' => 'Error al obtener los almacenes.',
-            'error' => $e->getMessage()
-        ], 500);
+                'message' => 'Error al obtener los almacenes.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
-    public function mostrarAlmacen(Request $request){
+    public function mostrarAlmacen(Request $request)
+    {
         try {
-            $almacen = Almacen::with( 'encargadoAlmacen')->where("id_almacen", $request->id_almacen)->get();
+            $almacen = Almacen::with('encargadoAlmacen')->where("id_almacen", $request->id_almacen)->get();
 
             if (!$almacen) {
                 return response()->json([
@@ -69,7 +73,6 @@ class AlmacenController extends Controller{
                 'message' => 'Datos recogidos',
                 'almacen' => $almacen
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al obtener el almacén.',
@@ -78,14 +81,15 @@ class AlmacenController extends Controller{
         }
     }
 
-    public function actualizar (Request $request){
+    public function actualizar(Request $request)
+    {
 
         $validatedData = $request->validate([
             'direccion' => 'required|string|max:255',
             'capacidad' => 'required|integer|min:0',
             'id_encargado' => 'required|integer',
         ]);
-        try{
+        try {
             $almacen = Almacen::findOrFail($request->id_almacen);
             $almacen->update($validatedData);
 
@@ -93,18 +97,18 @@ class AlmacenController extends Controller{
                 'message' => 'Almacen actualizado con éxito.',
                 'almacen' => $almacen,
             ], 200);
+        } catch (\Exception $e) {
 
-        }catch (\Exception $e){
-
-            return response()->json ([
+            return response()->json([
                 'message' => 'Error al actualizar el almacen.',
                 'error' => $e->getMessage(),
-            ],500);
+            ], 500);
         }
     }
 
-    public function eliminar(Request $request){
-        try{
+    public function eliminar(Request $request)
+    {
+        try {
             $almacen = Almacen::destroy($request->id_almacen);
 
             if ($almacen === 0) {
@@ -115,8 +119,8 @@ class AlmacenController extends Controller{
             return response()->json([
                 "message" => "Almacén con id =" . $request->id_almacen . " ha sido borrado con éxito"
 
-            ],201);
-        }catch(\Exception $e){
+            ], 201);
+        } catch (\Exception $e) {
             return response()->json([
                 "message" => "Error de base de datos al eliminar",
                 "error" => $e->getMessage()

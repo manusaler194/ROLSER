@@ -63,6 +63,7 @@ class ArticuloController extends Controller {
 
     public function articuloActualizar(Request $request){
         $validatedData = $request->validate([
+            'nombre' => 'required|string',
             'descripcion' => 'required|string|max:255',
             'precio' => 'required|numeric',
             'stock_actual' => 'required|integer|min: 0',
