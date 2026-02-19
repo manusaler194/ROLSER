@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import {apiFetch} from '../../utils/api';
 
 // Importamos todas las imágenes
 import Bolso1 from "./imgArticulos/Bolso1.jpg";
@@ -50,31 +51,23 @@ const imagenesArticulos = [
 const VerArticulosCliente = () => {
   const { id_catalogo } = useParams();
   const navigate = useNavigate();
-
   const [articulos, setArticulos] = useState([]);
   const [catalogoNombre, setCatalogoNombre] = useState("Catálogo");
-  const [error, setError] = useState("");
-  const [cantidades, setCantidades] = useState({}); // Estado para todas las cantidades
+  const [cantidades, setCantidades] = useState({});
 
   // Cargar artículos desde la API
   useEffect(() => {
     const cargarArticulos = async () => {
       try {
-        const response = await fetch(
+        const response = await apiFetch(
           `http://localhost/api/catalogo/${id_catalogo}/articulos`
         );
         const data = await response.json();
-
-        if (!response.ok) {
-          setError(data.error || "Error al cargar artículos");
-          return;
-        }
 
         setArticulos(data.articulos || []);
         setCatalogoNombre(data.catalogoNombre || "Catálogo");
       } catch (err) {
         console.error(err);
-        setError("Error de conexión con el servidor");
       }
     };
 
@@ -84,13 +77,51 @@ const VerArticulosCliente = () => {
   // Obtenemos el tipo de catálogo
   const catalogoTipo = catalogoNombre.toLowerCase();
   const tipoSeleccionado = imagenesArticulos.find(
-    (item) => item.tipo === catalogoTipo
+    (imagen) => imagen.tipo === catalogoTipo
   );
 
   // Creamos un array solo con las imágenes del tipo seleccionado
-  const imagenesInsertar = tipoSeleccionado
-    ? tipoSeleccionado.articulos.map((articulo) => articulo.imagen)
-    : [];
+  const imagenesInsertar = tipoSeleccionado ? tipoSeleccionado.articulos.map((articulo) => articulo.imagen) : [];
+
+  // ----- MODIFICADO: función para agregar al carrito
+  const agregarAlCarrito = (articulo, imagen) => {
+    const cantidad = cantidades[articulo.id_articulo];
+
+    if (!cantidad || cantidad <= 0) {
+      alert("Selecciona una cantidad válida");
+      return;
+    }
+
+    const carritoActual = JSON.parse(localStorage.getItem("carrito")) || [];
+
+    const existe = carritoActual.find(
+      (item) => item.id_articulo === articulo.id_articulo
+    );
+
+    let nuevoCarrito;
+
+    if (existe) {
+      // Si ya existe, sumamos la cantidad
+      nuevoCarrito = carritoActual.map((item) =>
+        item.id_articulo === articulo.id_articulo
+          ? { ...item, cantidad: item.cantidad + cantidad }
+          : item
+      );
+    } else {
+      // Si no existe, lo agregamos con la imagen
+      nuevoCarrito = [
+        ...carritoActual,
+        {
+          ...articulo,
+          cantidad: cantidad,
+          imagenSrc: imagen, // ----- GUARDAMOS EL SRC DIRECTO
+        },
+      ];
+    }
+
+    localStorage.setItem("carrito", JSON.stringify(nuevoCarrito));
+    alert(`${articulo.nombre} añadido al carrito`);
+  };
 
   return (
     <div className="w-full max-w-6xl mx-auto p-10 mt-10 relative">
@@ -107,7 +138,6 @@ const VerArticulosCliente = () => {
           Volver
         </button>
       </div>
-
 
       {/* Lista de artículos */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -139,24 +169,22 @@ const VerArticulosCliente = () => {
                 </p>
               </div>
 
-              {/* Selector de cantidad + botón añadir al carrito */}
+              {/* Seleccionar cantidad de compra */}
               <div className="flex items-center mt-4 gap-2">
                 <input
                   type="number"
                   min={0}
-                  value={cantidad}
                   onChange={(e) =>
                     setCantidades((prev) => ({
                       ...prev,
                       [articulo.id_articulo]: Number(e.target.value),
                     }))
                   }
+                  value={cantidad || ""}
                   className="w-16 p-2 border rounded text-center"
                 />
                 <button
-                  onClick={() =>
-                    alert(`Agregar al carrito: ${articulo.nombre} x${cantidad}`)
-                  }
+                  onClick={() => agregarAlCarrito(articulo, imagen)}
                   className="bg-[#bc002d] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#a00c24] transition"
                 >
                   +
@@ -167,7 +195,7 @@ const VerArticulosCliente = () => {
         })}
       </div>
 
-      {/* Botón fijo al carrito */}
+      {/* Botón al carrito */}
       <button
         onClick={() => navigate("/carritoCatalogo")}
         className="fixed bottom-8 right-8 bg-[#C8102E] text-white px-6 py-4 rounded-full text-xl font-bold shadow-lg hover:bg-red-800 transition"

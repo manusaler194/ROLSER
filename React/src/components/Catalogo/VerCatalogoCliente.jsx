@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {apiFetch} from '../../utils/api';
+
 
 // Imágenes
 import Bolso from "./imgCatalogo/bolsoRolser.jpg";
@@ -23,7 +25,7 @@ const VerCatalogoCliente = () => {
   useEffect(() => {
     const cargarCatalogos = async () => {
       try {
-        const response = await fetch("http://localhost/api/catalogo");
+        const response = await apiFetch("http://localhost/api/catalogo");
         const data = await response.json();
         setCatalogos(data.catalogo);
       } catch (error) {
@@ -33,7 +35,7 @@ const VerCatalogoCliente = () => {
 
     const cargarArticulos = async () => {
       try {
-        const response = await fetch("http://localhost/api/articulo");
+        const response = await apiFetch("http://localhost/api/articulo");
         const data = await response.json();
         setArticulos(data.almacen);
       } catch (error) {

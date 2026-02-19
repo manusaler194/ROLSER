@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {apiFetch} from '../../utils/api';
 
 const crearCatalogo = () => {
   // Estados del formulario
@@ -13,7 +14,7 @@ const crearCatalogo = () => {
   useEffect(() => {
     const cargarAdministradores = async () => {
       try {
-        const response = await fetch("http://localhost/api/administradores");
+        const response = await apiFetch("http://localhost/api/administradores");
         const data = await response.json();
         setAdministradores(data.admin);
       } catch (error) {
@@ -28,7 +29,7 @@ const crearCatalogo = () => {
   useEffect(() => {
     const cargarArticulos = async () => {
       try {
-        const response = await fetch("http://localhost/api/articulo");
+        const response = await apiFetch("http://localhost/api/articulo");
         const data = await response.json();
         setArticulos(data.almacen);
       } catch (error) {
@@ -46,7 +47,7 @@ const crearCatalogo = () => {
     const idAdministrador = e.target.administrador.value;
 
     try {
-      const catalogo = await fetch("http://localhost/api/catalogo/guardar", {
+      const catalogo = await apiFetch("http://localhost/api/catalogo/guardar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -64,7 +65,7 @@ const crearCatalogo = () => {
       }
 
       if (articulosSeleccionados.length > 0) {
-        await Promise.all(articulosSeleccionados.map(idArticulo => fetch("http://localhost/api/articulo_catalogo/guardar", {
+        await Promise.all(articulosSeleccionados.map(idArticulo => apiFetch("http://localhost/api/articulo_catalogo/guardar", {
               method: "POST",
               headers: {"Content-Type": "application/json"},
               body: JSON.stringify({
