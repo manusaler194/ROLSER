@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import Header from "./components/Conjunto/Header";
 import Navbar from "./components/Conjunto/Navbar";
 import Login from "./components/Auth/Login";
+import Register from "./components/Auth/Register";
 import Catalogos from "./components/Catalogo/crearCatalogos";
 import GestionUsuarios from "./components/Administrador/GestionUsuarios";
 import GestionAlmacen from "./components/Almacen/GestionAlmacen";
@@ -14,19 +15,11 @@ import DatosAlmacen from "./components/Almacen/DatosAlmacen";
 import DatosAlmacenEncargado from "./components/Almacen/DatosAlmacenEncargado";
 import ModificarAdministrador from "./components/Administrador/ModificarAdministrador";
 import GestionarPedidos from "./components/Pedido/GestionarPedidos";
-import GestionarPedidosEncargado from "./components/Pedido/GestionarPedidosEncargado";
-import GestionarPedidosCliente from "./components/Pedido/GestionarPedidosCliente";
-import GestionarPedidosClientevip from "./components/Pedido/GestionarPedidosClientevip";
-import GestionarPedidosComercial from "./components/Pedido/GestionarPedidosComercial";
 import ModificarCliente from "./components/Administrador/ModificarCliente";
 import ModificarClienteVip from "./components/Administrador/ModificarClienteVip";
 import ModificarComercial from "./components/Administrador/ModificarComercial";
 import ModificarEncargado from "./components/Administrador/ModificarEncargado";
 import DetallesPedido from "./components/Pedido/DetallesPedido";
-import DetallesPedidoEncargado from "./components/Pedido/DetallesPedidoEncargado";
-import DetallesPedidoCliente from "./components/Pedido/DetallesPedidoCliente";
-import DetallesPedidoClientevip from "./components/Pedido/DetallesPedidoClientevip";
-import DetallesPedidoComercial from "./components/Pedido/DetallesPedidoComercial";
 import CrearAdmin from "./components/Administrador/CrearAdmin";
 import CrearCliente from "./components/Administrador/CrearCliente";
 import CrearClienteVip from "./components/Administrador/CrearClienteVip";
@@ -56,6 +49,7 @@ const AppContent = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     );
   }
@@ -92,14 +86,11 @@ const AppContent = () => {
                 <Route path="/modificar-cliente/:id" element={<ModificarCliente />} />
                 <Route path="/tarifas" element={<div>Página de Tarifas</div>} />
                 <Route path="/estadisticas" element={<div>Estadísticas</div>} />
-                <Route path="/DetallesPedido/:id" element={<DetallesPedido />} />
-
               </>
             )}
 
             {["admin", "encargadoalmacen"].includes(role) && (
               <>
-                <Route path="/pedidos" element={<GestionarPedidos />} />
                 <Route path="/GestionAlmacen" element={<GestionAlmacen />} />
                 <Route path="/CrearAlmacen" element={<CrearAlmacen />} />
                 <Route path="/ModificarAlmacen/:id" element={<ModificarAlmacen />} />
@@ -107,9 +98,6 @@ const AppContent = () => {
                 <Route path="/crear-pedido-reabastecimiento" element={<CrearPedidoRebastecimiento />} />
                 {role === "encargadoalmacen" && (
                   <>
-                    <Route path="/DetallesPedido/encargado/:id" element={<DetallesPedidoEncargado />} />
-                      <Route path="/Pedidos/encargado" element={<GestionarPedidosEncargado />} />
-
                     <Route path="/GestionAlmacenEncargado" element={<GestionAlmacenEncargado />} />
                     <Route path="/DatosAlmacenEncargado/:id" element={<DatosAlmacenEncargado />} />
                     <Route path="/stock" element={<Stock />} />
@@ -118,10 +106,14 @@ const AppContent = () => {
               </>
             )}
 
-            {["comercial", "clientevip", "cliente"].includes(role) && (
+            {["comercial", "clientevip", "cliente", "admin", 'encargadoalmacen'].includes(role) && (
               <>                
                 <Route path="/facturas" element={<MostrarFacturas />} />
                 <Route path="/factura/:id" element={<MostrarFactura />} />
+                <Route path="/pedidos" element={<GestionarPedidos />} />
+                <Route path="/DetallesPedido/:id" element={<DetallesPedido />} />
+
+
                 
                 {role === "cliente" && (
                   <>
@@ -140,28 +132,7 @@ const AppContent = () => {
                 {role === "comercial" && (
                   <Route path="/aplicar-descuento" element={<div>Descuentos</div>} />
                 )}
-                {role === "cliente" &&(
-                  <>
-                    <Route path="/pedidos/cliente" element={<GestionarPedidosCliente />} />
-                    <Route path="/DetallesPedido/cliente/:id" element={<DetallesPedidoCliente />} />
 
-                  </>
-                )}
-
-                {role === "clientevip" &&(
-                  <>
-                    <Route path="/pedidos/clientevip" element={<GestionarPedidosClientevip />} />
-                    <Route path="/DetallesPedido/clientevip/:id" element={<DetallesPedidoClientevip />} />
-
-                  </>
-                )}
-                {role === "comercial" &&(
-                  <>
-                    <Route path="/pedidos/comercial" element={<GestionarPedidosComercial/>} />
-                    <Route path="/DetallesPedido/comercial/:id" element={<DetallesPedidoComercial />} />
-
-                  </>
-                )}
               </>
             )}
             <Route
@@ -170,10 +141,10 @@ const AppContent = () => {
                 <Navigate
                   to={
                     role === "admin" ? "/usuarios" :
-                    role === "encargadoalmacen" ? "/pedidos/encargado" :
-                    role === "cliente" ? "/pedidos/cliente":
-                    role === "clientevip" ? "/pedidos/clientevip":
-                    role === "comercial" ? "/pedidos/comercial":
+                    role === "encargadoalmacen" ? "/pedidos" :
+                    role === "cliente" ? "/pedidos":
+                    role === "clientevip" ? "/pedidos":
+                    role === "comercial" ? "/pedidos":
 
                     "/login"
                   }

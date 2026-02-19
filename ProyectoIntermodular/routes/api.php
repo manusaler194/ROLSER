@@ -20,25 +20,18 @@ use App\Http\Controllers\LineaPedidoController;
 use App\Http\Controllers\SeccionController;
 use App\Http\Controllers\ComercialController;
 
-/*
-|--------------------------------------------------------------------------
-| 1. RUTAS PÚBLICAS
-|--------------------------------------------------------------------------
-*/
-Route::post('/login', [AuthController::class, 'login']);
 
-/*
-|--------------------------------------------------------------------------
-| 2. RUTAS PROTEGIDAS (Requieren Token Sanctum)
-|--------------------------------------------------------------------------
-*/
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/clientes/guardar', [ClienteController::class, 'guardar']);
+
+
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) { return $request->user(); });
 
-    /* --- TEST DE ROLES ---
-    */
+
     Route::middleware('role:administrador')->get('/test-admin', function () {
         return response()->json(['message' => 'Hola Jefe, el middleware funciona.']);
     });
@@ -52,9 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json(['message' => 'Stock y almacén bajo control']);
     });
 
-    /* --- ARTÍCULOS, SECCIONES Y CATÁLOGOS ---
-       Lectura: Todos los autenticados | Escritura: Admin y Almacén
-    */
+
     Route::middleware('role:administrador,comercial,encargadoalmacen,cliente,clientevip')->group(function () {
         Route::get('/articulo', [ArticuloController::class, 'mostrarArticulos']);
         Route::get('/secciones', [SeccionController::class, 'mostrar']);
@@ -82,9 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/catalogo/actualizar/{id_catalogo}', [CatalogoController::class, 'catalogoActualizar']);
     });
 
-    /* --- ALMACENES Y PROVEEDORES ---
-       Acceso: Admin y Almacén
-    */
+
     Route::middleware('role:administrador,encargadoalmacen')->group(function () {
         Route::get('/almacenes', [AlmacenController::class, 'mostrar']);
         Route::get('/almacenes/{id_almacen}', [AlmacenController::class, 'mostrarAlmacen']);
@@ -101,53 +90,40 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/pedidos/reposicion/actualizar/{id_pedidoReposicion}', [PedidoReposicionController::class, 'actualizar']);
     });
 
-    /* --- CLIENTES Y COMERCIALES ---
-       Acceso: Admin y Comercial
-    */
+
     Route::middleware('role:administrador,comercial')->group(function () {
-        // Clientes
         Route::get('/clientes', [ClienteController::class, 'mostrar']);
         Route::get('/clientes/{id_cliente}', [ClienteController::class, 'mostrarCliente']);
-        Route::post('/clientes/guardar', [ClienteController::class, 'guardar']);
         Route::put('/clientes/actualizar/{id_cliente}', [ClienteController::class, 'actualizar']);
 
-        // Clientes VIP
         Route::get('/clientesVip', [ClienteVipController::class, 'mostrar']);
         Route::get('/clientesVip/{id_clientevip}', [ClienteVipController::class, 'mostrarClienteVip']);
         Route::post('/clientesVip/guardar', [ClienteVipController::class, 'guardar']);
         Route::put('/clientesVip/actualizar/{id_clientevip}', [ClienteVipController::class, 'actualizar']);
 
-        // Comerciales
         Route::get('/comerciales', [ComercialController::class, 'mostrar']);
         Route::get('/comerciales/{id_comercial}', [ComercialController::class, 'mostrarComercial']);
         Route::put('/comerciales/actualizar/{id_comercial}', [ComercialController::class, 'actualizar']);
     });
 
-    /* --- SOLO ADMINISTRADOR (Gestión de Personal y Borrados) ---
-    */
     Route::middleware('role:administrador')->group(function () {
-        // Gestión de Admins
         Route::get('/administradores', [AdministradorController::class, 'mostrar']);
         Route::get('/administradores/{id_administrador}', [AdministradorController::class, 'mostrarAdministrador']);
         Route::post('/administradores/guardar', [AdministradorController::class, 'guardar']);
         Route::put('/administradores/actualizar/{id_administrador}', [AdministradorController::class, 'actualizar']);
         Route::get('/users', [AdministradorController::class, 'userIndex']);
 
-        // Gestión de Encargados Almacén
         Route::get('/encargadoAlmacen', [EncargadoAlmacenController::class, 'mostrar']);
         Route::get('/encargadoAlmacen/{id_cliente}', [EncargadoAlmacenController::class, 'mostrarEncargadoAlmacen']);
         Route::post('/encargadoAlmacen/guardar', [EncargadoAlmacenController::class, 'encargadoAlmacenNuevo']);
         Route::put('/encargadoAlmacen/actualizar/{id_encargado}', [EncargadoAlmacenController::class, 'encargadoAlmacenActualizar']);
 
-        // Creación de Comerciales
         Route::post('/comerciales/guardar', [ComercialController::class, 'guardar']);
 
-        // FACTURAS
         Route::get('/mis-facturas', [FacturaController::class, 'misFacturas']);
         Route::get('/mostrar/factura/{id_factura}', [FacturaController::class, 'mostrarFactura']);
         Route::get('/mostrar/facturas/{tipo}/{id}', [FacturaController::class, 'mostrar']);
 
-        /* --- TODOS LOS BORRADOS --- */
         Route::delete('/almacenes/borrar/{id_almacen}', [AlmacenController::class, 'eliminar']);
         Route::delete('/administradores/borrar/{id_administrador}', [AdministradorController::class, 'eliminar']);
         Route::delete('/pedidos/borrar/{id_pedido}', [PedidoController::class, 'eliminar']);

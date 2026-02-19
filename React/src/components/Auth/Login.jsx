@@ -71,6 +71,7 @@ const Login = () => {
           <div className="text-center mt-4">
             <button
               type="button"
+              onClick={() => navigate("/register")}
               className="text-xs text-gray-500 hover:text-gray-700"
             >
               No estoy registrado
