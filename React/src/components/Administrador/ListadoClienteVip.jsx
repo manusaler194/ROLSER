@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ClientesVipsTable from "./ClientesVips"; // Componente de Ficha VIP
+import { apiFetch } from "../../utils/api";
 
 const ListadoClienteVip = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const ListadoClienteVip = () => {
 
   // 1. CARGA DE DATOS
   useEffect(() => {
-    fetch("http://localhost/api/clientesVip")
+    apiFetch("http://localhost/api/clientesVip")
       .then((res) => res.json())
       .then((data) => {
         setLista(data.clientesVip || []); 
@@ -35,7 +36,7 @@ const ListadoClienteVip = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost/api/clientesVip/borrar/${id}`, {
+      const response = await apiFetch(`http://localhost/api/clientesVip/borrar/${id}`, {
         method: "DELETE", 
         headers: {
           "Content-Type": "application/json",

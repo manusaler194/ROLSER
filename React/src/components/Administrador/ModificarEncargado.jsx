@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
+import { apiFetch } from '../../utils/api';
 
 const ModificarEncargado = () => {
     const navegar = useNavigate();
@@ -21,7 +22,7 @@ const ModificarEncargado = () => {
         const cargarEncargado = async () => {
             try {
                 // CORRECCIÓN: Usamos la IP en lugar de localhost
-                const respuesta = await fetch(`http://localhost/api/encargadoAlmacen/${id}`);
+                const respuesta = await apiFetch(`http://localhost/api/encargadoAlmacen/${id}`);
                 
                 if (!respuesta.ok) {
                     throw new Error(`Error HTTP: ${respuesta.status}`);

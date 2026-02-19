@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
+import { apiFetch } from '../../utils/api';
 
 const ModificarCliente = () => {
     const navegar = useNavigate();
@@ -21,7 +22,7 @@ const ModificarCliente = () => {
     useEffect(() => {
         const cargarCliente = async () => {
             try {
-                const respuesta = await fetch(`http://localhost/api/clientes/${id}`);
+                const respuesta = await apiFetch(`http://localhost/api/clientes/${id}`);
                 
                 if (!respuesta.ok) {
                     throw new Error(`Error HTTP: ${respuesta.status}`);
@@ -73,7 +74,7 @@ const ModificarCliente = () => {
                 delete datosAEnviar.password;
             }
 
-            await axios.put(`http://192.168.0.14:8008/api/clientes/actualizar/${id}`, datosAEnviar); 
+            await axios.put(`http://localhost/api/clientes/actualizar/${id}`, datosAEnviar); 
             
             alert("Cliente modificado con éxito");
             navegar('/usuarios'); 

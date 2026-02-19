@@ -1,4 +1,3 @@
-// src/utils/api.js
 export const apiFetch = async (url, options = {}) => {
     const token = localStorage.getItem('token');
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import EncargadosTable from "./Encargado"; // Tu componente de ficha individual
+import { apiFetch } from "../../utils/api";
 
 const ListadoEncargado = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const ListadoEncargado = () => {
   const [encargadoSeleccionado, setEncargadoSeleccionado] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost/api/encargadoAlmacen")
+    apiFetch("http://localhost/api/encargadoAlmacen")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -36,7 +37,7 @@ const ListadoEncargado = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost/api/encargadoAlmacen/borrar/${id}`, {
+      const response = await apiFetch(`http://localhost/api/encargadoAlmacen/borrar/${id}`, {
         method: "DELETE", 
         headers: {
           "Content-Type": "application/json",

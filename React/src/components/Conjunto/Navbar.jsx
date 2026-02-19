@@ -18,11 +18,11 @@ const Navbar = ({ usuario }) => {
       { label: 'Gestionar usuarios', icon: iconoUsuario , rol: ['admin'], path: '/usuarios' },
       { label: 'Crear catálogos', icon: iconoCatalogo , rol: ['admin'], path: '/crear-catalogo' },
       { label: 'Gestionar pedidos', icon: iconoPedido , rol: ['admin'], path: '/pedidos' },
-      { label: 'Gestionar pedidos', icon: iconoPedido , rol: ['encargado_almacen'], path: '/pedidos/encargado' },      
+      { label: 'Gestionar pedidos', icon: iconoPedido , rol: ['encargadoalmacen'], path: '/pedidos/encargado' },      
       { label: 'Gestionar pedidos realizados', icon: iconoPedido , rol: ['cliente'], path: '/pedidos/cliente' },
       { label: 'Gestionar pedidos realizados', icon: iconoPedido , rol: ['clientevip'], path: '/pedidos/clientevip' },
       { label: 'Gestionar pedidos realizados', icon: iconoPedido , rol: ['comercial'], path: '/pedidos/comercial' },
-      { label: 'Gestionar almacén', icon: iconoAlmacen, rol: ['encargado_almacen'], path: '/GestionAlmacenEncargado'},
+      { label: 'Gestionar almacén', icon: iconoAlmacen, rol: ['encargadoalmacen'], path: '/GestionAlmacenEncargado'},
       { label: 'Gestionar almacén', icon: iconoAlmacen, rol: ['admin'], path: '/GestionAlmacen' },
       { label: 'Ver facturas', icon: iconoInforme, rol: ['comercial', 'cliente', 'clientevip'], path: '/facturas' },
       { label: 'Ver catálogo', icon: iconoCatalogo, rol: ['clientevip', 'comercial'], path: '/catalogo' },
@@ -31,8 +31,8 @@ const Navbar = ({ usuario }) => {
       { label: 'Realizar pedido', icon: iconoCarrito, rol: ['clientevip', 'comercial'], path: '/realizar-pedido' },
       { label: 'Aplicar descuento', icon: iconoDescuento, rol: ['comercial'], path: '/aplicar-descuento' },
       { label: 'Solicitar bajas,altas..', icon: iconoDatos, rol: ['clientevip', 'comercial'], path: '/solicitar-bajas-altas' },
-      { label: 'Stock', icon: iconoCarrito, rol: ['encargado_almacen'], path: '/stock' },
-      { label: 'Crear pedido reabastecimiento', icon: iconoPedido, rol: ['encargado_almacen', 'admin'], path: '/crear-pedido-reabastecimiento' },
+      { label: 'Stock', icon: iconoCarrito, rol: ['encargadoalmacen'], path: '/stock' },
+      { label: 'Crear pedido reabastecimiento', icon: iconoPedido, rol: ['encargadoalmacen', 'admin'], path: '/crear-pedido-reabastecimiento' },
   ];
 
   const individual = menu.filter(item => item.rol.includes(usuario));

@@ -105,7 +105,7 @@ return (
       </div>
 
       <Link 
-        to='/pedidos/encargado' 
+        to='/pedidos' 
         className="block w-full py-4 bg-[#bc002d] text-white font-bold rounded-full text-center shadow-md hover:bg-red-800 transition-all active:scale-[0.98] cursor-pointer"
       >
         Volver al listado

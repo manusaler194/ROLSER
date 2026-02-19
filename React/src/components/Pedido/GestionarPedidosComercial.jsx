@@ -98,7 +98,7 @@ const GestionarPedidosComercial = () => {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <Link 
-                                            to={`/DetallesPedido/${pedido.id_pedido}`} 
+                                            to={`/DetallesPedido/comercial/${pedido.id_pedido}`} 
                                             className="inline-block bg-[#bc002d] text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-red-800 transition-all shadow-sm"
                                         >
                                             Ver Detalles

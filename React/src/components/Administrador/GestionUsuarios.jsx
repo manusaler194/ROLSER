@@ -335,6 +335,7 @@ export default GestionUsuarios;
 */
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiFetch } from '../../utils/api';
 
 const GestionUsuarios = () => {
   const navigate = useNavigate();
@@ -342,7 +343,7 @@ const GestionUsuarios = () => {
 
   
   useEffect(() => {
-    fetch("http://localhost/api/users")
+    apiFetch("http://localhost/api/users")
       .then((res) => res.json())
       .then((data) => {
         setContadores({

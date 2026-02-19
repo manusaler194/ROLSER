@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
+import { apiFetch } from '../../utils/api';
 
 const ModificarAdministrador = () => {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ const ModificarAdministrador = () => {
     useEffect(() => {
         const cargarAdmin = async () => {
             try {
-                const response = await fetch(`http://localhost/api/administradores/${id}`);
+                const response = await apiFetch(`http://localhost/api/administradores/${id}`);
                 
                 if (!response.ok) {
                     throw new Error(`Error HTTP: ${response.status}`);

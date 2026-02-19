@@ -77,7 +77,7 @@ const DetallesPedidoClientevip = () => {
                     <td className="px-6 py-4 text-gray-700 text-center">{linea.cantidad}</td>
                     <td className="px-6 py-4 text-gray-700 text-right">{linea.precio} €</td>
                     <td className="px-6 py-4 text-[#bc002d] font-bold text-right">
-                      {(linea.precio * linea.cantidad)} €
+                      {(linea.precio * linea.cantidad).toFixed(2)} €
                     </td>
                   </tr>
                 ))}
@@ -98,7 +98,7 @@ const DetallesPedidoClientevip = () => {
                 <div className="flex justify-between text-base py-1 mt-1 border-t border-dotted border-gray-300">
                   <span className="text-gray-600 font-bold">Subtotal:</span>
                   <span className="text-[#bc002d] font-black">
-                    {(linea.precio * linea.cantidad)} €
+                    {(linea.precio * linea.cantidad).toFixed(2)} €
                   </span>
                 </div>
               </div>

@@ -221,6 +221,7 @@ export default ListadoCliente;*/
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ClientesTable from "./ClientesTable"; 
+import { apiFetch } from "../../utils/api";
 
 const ListadoCliente = () => {
   const navigate = useNavigate();
@@ -233,7 +234,7 @@ const ListadoCliente = () => {
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost/api/clientes")
+    apiFetch("http://localhost/api/clientes")
       .then((res) => res.json())
       .then((data) => {
         setLista(data.clientes || []); 
@@ -251,7 +252,7 @@ const ListadoCliente = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost/api/clientes/borrar/${id}`, {
+      const response = await apiFetch(`http://localhost/api/clientes/borrar/${id}`, {
         method: "DELETE", 
         headers: {
           "Content-Type": "application/json",

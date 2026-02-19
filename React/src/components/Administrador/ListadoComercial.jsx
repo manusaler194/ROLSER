@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ComercialesTable from "./Comercial";
+import { apiFetch } from "../../utils/api";
 
 const ListadoComerciales = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const ListadoComerciales = () => {
   const [comercialSeleccionado, setComercialSeleccionado] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost/api/comerciales")
+    apiFetch("http://localhost/api/comerciales")
       .then((res) => res.json())
       .then((data) => {
         setLista(data.comerciales || []); 
@@ -32,7 +33,7 @@ const ListadoComerciales = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost/api/comerciales/borrar/${id}`, {
+      const response = await apiFetch(`http://localhost/api/comerciales/borrar/${id}`, {
         method: "DELETE", 
         headers: {
           "Content-Type": "application/json",

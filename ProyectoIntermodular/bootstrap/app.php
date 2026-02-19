@@ -12,9 +12,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Registramos el alias para los roles
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
+            'admin' => \App\Http\Middleware\CheckRole::class . ':administrador',
+            'comercial' => \App\Http\Middleware\CheckRole::class . ':comercial',
+            'almacen' => \App\Http\Middleware\CheckRole::class . ':encargadoalmacen',
+            'cliente' => \App\Http\Middleware\CheckRole::class . ':cliente',
+            'clientevip' => \App\Http\Middleware\CheckRole::class . ':clientevip',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

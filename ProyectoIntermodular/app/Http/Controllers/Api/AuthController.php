@@ -23,7 +23,7 @@ class AuthController extends Controller
             'comercial' => \App\Models\Comercial::class,
             'cliente' => \App\Models\Cliente::class,
             'clientevip' => \App\Models\ClienteVip::class,
-            'encargado_almacen' => \App\Models\EncargadoAlmacen::class,
+            'encargadoalmacen' => \App\Models\EncargadoAlmacen::class,
         ];
 
         foreach ($roles as $rolNombre => $modelo) {

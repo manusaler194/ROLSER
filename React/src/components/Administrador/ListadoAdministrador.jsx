@@ -218,6 +218,7 @@ export default ListadoAdministrador;*/
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminsTable from "./AdminsTable"; 
+import { apiFetch } from "../../utils/api";
 
 const ListadoAdministrador = () => {
   const navigate = useNavigate();
@@ -231,7 +232,7 @@ const ListadoAdministrador = () => {
   const [adminSeleccionado, setAdminSeleccionado] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost/api/administradores")
+    apiFetch("http://localhost/api/administradores")
       .then((res) => res.json())
       .then((data) => {
         setLista(data.admin || []); 
@@ -249,7 +250,7 @@ const ListadoAdministrador = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost/api/administradores/borrar/${id}`, {
+      const response = await apiFetch(`http://localhost/api/administradores/borrar/${id}`, {
         method: "DELETE", 
         headers: {
           "Content-Type": "application/json",

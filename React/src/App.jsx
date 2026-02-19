@@ -97,7 +97,7 @@ const AppContent = () => {
               </>
             )}
 
-            {["admin", "encargado_almacen"].includes(role) && (
+            {["admin", "encargadoalmacen"].includes(role) && (
               <>
                 <Route path="/pedidos" element={<GestionarPedidos />} />
                 <Route path="/GestionAlmacen" element={<GestionAlmacen />} />
@@ -105,7 +105,7 @@ const AppContent = () => {
                 <Route path="/ModificarAlmacen/:id" element={<ModificarAlmacen />} />
                 <Route path="/DatosAlmacen/:id" element={<DatosAlmacen />} />
                 <Route path="/crear-pedido-reabastecimiento" element={<CrearPedidoRebastecimiento />} />
-                {role === "encargado_almacen" && (
+                {role === "encargadoalmacen" && (
                   <>
                     <Route path="/DetallesPedido/encargado/:id" element={<DetallesPedidoEncargado />} />
                       <Route path="/Pedidos/encargado" element={<GestionarPedidosEncargado />} />
@@ -170,7 +170,7 @@ const AppContent = () => {
                 <Navigate
                   to={
                     role === "admin" ? "/usuarios" :
-                    role === "encargado_almacen" ? "/pedidos/encargado" :
+                    role === "encargadoalmacen" ? "/pedidos/encargado" :
                     role === "cliente" ? "/pedidos/cliente":
                     role === "clientevip" ? "/pedidos/clientevip":
                     role === "comercial" ? "/pedidos/comercial":
