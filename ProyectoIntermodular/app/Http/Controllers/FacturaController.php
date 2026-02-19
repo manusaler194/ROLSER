@@ -94,7 +94,7 @@ class FacturaController extends Controller
             $id = $factura->id_cliente;
         }
 
-        return view("mostrarFactura", compact("facturas", "tipo", "id"));
+        return view("mostrarFactura", compact("factura", "tipo", "id"));
     }
 
     public function actualizar(Request $request)

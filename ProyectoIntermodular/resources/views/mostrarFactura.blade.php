@@ -19,7 +19,6 @@
 </head>
 
 <body class="min-h-screen flex items-center justify-center py-12">
-    @foreach ($factura as $f)
         <div class="w-[450px] bg-white shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
 
             <div class="p-12 flex flex-col">
@@ -28,22 +27,22 @@
                     <p class="text-[11px] font-bold tracking-[0.5em] text-red-500 uppercase mb-2">Rolser</p>
                     <h1 class="text-4xl font-black text-gray-900 uppercase tracking-tighter">Factura</h1>
                     <div class="flex justify-center gap-4 text-xs font-bold uppercase tracking-widest">
-                        <span>Nº F-{{ $f->id_factura }}</span>
+                        <span>Nº F-{{ $factura->id_factura }}</span>
                     </div>
                 </div>
 
                 <div class="text-center mb-16 px-4">
                     <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Facturar a:</h3>
-                    @if ($f->cliente_vip)
+                    @if ($factura->cliente_vip)
                         <p class="text-2xl font-black text-gray-900 leading-tight uppercase">
-                            {{ $f->cliente_vip->nombre }}</p>
+                            {{ $factura->cliente_vip->nombre }}</p>
                         <p class="text-sm text-gray-500 mt-3 italic underline decoration-indigo-100 underline-offset-4">
-                            {{ $f->cliente_vip->email }}</p>
-                    @elseif($f->cliente)
-                        <p class="text-2xl font-black text-gray-900 leading-tight uppercase">{{ $f->cliente->nombre }}
+                            {{ $factura->cliente_vip->email }}</p>
+                    @elseif($factura->cliente)
+                        <p class="text-2xl font-black text-gray-900 leading-tight uppercase">{{ $factura->cliente->nombre }}
                         </p>
                         <p class="text-sm text-gray-500 mt-3 italic underline decoration-indigo-100 underline-offset-4">
-                            {{ $f->cliente->email }}</p>
+                            {{ $factura->cliente->email }}</p>
                     @endif
                 </div>
                 <div class="mb-16 text-center">
@@ -57,7 +56,7 @@
                     <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 inline-block w-full">
                         <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Base
                             Imponible</span>
-                        <span class="text-2xl font-black text-gray-900">{{ $f->base_imponible }}€</span>
+                        <span class="text-2xl font-black text-gray-900">{{ $factura->base_imponible }}€</span>
                     </div>
                 </div>
 
@@ -65,19 +64,19 @@
                     <div class="space-y-4 mb-12">
                         <div class="flex flex-col items-center">
                             <span class="text-[10px] font-bold text-gray-400 uppercase">Subtotal</span>
-                            <span class="text-md font-bold text-gray-800">{{ $f->base_imponible }}€</span>
+                            <span class="text-md font-bold text-gray-800">{{ $factura->base_imponible }}€</span>
                         </div>
 
                         <div class="flex flex-col items-center">
                             <span class="text-[10px] font-bold text-gray-400 uppercase">IVA
-                                ({{ $f->iva_porcentaje }}%)</span>
-                            <span class="text-md font-bold text-gray-800">+{{ $f->total_iva }}€</span>
+                                ({{ $factura->iva_porcentaje }}%)</span>
+                            <span class="text-md font-bold text-gray-800">+{{ $factura->total_iva }}€</span>
                         </div>
 
                         <div class="bg-indigo-50 p-6 rounded-md mt-6 border-y-2">
                             <span class="block text-xs font-black uppercase tracking-widest mb-2">Total Factura</span>
                             <span
-                                class="text-4xl font-black text-red-700 tracking-tighter">{{ $f->total_factura }}€</span>
+                                class="text-4xl font-black text-red-700 tracking-tighter">{{ $factura->total_factura }}€</span>
                         </div>
                     </div>
 
@@ -95,7 +94,6 @@
 
             </div>
         </div>
-    @endforeach
 
 </body>
 
