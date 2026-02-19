@@ -17,11 +17,7 @@ const Navbar = ({ usuario }) => {
   const menu = [
       { label: 'Gestionar usuarios', icon: iconoUsuario , rol: ['admin'], path: '/usuarios' },
       { label: 'Crear catálogos', icon: iconoCatalogo , rol: ['admin'], path: '/crear-catalogo' },
-      { label: 'Gestionar pedidos', icon: iconoPedido , rol: ['admin'], path: '/pedidos' },
-      { label: 'Gestionar pedidos', icon: iconoPedido , rol: ['encargadoalmacen'], path: '/pedidos/encargado' },      
-      { label: 'Gestionar pedidos realizados', icon: iconoPedido , rol: ['cliente'], path: '/pedidos/cliente' },
-      { label: 'Gestionar pedidos realizados', icon: iconoPedido , rol: ['clientevip'], path: '/pedidos/clientevip' },
-      { label: 'Gestionar pedidos realizados', icon: iconoPedido , rol: ['comercial'], path: '/pedidos/comercial' },
+      { label: 'Gestionar pedidos', icon: iconoPedido , rol: ['admin', 'encargadoalmacen', 'cliente', 'clientevip', 'comercial'], path: '/pedidos' },
       { label: 'Gestionar almacén', icon: iconoAlmacen, rol: ['encargadoalmacen'], path: '/GestionAlmacenEncargado'},
       { label: 'Gestionar almacén', icon: iconoAlmacen, rol: ['admin'], path: '/GestionAlmacen' },
       { label: 'Ver facturas', icon: iconoInforme, rol: ['comercial', 'cliente', 'clientevip'], path: '/facturas' },

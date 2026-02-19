@@ -46,4 +46,17 @@ class AuthController extends Controller
             'message' => 'Credenciales no válidas en ninguna de nuestras bases de datos.'
         ], 401);
     }
+   public function register(Request $request)
+{
+    $request->validate([
+        'nombre'    => 'required|string|max:50',
+        'email'     => 'required|string',
+        'password'  => 'required|string|min:6',
+        'telefono'  => 'required|string',
+        'direccion' => 'required|string',
+    ]);
+
+
+    return app(\App\Http\Controllers\ClienteController::class)->guardar($request);
+}
 }
