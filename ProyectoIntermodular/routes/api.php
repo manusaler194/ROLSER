@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) { return $request->user(); });
+        Route::get('/articulo', [ArticuloController::class, 'mostrarArticulos']);
 
 
     Route::middleware('role:administrador')->get('/test-admin', function () {
@@ -47,7 +48,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::middleware('role:administrador,comercial,encargadoalmacen,cliente,clientevip')->group(function () {
-        Route::get('/articulo', [ArticuloController::class, 'mostrarArticulos']);
         Route::get('/secciones', [SeccionController::class, 'mostrar']);
         Route::get('/catalogo', [CatalogoController::class, 'mostrarCatalogos']);
         Route::get('/catalogo/{id_catalogo}/articulos', [ArticuloController::class, 'mostrarArticulosPorCatalogo']);
