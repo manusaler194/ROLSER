@@ -7,20 +7,22 @@ const DetallesPedido = () => {
   const { user } = useAuth();
   const [pedido, setPedido] = useState(null);
   const { id } = useParams();
-
-  const role = user?.rol;
-  const isVIP = role === 'clientevip'; 
-  const isClienteNormal = role === 'cliente';
-  const isClienteAny = isVIP || isClienteNormal;
-  const isEncargado = role === 'encargadoalmacen';
-  const isComercial = role === 'comercial';
-  const isAdmin = role === 'admin';
+  console.log(user);
+  const rol = user?.role;
+  console.log(rol);
+  const esVIP = rol === 'clientevip'; 
+  const esClienteNormal = rol === 'cliente';
+  const esCualquierCliente = esVIP || esClienteNormal;
+  const esEncargado = rol === 'encargadoalmacen';
+  const esComercial = rol === 'comercial';
+  const esAdmin = rol === 'admin';
 
   useEffect(() => {
     const cargarPedido = async () => {
       try {
         const response = await apiFetch(`http://localhost/api/pedidos/${id}`);
         const data = await response.json();
+        
         if (data.pedido && data.pedido.length > 0) {
           setPedido(data.pedido[0]);
         }
@@ -33,79 +35,77 @@ const DetallesPedido = () => {
 
   if (!pedido) return <div className="text-center py-20 font-bold text-gray-400">Cargando pedido...</div>;
 
-  const containerStyle = isVIP 
+  const estiloContenedor = esVIP 
     ? "border-2 border-yellow-400 shadow-[0_20px_50px_rgba(234,179,8,0.15)] bg-white" 
     : "border border-gray-200 shadow-lg bg-white";
 
-  const inputClasses = "w-full px-5 py-3 mb-4 border border-gray-400 rounded-full bg-gray-50 text-gray-700 cursor-default focus:outline-none";
+  const clasesInput = "w-full px-5 py-3 mb-4 border border-gray-400 rounded-full bg-gray-50 text-gray-700 cursor-default focus:outline-none";
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4 sm:py-10">
-      <div className={`w-full max-w-3xl p-6 sm:p-10 rounded-[2.5rem] transition-all ${containerStyle}`}>
+      <div className={`w-full max-w-3xl p-6 sm:p-10 rounded-[2.5rem] transition-all ${estiloContenedor}`}>
         
         <div className="flex flex-col items-center mb-8">
-          {isVIP && (
+          {esVIP && (
             <span className="mb-2 text-[10px] bg-yellow-100 text-yellow-700 px-4 py-1 rounded-full font-black uppercase tracking-widest border border-yellow-200">
               👑 Servicio Preferente VIP
             </span>
           )}
-          <h2 className="text-2xl sm:text-3xl font-black text-center text-gray-800">
-            Pedido #{id}
-          </h2>
+          <h2 className="text-2xl sm:text-3xl font-black text-center text-gray-800">Pedido #{id}</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 mb-4">
           <div>
             <label className="block ml-4 mb-1 text-[10px] font-black text-gray-500 uppercase">Fecha</label>
-            <input type="text" value={pedido.fecha_pedido} className={inputClasses} readOnly />
+            <input type="text" value={pedido.fecha_pedido} className={clasesInput} readOnly />
           </div>
           <div>
             <label className="block ml-4 mb-1 text-[10px] font-black text-gray-500 uppercase">Estado</label>
             <input 
               type="text" 
               value={pedido.estado} 
-              className={`${inputClasses} font-bold ${pedido.estado === 'Entregado' ? 'text-green-600' : 'text-amber-600'}`} 
+              className={`${clasesInput} font-bold ${pedido.estado === 'Entregado' ? 'text-green-600' : 'text-amber-600'}`} 
               readOnly 
             />
           </div>
         </div>
 
-        
-        {isClienteAny && (
-          <div className={`mb-8 p-5 rounded-3xl border transition-colors ${isVIP ? 'bg-yellow-50 border-yellow-200' : 'bg-red-50 border-red-100'}`}>
-            <label className={`block mb-1 text-[10px] font-black uppercase ${isVIP ? 'text-yellow-700' : 'text-red-800'}`}>
+        {esCualquierCliente && pedido.comercial && (
+          <div className={`mb-8 p-5 rounded-3xl border transition-colors ${esVIP ? 'bg-yellow-50 border-yellow-200' : 'bg-red-50 border-red-100'}`}>
+            <label className={`block mb-3 text-[10px] font-black uppercase ${esVIP ? 'text-yellow-700' : 'text-red-800'}`}>
               Agente Comercial Responsable
             </label>
             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white ${isVIP ? 'bg-yellow-500' : 'bg-[#bc002d]'}`}>
-                {(pedido.comercial?.nombre || "O")[0]}
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white ${esVIP ? 'bg-yellow-500' : 'bg-[#bc002d]'}`}>
+                {pedido.comercial.nombre ? pedido.comercial.nombre[0].toUpperCase() : "C"}
               </div>
               <span className="font-bold text-gray-800">
-                {pedido.comercial?.nombre || "Venta Directa Online"}
+                {pedido.comercial.nombre}
               </span>
             </div>
           </div>
         )}
 
-        {(isComercial || isAdmin || isEncargado) && (
+        {(esComercial || esAdmin || esEncargado) && (
           <div className="mb-8 p-5 bg-gray-100 rounded-3xl border border-gray-200">
             <label className="block mb-2 text-[10px] font-black text-gray-500 uppercase">
-              {isComercial ? "Cliente Bajo tu Gestión" : "Detalles del Cliente"}
+              {esComercial ? "Cliente Bajo tu Gestión" : "Detalles del Cliente"}
             </label>
             <div className="flex justify-between items-center">
               <span className="font-bold text-lg text-gray-800">
-                {pedido.cliente?.nombre || pedido.cliente_vip?.nombre}
+                {pedido.cliente?.nombre || pedido.cliente_vip?.nombre || "Cliente Online"}
               </span>
-              {pedido.cliente_vip && (
-                <span className="text-[9px] bg-yellow-400 text-white px-3 py-1 rounded-full font-black">VIP</span>
+              {pedido.id_clientevip && (
+                <span className="text-[10px] bg-yellow-400 text-white px-3 py-1 rounded-full font-black uppercase tracking-wider">
+                  VIP
+                </span>
               )}
             </div>
           </div>
         )}
-
         <div className="mb-8">
           <h3 className="text-lg font-black text-gray-800 mb-4 ml-2 flex items-center gap-2">
-            <span className={`w-1.5 h-5 rounded-full ${isVIP ? 'bg-yellow-500' : 'bg-[#bc002d]'}`}></span>
+            <span className={`w-1.5 h-5 rounded-full ${esVIP ? 'bg-yellow-500' : 'bg-[#bc002d]'}`}></span>
             DETALLE DE PRODUCTOS
           </h3>
           
@@ -119,15 +119,21 @@ const DetallesPedido = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {pedido.linea_pedidos?.map((linea) => (
-                  <tr key={linea.id_linea} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm font-medium text-gray-700">{linea.articulo?.nombre}</td>
-                    <td className="px-6 py-4 text-sm text-center font-bold text-gray-600">{linea.cantidad}</td>
-                    <td className="px-6 py-4 text-sm font-black text-right text-gray-900">
-                      {(linea.precio * linea.cantidad).toFixed(2)} €
-                    </td>
+                {pedido.linea_pedidos ? (
+                  pedido.linea_pedidos.map((linea) => (
+                    <tr key={linea.id_linea} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-700">{linea.articulo?.nombre}</td>
+                      <td className="px-6 py-4 text-sm text-center font-bold text-gray-600">{linea.cantidad}</td>
+                      <td className="px-6 py-4 text-sm font-black text-right text-gray-900">
+                        {(linea.precio * linea.cantidad).toFixed(2)} €
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="px-6 py-4 text-center text-gray-400 italic">No hay productos registrados</td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
@@ -136,7 +142,7 @@ const DetallesPedido = () => {
         <Link 
           to="/pedidos" 
           className={`block w-full py-4 text-white font-black rounded-full text-center shadow-lg transition-all active:scale-95 ${
-            isVIP ? 'bg-yellow-600 hover:bg-yellow-700 shadow-yellow-200' : 'bg-[#bc002d] hover:bg-red-800'
+            esVIP ? 'bg-yellow-600 hover:bg-yellow-700 shadow-yellow-200' : 'bg-[#bc002d] hover:bg-red-800'
           }`}
         >
           VOLVER AL LISTADO
