@@ -28,15 +28,15 @@ const Register = () => {
       });
 
       if (response.ok) {
-        alert("¡Registro completado con éxito!");
+        alert("Registro completado");
         navigate("/login"); 
       } else {
         const errorData = await response.json();
-        alert("Error: " + (errorData.message || "Revisa los datos introducidos"));
+        alert("Error: " + (errorData.message));
       }
     } catch (error) {
       console.error("Error en la conexión:", error);
-      alert("No se pudo conectar con el servidor.");
+      alert("No se pudo conectar");
     }
   };
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Comercial;
 use App\Models\Administrador;
-use Illuminate\Support\Facades\Hash; // Necesario si vas a encriptar la contraseña
+use Illuminate\Support\Facades\Hash; 
 
 
 class ComercialController extends Controller{
@@ -116,13 +116,7 @@ class ComercialController extends Controller{
     public function eliminar(Request $request){
          try{
             $comercial = Comercial::destroy($request->id_comercial);
-
-            if ($comercial === 0) {
-                return response()->json([
-                    "message" => "No se encontró el comercial con ID " . $request->id_comercial
-                ], 404);
-            }
-
+            
             return response()->json([
                 "message" => "Comercial con id =" . $request->id_comercial . " ha sido borrado con éxito"
             ], 201);

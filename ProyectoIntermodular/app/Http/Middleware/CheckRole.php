@@ -15,7 +15,6 @@ class CheckRole
             return response()->json(['message' => 'No autenticado'], 401);
         }
 
-        // Detecta el rol según el nombre del Modelo
         $userRole = strtolower(class_basename($user));
 
         if (!in_array($userRole, $roles)) {

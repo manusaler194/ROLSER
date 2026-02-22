@@ -78,7 +78,7 @@ const CrearPedidoRebastecimiento = () => {
             precio: articulo.precio,
             stock_actual: Number(articulo.stock_actual) + Number(articulo.cantidad),
             id_seccion: articulo.id_seccion,
-            id_administrador: user.id_ad
+            id_administrador: user.id_administrador || null
           })
         });
 

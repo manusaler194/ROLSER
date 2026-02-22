@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import Header from "../Conjunto/Header";
 import logo from "/src/assets/Header/logo.jpg";
 
 const Login = () => {
@@ -15,9 +14,9 @@ const Login = () => {
     e.preventDefault();
     try {
       console.log("INTENTANDO CONECTAR A LA IP:", "100.25.154.102");
-      const response = await axios.post("http://100.25.154.102/api/login", {
+      const response = await axios.post("http://localhost/api/login", {
         email,
-        password,
+        password
       });
       console.log(response.data);
       const { user, token, role } = response.data;
@@ -29,7 +28,7 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       console.error(error);
-      alert("Error: Credenciales inválidas");
+      alert("Error: Usuario o contraseña incorrecto");
     }
   };
 

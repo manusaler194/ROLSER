@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// Importación de todos los Controladores
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\AdministradorController;
 use App\Http\Controllers\AlmacenController;
@@ -30,21 +29,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) { return $request->user(); });
-
-
-    Route::middleware('role:administrador')->get('/test-admin', function () {
-        return response()->json(['message' => 'Hola Jefe, el middleware funciona.']);
-    });
-    Route::middleware('role:comercial')->get('/test-comercial', function () {
-        return response()->json(['message' => 'Hola Comercial, el middleware funciona.']);
-    });
-    Route::middleware('role:cliente,clientevip')->get('/test-cliente', function () {
-        return response()->json(['message' => 'Acceso para clientes ok']);
-    });
-    Route::middleware('role:encargadoalmacen')->get('/test-almacen', function () {
-        return response()->json(['message' => 'Stock y almacén bajo control']);
-    });
-
 
     Route::middleware('role:administrador,comercial,encargadoalmacen,cliente,clientevip')->group(function () {
         Route::get('/secciones', [SeccionController::class, 'mostrar']);

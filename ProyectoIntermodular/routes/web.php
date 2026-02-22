@@ -24,11 +24,5 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::get('/mostrar/factura/{id_factura}', [FacturaController::class, 'mostrarFactura']);
 Route::get('/mostrar/facturas/{tipo}/{id}', [FacturaController::class, 'mostrar'])->name("mostrarFacturas");
-//Route::get('/mostrar/facturas/cliente/{id_cliente}', [FacturaController::class, 'mostrarFacturaCliente']);
-//1 Crear la tabla 2Creaar el model 3 La ruta 4 el controlador 5 vista
-//Laravel extension pack
 
-/* -------------------------------------------------------------------------- */
-/* FACTURAS                                  */
-/* -------------------------------------------------------------------------- */
 require __DIR__.'/auth.php';

@@ -65,13 +65,13 @@ class FacturaController extends Controller
     {
         try {
             if ($tipo === 'cliente') {
-                $facturas = Facturas::with(['cliente', 'comercial', 'clienteVip'])->where("id_cliente", $id)->get();
+                $facturas = Facturas::with(['cliente', 'comercial'])->where("id_cliente", $id)->get();
             } else
                 if ($tipo === 'clientevip') {
-                $facturas = Facturas::with(['cliente', 'comercial', 'clienteVip'])->where("id_clientevip", $id)->get();
+                $facturas = Facturas::with(['clienteVip'])->where("id_clientevip", $id)->get();
             } else
                     if ($tipo === 'comercial') {
-                $facturas = Facturas::with(['cliente', 'comercial', 'clienteVip'])->where("id_comercial", $id)->get();
+                $facturas = Facturas::with(['cliente', 'comercial'])->where("id_comercial", $id)->get();
             }
 
 
@@ -84,7 +84,7 @@ class FacturaController extends Controller
     public function mostrarFactura($id_factura)
     {
 
-        $factura = Facturas::with(['cliente', 'clienteVip'])->where('id_factura', $id_factura)->firstOrFail();
+        $factura = Facturas::with(['cliente', 'clienteVip'])->where('id_factura', $id_factura);
 
         if ($factura->id_clientevip) {
             $tipo = 'clientevip';

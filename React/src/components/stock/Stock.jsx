@@ -29,17 +29,15 @@ const Stock = () => {
     const idProveedorDefecto = articulo.id_proveedor || 1; 
 
     try {
-        const datosPedido = {
-            fecha_pedido: new Date().toISOString().split('T')[0],
-            estado: 'En proceso', 
-            id_proveedor: idProveedorDefecto, 
-            id_administrador: role === 'admin' ? user.id_administrador : null,
-            id_encargado: role === 'encargado de almacen' ? user.id_encargado : null
-        };
-
         const responsePedido = await apiFetch('http://localhost/api/pedidos/reposicion/guardar', {
             method: 'POST',
-            body: JSON.stringify(datosPedido)
+            body: JSON.stringify({
+                fecha_pedido: new Date().toISOString().split('T')[0],
+                estado: 'En proceso', 
+                id_proveedor: idProveedorDefecto, 
+                id_administrador: role === 'admin' ? user.id_administrador : null,
+                id_encargado: role === 'encargado de almacen' ? user.id_encargado : null
+            })
         });
 
         if (!responsePedido.ok) throw new Error("Error al crear");
@@ -48,8 +46,7 @@ const Stock = () => {
             method: 'PUT',
             body: JSON.stringify({
                 ...articulo,
-                stock_actual: Number(articulo.stock_actual) + cantidad,
-                id_administrador: user.id_administrador || user.id_encargado
+                stock_actual: articulo.stock_actual + cantidad,
             })
         });
 

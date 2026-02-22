@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import iconoDesplegable from "/src/assets/desplegable.svg";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { apiFetch } from "../../utils/api";
 
@@ -50,7 +48,6 @@ const CrearAlmacen = () => {
         },
       );
       const data = await response.json();
-      console.log("Funciona:", data);
       alert("Almacén creado con éxito");
       navigate("/GestionAlmacen");
     } catch (error) {

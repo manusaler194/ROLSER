@@ -26,7 +26,6 @@ const Navbar = ({ usuario }) => {
       { label: 'Ver catálogos', icon: iconoCatalogo, rol: ['admin'], path: '/catalogos' },
       { label: 'Realizar pedido', icon: iconoCarrito, rol: ['clientevip', 'comercial'], path: '/realizar-pedido' },
       { label: 'Aplicar descuento', icon: iconoDescuento, rol: ['comercial'], path: '/aplicar-descuento' },
-      { label: 'Solicitar bajas,altas..', icon: iconoDatos, rol: ['clientevip', 'comercial'], path: '/solicitar-bajas-altas' },
       { label: 'Stock', icon: iconoCarrito, rol: ['encargadoalmacen'], path: '/stock' },
       { label: 'Crear pedido reabastecimiento', icon: iconoPedido, rol: ['encargadoalmacen', 'admin'], path: '/crear-pedido-reabastecimiento' },
   ];
@@ -76,11 +75,10 @@ const Navbar = ({ usuario }) => {
         </nav>
       </div>
 
-      {/* FONDO OSCURO (Solo móvil): Si el menú está abierto, oscurece el fondo para centrar la atención en el menú */}
       {menuAbierto && (
         <div 
           className="md:hidden fixed inset-0 bg-opacity-50 z-30 transition-opacity"
-          onClick={() => setMenuAbierto(false)} // Cierra el menú si el usuario toca fuera de él
+          onClick={() => setMenuAbierto(false)}
         ></div>
       )}
     </>

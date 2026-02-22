@@ -116,11 +116,6 @@ class PedidoReposicionController extends Controller
         try {
             $pedido = PedidoReposicion::destroy($request->id_pedidoReposicion);
 
-            if ($pedido === 0) {
-                return response()->json([
-                    "message" => "No se encontró el pedido con ID " . $request->id_pedidoReposicion
-                ], 404);
-            }
             return response()->json([
                 "message" => "Pedido con id =" . $request->id_pedidoReposicion . " ha sido borrado con éxito"
 

@@ -1,16 +1,21 @@
+
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
+
 const AuthContext = createContext();
 
+
 export const AuthProvider = ({ children }) => {
+    
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [role, setRole] = useState(localStorage.getItem('role'));
+   
     const [user, setUser] = useState(() => {
-        const savedUser = localStorage.getItem('user');
+        const usuario = localStorage.getItem('user');
         try {
-            return savedUser ? JSON.parse(savedUser) : null;
-        } catch (e) {
+            return usuario ? JSON.parse(usuario) : null;
+        }catch (error) {
             return null;
         }
     });
@@ -18,6 +23,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         if (token) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            
             localStorage.setItem('token', token);
             localStorage.setItem('role', role);
             if (user) localStorage.setItem('user', JSON.stringify(user));
@@ -27,16 +33,11 @@ export const AuthProvider = ({ children }) => {
         }
     }, [token, role, user]); 
 
-    const login = (userData, userToken) => {
-        if (!userData || !userData.role) {
-            console.error("El usuario no tiene un rol asignado");
-            return;
-        }
 
+    const login = (userData, userToken) => {
         setToken(userToken);
         setRole(userData.role);
         setUser(userData);
-
         localStorage.setItem('token', userToken);
         localStorage.setItem('role', userData.role);
         localStorage.setItem('user', JSON.stringify(userData));
@@ -52,7 +53,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{ token, role, user, login, logout }}>
-            {children}
+            {children} 
         </AuthContext.Provider>
     );
 };

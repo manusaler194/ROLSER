@@ -52,7 +52,7 @@ class PedidoController extends Controller
             return response()->json([
                 'message' => 'Pedido creado con éxito.',
                 'pedidos' => $pedido,
-            ], 201); // Código HTTP 201: Creado
+            ], 201); 
 
         } catch (\Exception $e) {
             return response()->json([
@@ -129,11 +129,6 @@ class PedidoController extends Controller
         try {
             $pedido = Pedido::destroy($request->id_pedido);
 
-            if ($pedido === 0) {
-                return response()->json([
-                    "message" => "No se encontró el pedido con ID " . $request->id_pedido
-                ], 404);
-            }
             return response()->json([
                 "message" => "Pedido con id =" . $request->id_pedido . " ha sido borrado con éxito"
 

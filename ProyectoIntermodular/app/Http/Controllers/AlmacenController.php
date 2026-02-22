@@ -110,12 +110,6 @@ class AlmacenController extends Controller
     {
         try {
             $almacen = Almacen::destroy($request->id_almacen);
-
-            if ($almacen === 0) {
-                return response()->json([
-                    "message" => "No se encontró el almacén con ID " . $request->id_almacen
-                ], 404);
-            }
             return response()->json([
                 "message" => "Almacén con id =" . $request->id_almacen . " ha sido borrado con éxito"
 
