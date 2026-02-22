@@ -14,6 +14,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("INTENTANDO CONECTAR A LA IP:", "100.25.154.102");
       const response = await axios.post("http://100.25.154.102/api/login", {
         email,
         password,
