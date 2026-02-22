@@ -24,7 +24,6 @@ use App\Http\Controllers\ComercialController;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/clientes/guardar', [ClienteController::class, 'guardar']);
-Route::get('/articulo', [ArticuloController::class, 'mostrarArticulos']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -60,6 +59,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/lineasPedido', [LineaPedidoController::class, 'mostrar']);
         Route::post('/lineasPedido/guardar', [LineaPedidoController::class, 'guardar']);
         Route::put('/lineasPedido/actualizar/{id_linea}', [LineaPedidoController::class, 'actualizar']);
+        Route::get('/articulo', [ArticuloController::class, 'mostrarArticulos']);
+   
     });
 
     Route::middleware('role:administrador,encargadoalmacen')->group(function () {
