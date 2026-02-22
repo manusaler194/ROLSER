@@ -24,13 +24,13 @@ use App\Http\Controllers\ComercialController;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/clientes/guardar', [ClienteController::class, 'guardar']);
+Route::get('/articulo', [ArticuloController::class, 'mostrarArticulos']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) { return $request->user(); });
-        Route::get('/articulo', [ArticuloController::class, 'mostrarArticulos']);
 
 
     Route::middleware('role:administrador')->get('/test-admin', function () {
