@@ -68,6 +68,9 @@ const ListadoAdministrador = () => {
   
   const administradoresVisibles = filtrados.slice(indicePrimerItem, indiceUltimoItem);
   
+  const totalPaginas = Math.ceil(filtrados.length / ITEMS_POR_PAGINA); const indiceUltimoItem = paginaActual * ITEMS_POR_PAGINA;
+  const indicePrimerItem = indiceUltimoItem - ITEMS_POR_PAGINA;
+  const administradoresVisibles = filtrados.slice(indicePrimerItem, indiceUltimoItem);
   const totalPaginas = Math.ceil(filtrados.length / ITEMS_POR_PAGINA);
 
   
@@ -78,7 +81,10 @@ const ListadoAdministrador = () => {
 
   const handlePaginaAnterior = () => {
     if (paginaActual > 1) setPaginaActual(paginaActual - 1);
-  };
+  }; const indiceUltimoItem = paginaActual * ITEMS_POR_PAGINA;
+  const indicePrimerItem = indiceUltimoItem - ITEMS_POR_PAGINA;
+  const administradoresVisibles = filtrados.slice(indicePrimerItem, indiceUltimoItem);
+  const totalPaginas = Math.ceil(filtrados.length / ITEMS_POR_PAGINA);
 
   const handlePaginaSiguiente = () => {
     if (paginaActual < totalPaginas) setPaginaActual(paginaActual + 1);
@@ -217,14 +223,14 @@ const ListadoAdministrador = () => {
 export default ListadoAdministrador;*/
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import AdminsTable from "./AdminsTable"; 
+import AdminsTable from "./AdminsTable";
 
 const ListadoAdministrador = () => {
   const navigate = useNavigate();
   const [lista, setLista] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [cargando, setCargando] = useState(true);
-  
+
   const [paginaActual, setPaginaActual] = useState(1);
   const ITEMS_POR_PAGINA = 3;
 
@@ -234,7 +240,7 @@ const ListadoAdministrador = () => {
     fetch("http://localhost/api/administradores")
       .then((res) => res.json())
       .then((data) => {
-        setLista(data.admin || []); 
+        setLista(data.admin || []);
         setCargando(false);
       })
       .catch((err) => {
@@ -250,7 +256,7 @@ const ListadoAdministrador = () => {
 
     try {
       const response = await fetch(`http://localhost/api/administradores/borrar/${id}`, {
-        method: "DELETE", 
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
@@ -272,7 +278,7 @@ const ListadoAdministrador = () => {
     const termino = busqueda.toLowerCase();
     const nombreCompleto = `${admin.nombre} ${admin.apellidos}`.toLowerCase();
     const email = (admin.email || "").toLowerCase();
-    
+
     return nombreCompleto.includes(termino) || email.includes(termino);
   });
 
@@ -283,7 +289,7 @@ const ListadoAdministrador = () => {
 
   const handleBusquedaChange = (e) => {
     setBusqueda(e.target.value);
-    setPaginaActual(1); 
+    setPaginaActual(1);
   };
 
   const handlePaginaAnterior = () => {
@@ -296,9 +302,9 @@ const ListadoAdministrador = () => {
 
   if (adminSeleccionado) {
     return (
-      <AdminsTable 
-        usuario={adminSeleccionado} 
-        onVolver={() => setAdminSeleccionado(null)} 
+      <AdminsTable
+        usuario={adminSeleccionado}
+        onVolver={() => setAdminSeleccionado(null)}
       />
     );
   }
@@ -308,9 +314,9 @@ const ListadoAdministrador = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-8 font-sans">
       <div className="max-w-4xl mx-auto">
-        
-        <button 
-          onClick={() => navigate("/usuarios")} 
+
+        <button
+          onClick={() => navigate("/usuarios")}
           className="text-[#bd0026] font-bold mb-6 hover:underline flex items-center gap-2"
         >
           ← VOLVER AL MENÚ
@@ -324,7 +330,7 @@ const ListadoAdministrador = () => {
               Total: {filtrados.length}
             </span>
           </div>
-          
+
           <button
             onClick={() => navigate("/crear-admin")}
             className="w-full sm:w-auto bg-[#bd0026] text-white px-6 py-3 rounded-lg font-bold shadow-md hover:bg-red-800 transition-all uppercase flex items-center justify-center gap-2"
@@ -338,14 +344,14 @@ const ListadoAdministrador = () => {
           placeholder="Buscar por nombre o email..."
           className="w-full mb-8 p-3 sm:p-4 rounded-full border border-gray-400 px-6 focus:ring-2 focus:ring-[#bd0026] outline-none shadow-sm bg-white text-sm sm:text-base"
           value={busqueda}
-          onChange={handleBusquedaChange} 
+          onChange={handleBusquedaChange}
         />
 
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
           {administradoresVisibles.length > 0 ? (
             administradoresVisibles.map((admin) => (
-              <div 
-                key={admin.id_administrador} 
+              <div
+                key={admin.id_administrador}
                 // Adaptación lista: apila info y botones en móvil
                 className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 p-5 border-b border-gray-100 last:border-none hover:bg-gray-50 transition-colors"
               >
@@ -355,7 +361,7 @@ const ListadoAdministrador = () => {
                   </span>
                   <span className="text-sm text-gray-500">{admin.email}</span>
                 </div>
-                
+
                 {/* Botones responsivos */}
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -393,15 +399,14 @@ const ListadoAdministrador = () => {
             <button
               onClick={handlePaginaAnterior}
               disabled={paginaActual === 1}
-              className={`w-full sm:w-auto px-4 py-2 rounded-lg font-bold ${
-                paginaActual === 1 
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed" 
+              className={`w-full sm:w-auto px-4 py-2 rounded-lg font-bold ${paginaActual === 1
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                   : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
-              }`}
+                }`}
             >
               Anterior
             </button>
-            
+
             <span className="text-gray-600 font-medium order-first sm:order-none">
               Página {paginaActual} de {totalPaginas}
             </span>
@@ -409,11 +414,10 @@ const ListadoAdministrador = () => {
             <button
               onClick={handlePaginaSiguiente}
               disabled={paginaActual === totalPaginas}
-              className={`w-full sm:w-auto px-4 py-2 rounded-lg font-bold ${
-                paginaActual === totalPaginas 
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed" 
+              className={`w-full sm:w-auto px-4 py-2 rounded-lg font-bold ${paginaActual === totalPaginas
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                   : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
-              }`}
+                }`}
             >
               Siguiente
             </button>

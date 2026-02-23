@@ -5,25 +5,23 @@ const VipsTable = ({ usuario, onVolver }) => {
   // Verificación de seguridad
   if (!usuario) return <p className="text-center p-4">No hay datos del cliente VIP.</p>;
 
-  // -----------------------------------------------------------------------
-  // 1. NORMALIZACIÓN DE DATOS
-  // -----------------------------------------------------------------------
+
   const datos = usuario;
 
-  // CORRECCIÓN 1: Email (El JSON trae "correo")
+  
   const emailReal = datos.email || "";
 
-  // CORRECCIÓN 2: Acceder al objeto 'administrador'
+
   const nombreAdmin = datos.administrador 
     ? `${datos.administrador.nombre} ${datos.administrador.apellidos}` 
     : "Sin asignar";
 
-  // CORRECCIÓN 3: Acceder al objeto 'comercial'
+  
   const nombreComercial = datos.comercial 
     ? datos.comercial.nombre 
     : "Sin asignar";
 
-  // CORRECCIÓN 4: Acceder al objeto 'catalogo'
+  
   const nombreCatalogo = datos.catalogo 
     ? datos.catalogo.nombre_catalogo 
     : "Sin catálogo";
