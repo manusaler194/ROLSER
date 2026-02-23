@@ -2,23 +2,20 @@ import React from 'react';
 
 const ClientesTable = ({ usuario, onVolver }) => {
   
-  // Verificación de seguridad
+  
   if (!usuario) return <p className="text-center p-4">No hay datos de clientes.</p>;
 
-  // -----------------------------------------------------------------------
-  // 1. NORMALIZACIÓN DE DATOS (Para evitar errores si cambia la estructura)
-  // -----------------------------------------------------------------------
+  
   const datos = usuario.original || usuario;
 
-  // CORRECCIÓN 1: El JSON trae "correo", no "email"
+  
   const emailReal = datos.email || "";
 
-  // CORRECCIÓN 2: Acceder al objeto anidado 'comercial'
   const nombreComercial = datos.comercial 
     ? datos.comercial.nombre 
     : "Sin asignar";
 
-  // CORRECCIÓN 3: Acceder al objeto anidado 'administrador'
+  
   const nombreAdmin = datos.administrador 
     ? `${datos.administrador.nombre} ${datos.administrador.apellidos}` 
     : "Sin asignar";
