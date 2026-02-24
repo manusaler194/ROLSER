@@ -25,7 +25,7 @@ const ModificarAlmacen = () =>{
 
     useEffect(() => {
         const obtenerAlmacen = async () => {
-            const response = await apiFetch(`http://localhost/api/almacenes/${id}`);
+            const response = await apiFetch(`http://100.25.154.102/api/almacenes/${id}`);
             const data = await response.json();
             console.log(data);
             const almacenRecibido = data.almacen[0];
@@ -38,7 +38,7 @@ const ModificarAlmacen = () =>{
         };
        const obtenerEncargados = async () => {
         try {
-            const response = await apiFetch('http://localhost/api/encargadoAlmacen');
+            const response = await apiFetch('http://100.25.154.102/api/encargadoAlmacen');
             const data = await response.json();
             console.log(data);
             setEncargados(data.encargadoAlmacen);

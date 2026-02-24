@@ -20,7 +20,7 @@ const DetallesPedido = () => {
   useEffect(() => {
     const cargarPedido = async () => {
       try {
-        const response = await apiFetch(`http://localhost/api/pedidos/${id}`);
+        const response = await apiFetch(`http://100.25.154.102/api/pedidos/${id}`);
         const data = await response.json();
         
         if (data.pedido && data.pedido.length > 0) {

@@ -11,12 +11,12 @@ const CrearPedidoRebastecimiento = () => {
   useEffect(() => {
     const cargarDatos = async () => {
       try {
-        const responseArt = await apiFetch('http://localhost/api/articulo');
+        const responseArt = await apiFetch('http://100.25.154.102/api/articulo');
         const dataArt = await responseArt.json();
         console.log(dataArt);
         setArticulos(dataArt.almacen);
 
-        const responseProv = await apiFetch('http://localhost/api/proveedor');
+        const responseProv = await apiFetch('http://100.25.154.102/api/proveedor');
         const dataProv = await responseProv.json();
         console.log(dataProv);
         setProveedores(dataProv.proveedor);
