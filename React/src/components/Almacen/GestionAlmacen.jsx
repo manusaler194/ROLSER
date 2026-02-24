@@ -17,7 +17,7 @@ const GestionAlmacen = () => {
 
   const cargarAlmacenes = async () => {
     try {
-      const response = await apiFetch("http://localhost/api/almacenes");
+      const response = await apiFetch("http://100.25.154.102/api/almacenes");
       const data = await response.json();
       console.log(data.almacen)
       setAlmacenes(data.almacen);
@@ -35,7 +35,7 @@ const GestionAlmacen = () => {
     
     try {
       const response = await apiFetch(
-        `http://localhost/api/almacenes/borrar/${id}`,
+        `http://100.25.154.102/api/almacenes/borrar/${id}`,
         { method: "DELETE" }
       );
       if (response.ok) {
