@@ -1,338 +1,286 @@
-/*import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiFetch, BASE_URL } from '../../utils/api'; 
 
-
-import AdminsTable from "./AdminsTable";
-import ClientesTable from "./ClientesTable";
-import VipsTable from "./ClientesVips";
-import EncargadosTable from "./Encargado";
-import ComercialesTable from "./Comercial";
+import Ficha from "./Ficha";
 
 const GestionUsuarios = () => {
+  const navigate = useNavigate();
   
-  const URL_API = "http://192.168.0.14:8008/api/users";
-
+  const [datos, setDatos] = useState({
+    admins: [],
+    clientes: [],
+    vips: [],
+    encargados: [],
+    comerciales: []
+  });
+  const [cargando, setCargando] = useState(true);
   
-  const navegar = useNavigate();
-
-  // Estados
-  const [vistaActual, setVistaActual] = useState("MENU");
-  const [categoriaActiva, setCategoriaActiva] = useState(null);
-  const [textoBusqueda, setTextoBusqueda] = useState("");
-
+  const [pestañaActual, setPestañaActual] = useState("admins");
+  const [busqueda, setBusqueda] = useState("");
+  const [paginaActual, setPaginaActual] = useState(1);
+  const ITEMS_POR_PAGINA = 3;
+  
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
-  const [datosFormulario, setDatosFormulario] = useState(null);
-
-  const [datosGlobales, setDatosGlobales] = useState(null);
-  const [estaCargando, setEstaCargando] = useState(true);
-  const [errorConexion, setErrorConexion] = useState(null);
-
-  const listaCategorias = [
-    { id: "admins", titulo: "Administradores" },
-    { id: "clientes", titulo: "Clientes" },
-    { id: "vips", titulo: "Clientes VIP" },
-    { id: "encargados", titulo: "Encargados" },
-    { id: "comerciales", titulo: "Comerciales" },
-  ];
 
   useEffect(() => {
-    const cargarUsuarios = async () => {
-      try {
-        const respuesta = await fetch(URL_API);
-        if (!respuesta.ok) throw new Error("Error de conexión");
-        const resultado = await respuesta.json();
-        setDatosGlobales(resultado);
-      } catch (err) {
-        console.error(err);
-        setErrorConexion("No se pudo conectar con el servidor.");
-      } finally {
-        setEstaCargando(false);
-      }
-    };
-
-    cargarUsuarios();
+    Promise.all([
+      apiFetch(`${BASE_URL}/administradores`).then(res => res.json()),
+      apiFetch(`${BASE_URL}/clientes`).then(res => res.json()),
+      apiFetch(`${BASE_URL}/clientesVip`).then(res => res.json()),
+      apiFetch(`${BASE_URL}/encargadoAlmacen`).then(res => res.json()),
+      apiFetch(`${BASE_URL}/comerciales`).then(res => res.json())
+    ])
+    .then(([dataAdmins, dataClientes, dataVips, dataEncargados, dataComerciales]) => {
+      setDatos({
+        admins: dataAdmins.admin || dataAdmins || [],
+        clientes: dataClientes.clientes || dataClientes || [],
+        vips: dataVips.clientesVip || dataVips || [],
+        encargados: Array.isArray(dataEncargados) ? dataEncargados : (dataEncargados.encargadoAlmacen || []),
+        comerciales: dataComerciales.comerciales || dataComerciales || [],
+      });
+      setCargando(false);
+    })
+    .catch((err) => {
+      console.error("Error cargando usuarios:", err);
+      setCargando(false);
+    });
   }, []);
 
-  const formatearUsuario = (usuario) => ({
-    id:
-      usuario.id_cliente ||
-      usuario.id_clientevip ||
-      usuario.id_encargado ||
-      usuario.id_comercial ||
-      usuario.id_administrador ||
-      usuario.id,
+  // Hemos añadido "rutaModificar" para que coincida exactamente con las rutas de tu App.js
+  const configPestañas = {
+    admins: { 
+      titulo: "Administradores", 
+      idKey: "id_administrador", 
+      endpoint: "administradores",
+      rutaNuevo: "/crear-admin",
+      rutaModificar: "/modificar-admin" 
+    },
+    clientes: { 
+      titulo: "Clientes", 
+      idKey: "id_cliente", 
+      endpoint: "clientes",
+      rutaNuevo: "/crear-cliente",
+      rutaModificar: "/modificar-cliente"
+    },
+    vips: { 
+      titulo: "Clientes VIP", 
+      idKey: "id_clientevip", 
+      endpoint: "clientesVip",
+      rutaNuevo: "/crear-clientevip",
+      rutaModificar: "/modificar-clientevip"
+    },
+    encargados: { 
+      titulo: "Encargados", 
+      idKey: "id_encargado", 
+      endpoint: "encargadoAlmacen",
+      rutaNuevo: "/crear-encargado",
+      rutaModificar: "/modificar-encargado"
+    },
+    comerciales: { 
+      titulo: "Comerciales", 
+      idKey: "id_comercial", 
+      endpoint: "comerciales",
+      rutaNuevo: "/crear-comercial",
+      rutaModificar: "/modificar-comercial"
+    },
+  };
 
-    nombre: usuario.nombre || "",
-    apellidos: usuario.apellidos || "",
-    email: usuario.email || usuario.correo || "",
-    telefono: usuario.telefono || usuario.contacto || "",
-    direccion: usuario.direccion || "",
-    original: usuario,
-  });
+  const actualConf = configPestañas[pestañaActual];
 
-  
-  const manejarCrearNuevo = () => {
-    if (categoriaActiva === "admins") {
-      navegar("/crear-admin");
-    } else if (categoriaActiva === "clientes") {
-      navegar("/crear-cliente");
-    } else if (categoriaActiva === "vips") {
-      navegar("/crear-clientevip");
-    } else if (categoriaActiva === "comerciales") {
-      navegar("/crear-comercial");
-    } else if (categoriaActiva === "encargados") {
-      navegar("/crear-encargado");
-    } else {
-      
-      setDatosFormulario({
-        nombre: "",
-        apellidos: "",
-        email: "",
-        telefono: "",
-        direccion: "",
+  const eliminarUsuario = async (id) => {
+    if (!window.confirm(`¿Estás seguro de que quieres eliminar este ${actualConf.titulo.slice(0, -1)}?`)) {
+      return;
+    }
+
+    try {
+      const response = await apiFetch(`${BASE_URL}/${actualConf.endpoint}/borrar/${id}`, {
+        method: "DELETE",
       });
-      setVistaActual("EDITAR"); 
+
+      if (response.ok) {
+        setDatos(prev => ({
+          ...prev,
+          [pestañaActual]: prev[pestañaActual].filter(item => item[actualConf.idKey] !== id)
+        }));
+        alert(`${actualConf.titulo.slice(0, -1)} eliminado con éxito.`);
+      } else {
+        alert("Error al eliminar.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
-  if (estaCargando)
-    return (
-      <div className="min-h-screen flex items-center justify-center font-bold text-gray-600">
-        Cargando recursos...
-      </div>
-    );
-  if (errorConexion)
-    return (
-      <div className="min-h-screen flex items-center justify-center text-red-600 font-bold">
-        {errorConexion}
-      </div>
-    );
+  const listaActiva = datos[pestañaActual] || [];
+  
+  const filtrados = listaActiva.filter((item) => {
+    const termino = busqueda.toLowerCase();
+    const nombreCompleto = item.apellidos ? `${item.nombre} ${item.apellidos}`.toLowerCase() : (item.nombre || "").toLowerCase();
+    const email = (item.email || "").toLowerCase();
+    return nombreCompleto.includes(termino) || email.includes(termino);
+  });
 
-  // ---------------------------- VISTAS ------------
+  const indiceUltimoItem = paginaActual * ITEMS_POR_PAGINA;
+  const indicePrimerItem = indiceUltimoItem - ITEMS_POR_PAGINA;
+  const usuariosVisibles = filtrados.slice(indicePrimerItem, indiceUltimoItem);
+  const totalPaginas = Math.ceil(filtrados.length / ITEMS_POR_PAGINA);
 
-  // 1. MENU PRINCIPAL
-  if (vistaActual === "MENU") {
+  const handleCambioPestaña = (nuevaPestaña) => {
+    setPestañaActual(nuevaPestaña);
+    setBusqueda("");
+    setPaginaActual(1);
+    setUsuarioSeleccionado(null);
+  };
+
+  if (usuarioSeleccionado) {
+    const onVolver = () => setUsuarioSeleccionado(null);
+    
+    // Mapeamos el nombre de la pestaña (plural) al 'tipo' que espera nuestro componente Ficha (singular)
+    const mapeoTipos = {
+      admins: 'admin',
+      clientes: 'cliente',
+      vips: 'vip',
+      comerciales: 'comercial',
+      encargados: 'encargado'
+    };
+
     return (
-      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6 font-sans">
-        <header className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 uppercase tracking-widest">
+      <Ficha 
+        usuario={usuarioSeleccionado} 
+        tipo={mapeoTipos[pestañaActual]} 
+        onVolver={onVolver} 
+      />
+    );
+  }
+
+  if (cargando) return <div className="min-h-screen bg-gray-100 p-10 text-center font-bold text-gray-500">Cargando usuarios...</div>;
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-4 md:p-8 font-sans">
+      <div className="max-w-6xl mx-auto">
+        
+        <header className="mb-8 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 uppercase tracking-widest">
             Gestión de Usuarios
           </h1>
           <div className="h-1 w-24 bg-[#bd0026] mx-auto mt-4"></div>
         </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
-          {listaCategorias.map((categoria) => (
-            <BotonCategoria
-              key={categoria.id}
-              categoria={categoria}
-              cantidad={datosGlobales?.[categoria.id]?.length || 0}
-              alHacerClick={() => {
-                if (datosGlobales?.[categoria.id]) {
-                  setCategoriaActiva(categoria.id);
-                  setVistaActual("LISTA");
-                  setTextoBusqueda("");
-                } else {
-                  alert(`Sin datos para ${categoria.titulo}`);
-                }
-              }}
-            />
+        <div className="flex flex-wrap justify-center gap-2 mb-8 bg-white p-2 rounded-xl shadow-sm border border-gray-200">
+          {Object.entries(configPestañas).map(([clave, config]) => (
+            <button
+              key={clave}
+              onClick={() => handleCambioPestaña(clave)}
+              className={`px-4 py-2 rounded-lg font-bold text-sm md:text-base transition-all ${
+                pestañaActual === clave 
+                  ? "bg-[#bd0026] text-white shadow-md" 
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              {config.titulo} ({datos[clave].length})
+            </button>
           ))}
         </div>
-      </div>
-    );
-  }
 
-  // 2. VISTA DE LISTA
-  if (vistaActual === "LISTA") {
-    const listaSinFiltrar = datosGlobales[categoriaActiva] || [];
-
-    const usuariosFiltrados = listaSinFiltrar
-      .map(formatearUsuario)
-      .filter((usuario) => {
-        const termino = textoBusqueda.toLowerCase();
-        return (
-          usuario.nombre.toLowerCase().includes(termino) ||
-          usuario.apellidos.toLowerCase().includes(termino) ||
-          usuario.email.toLowerCase().includes(termino)
-        );
-      });
-
-    const tituloSeccion = listaCategorias.find(
-      (c) => c.id === categoriaActiva,
-    )?.titulo;
-
-    return (
-      <div className="min-h-screen bg-gray-100 p-8 font-sans">
-        <div className="max-w-4xl mx-auto">
-          <button
-            onClick={() => setVistaActual("MENU")}
-            className="text-[#bd0026] font-bold mb-8 hover:underline flex items-center gap-2"
-          >
-            ← VOLVER AL MENÚ
-          </button>
-
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+          <div>
+            <h2 className="text-2xl font-bold uppercase text-gray-900">Listado de {actualConf.titulo}</h2>
+          </div>
           
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div className="text-left w-full md:w-auto">
-              <h2 className="text-3xl font-bold text-black uppercase">
-                {tituloSeccion}
-              </h2>
-              <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold mt-2 inline-block">
-                Total: {usuariosFiltrados.length}
-              </span>
-            </div>
-
-            
-            <button
-              onClick={manejarCrearNuevo}
-              className="w-full md:w-auto bg-[#bd0026] text-white px-6 py-3 rounded-lg font-bold shadow-md hover:bg-red-800 hover:shadow-xl transition-all duration-300 uppercase tracking-wider flex items-center justify-center gap-2"
-            >
-              <span className="text-xl leading-none pb-1">+</span> Crear Nuevo
-            </button>
-       
-          </div>
-
-          <input
-            type="text"
-            placeholder="Buscar usuario..."
-            className="w-full mb-8 p-4 rounded-full border border-gray-400 px-6 focus:ring-2 focus:ring-[#bd0026] outline-none shadow-sm bg-white"
-            value={textoBusqueda}
-            onChange={(e) => setTextoBusqueda(e.target.value)}
-          />
-
-          <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
-            {usuariosFiltrados.length > 0 ? (
-              usuariosFiltrados.map((usuario, index) => (
-                <ItemLista
-                  key={index}
-                  usuario={usuario}
-                  alVer={() => {
-                    setUsuarioSeleccionado(usuario);
-                    setVistaActual("FICHA");
-                  }}
-                  alEditar={() => {
-                    if (categoriaActiva === "admins") {
-                      navegar(`/modificar-admin/${usuario.id}`);
-                    } else if (categoriaActiva === "clientes") {
-                      navegar(`/modificar-cliente/${usuario.id}`);
-                    } else if (categoriaActiva === "vips") {
-                      navegar(`/modificar-clientevip/${usuario.id}`);
-                    } else if (categoriaActiva === "comerciales") {
-                      navegar(`/modificar-comercial/${usuario.id}`);
-                    } else if (categoriaActiva === "encargados") {
-                      navegar(`/modificar-encargado/${usuario.id}`);
-                    } else {
-                      setUsuarioSeleccionado(usuario);
-                      setDatosFormulario(usuario);
-                      setVistaActual("EDITAR");
-                    }
-                  }}
-                />
-              ))
-            ) : (
-              <div className="p-10 text-center text-gray-400">
-                No hay resultados.
-              </div>
-            )}
-          </div>
+          <button
+            onClick={() => navigate(actualConf.rutaNuevo)}
+            className="w-full sm:w-auto bg-black text-white px-6 py-3 rounded-lg font-bold shadow-md hover:bg-gray-800 transition-all uppercase flex justify-center items-center gap-2"
+          >
+            <span className="text-xl leading-none pb-1">+</span> Nuevo
+          </button>
         </div>
+
+        <input
+          type="text"
+          placeholder={`Buscar en ${actualConf.titulo.toLowerCase()} por nombre o email...`}
+          className="w-full mb-6 p-3 md:p-4 rounded-full border border-gray-300 px-6 focus:ring-2 focus:ring-[#bd0026] outline-none shadow-sm bg-white"
+          value={busqueda}
+          onChange={(e) => { setBusqueda(e.target.value); setPaginaActual(1); }}
+        />
+
+        <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
+          {usuariosVisibles.length > 0 ? (
+            usuariosVisibles.map((item) => (
+              <div 
+                key={item[actualConf.idKey]} 
+                className="flex flex-col md:flex-row justify-between md:items-center p-4 md:p-5 border-b border-gray-100 last:border-none hover:bg-gray-50 gap-4"
+              >
+                <div className="overflow-hidden">
+                  <span className="block text-lg font-bold text-gray-800 truncate">
+                    {item.nombre} {item.apellidos || ''}
+                  </span>
+                  <span className="text-sm text-gray-500 break-words">{item.email}</span>
+                  
+                  {item.telefono && <span className="block text-xs text-gray-400 mt-1">Tel: {item.telefono}</span>}
+                  {item.contacto && <span className="block text-xs text-gray-400 mt-1">Contacto: {item.contacto}</span>}
+                  {item.catalogo && <span className="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-md font-semibold mt-1">Catálogo: {item.catalogo.nombre_catalogo}</span>}
+                </div>
+                
+                <div className="flex flex-wrap sm:flex-nowrap w-full md:w-auto gap-2">
+                  <button
+                    // AQUI ESTÁ EL CAMBIO CLAVE ↓
+                    onClick={() => navigate(`${actualConf.rutaModificar}/${item[actualConf.idKey]}`)}
+                    className="flex-1 md:flex-none bg-black text-white px-3 py-2 rounded-full text-xs font-bold hover:bg-gray-800 shadow-sm uppercase text-center"
+                  >
+                    Modificar
+                  </button>
+                  <button
+                    onClick={() => eliminarUsuario(item[actualConf.idKey])}
+                    className="flex-1 md:flex-none bg-red-600 text-white px-3 py-2 rounded-full text-xs font-bold hover:bg-red-800 shadow-sm uppercase text-center"
+                  >
+                    Borrar
+                  </button>
+                  <button
+                    onClick={() => setUsuarioSeleccionado(item)}
+                    className="flex-1 md:flex-none bg-white border border-[#bd0026] text-[#bd0026] px-3 py-2 rounded-full text-xs font-bold hover:bg-[#bd0026] hover:text-white shadow-sm uppercase text-center"
+                  >
+                    Ficha
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="p-10 text-center text-gray-400">
+              No se encontraron resultados en {actualConf.titulo}.
+            </div>
+          )}
+        </div>
+
+        {filtrados.length > ITEMS_POR_PAGINA && (
+          <div className="flex flex-col-reverse sm:flex-row justify-center items-center gap-3 mt-6">
+            <button
+              onClick={() => setPaginaActual(p => Math.max(1, p - 1))}
+              disabled={paginaActual === 1}
+              className={`px-4 py-2 rounded-lg font-bold ${paginaActual === 1 ? "bg-gray-200 text-gray-400" : "bg-white border text-gray-700 hover:bg-gray-50"}`}
+            >
+              Anterior
+            </button>
+            <span className="text-gray-600 font-medium">
+              Página {paginaActual} de {totalPaginas}
+            </span>
+            <button
+              onClick={() => setPaginaActual(p => Math.min(totalPaginas, p + 1))}
+              disabled={paginaActual === totalPaginas}
+              className={`px-4 py-2 rounded-lg font-bold ${paginaActual === totalPaginas ? "bg-gray-200 text-gray-400" : "bg-white border text-gray-700 hover:bg-gray-50"}`}
+            >
+              Siguiente
+            </button>
+          </div>
+        )}
+
       </div>
-    );
-  }
-
-  // 3. VISTA DE FICHA
-  if (vistaActual === "FICHA" && usuarioSeleccionado) {
-    if (categoriaActiva === "admins") {
-      return (
-        <AdminsTable
-          usuario={usuarioSeleccionado}
-          onVolver={() => setVistaActual("LISTA")}
-        />
-      );
-    } else if (categoriaActiva === "clientes") {
-      return (
-        <ClientesTable
-          usuario={usuarioSeleccionado}
-          onVolver={() => setVistaActual("LISTA")}
-        />
-      );
-    } else if (categoriaActiva === "vips") {
-      return (
-        <VipsTable
-          usuario={usuarioSeleccionado}
-          onVolver={() => setVistaActual("LISTA")}
-        />
-      );
-    } else if (categoriaActiva === "encargados") {
-      return (
-        <EncargadosTable
-          usuario={usuarioSeleccionado}
-          onVolver={() => setVistaActual("LISTA")}
-        />
-      );
-    } else if (categoriaActiva === "comerciales") {
-      return (
-        <ComercialesTable
-          usuario={usuarioSeleccionado}
-          onVolver={() => setVistaActual("LISTA")}
-        />
-      );
-    }
-
-    return (
-      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
-        <p>Cargando ficha...</p>
-      </div>
-    );
-  }
-
-  
-  
+    </div>
+  );
 };
 
-
-
-const BotonCategoria = ({ categoria, cantidad, alHacerClick }) => (
-  <button
-    onClick={alHacerClick}
-    className="bg-white group p-8 rounded-xl border border-gray-300 shadow-sm hover:border-[#bd0026] hover:shadow-xl transition-all duration-300 flex flex-col items-center"
-  >
-    <span className="text-xl font-bold text-gray-700 group-hover:text-[#bd0026] uppercase tracking-wide">
-      {categoria.titulo}
-    </span>
-    <span className="text-sm text-gray-400 mt-2">{cantidad} Registros</span>
-  </button>
-);
-
-const ItemLista = ({ usuario, alVer, alEditar }) => (
-  <div className="flex justify-between items-center p-5 border-b border-gray-100 last:border-none hover:bg-gray-50 transition-colors group">
-    <div className="flex flex-col">
-      <span className="text-lg font-bold text-gray-800 group-hover:text-[#bd0026] transition-colors">
-        {usuario.nombre} {usuario.apellidos}
-      </span>
-      <span className="text-sm text-gray-500">{usuario.email}</span>
-    </div>
-    <div className="flex gap-2">
-      <button
-        onClick={alEditar}
-        className="bg-black text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-gray-800 transition-all shadow-sm uppercase tracking-wider"
-      >
-        Modificar
-      </button>
-      <button
-        onClick={alVer}
-        className="bg-white border border-[#bd0026] text-[#bd0026] px-4 py-2 rounded-full text-xs font-bold hover:bg-[#bd0026] hover:text-white transition-all shadow-sm uppercase tracking-wider"
-      >
-        Ver Ficha
-      </button>
-    </div>
-  </div>
-);
-
-
 export default GestionUsuarios;
-*/
+/*
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from '../../utils/api';
@@ -395,4 +343,4 @@ const GestionUsuarios = () => {
   );
 };
 
-export default GestionUsuarios;
+export default GestionUsuarios;*/

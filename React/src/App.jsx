@@ -11,33 +11,25 @@ import GestionAlmacen from "./components/Almacen/GestionAlmacen";
 import CrearAlmacen from "./components/Almacen/CrearAlmacen";
 import ModificarAlmacen from "./components/Almacen/ModificarAlmacen";
 import DatosAlmacen from "./components/Almacen/DatosAlmacen";
-import ModificarAdministrador from "./components/Administrador/ModificarAdministrador";
+
 import GestionarPedidos from "./components/Pedido/GestionarPedidos";
-import ModificarCliente from "./components/Administrador/ModificarCliente";
-import ModificarClienteVip from "./components/Administrador/ModificarClienteVip";
-import ModificarComercial from "./components/Administrador/ModificarComercial";
-import ModificarEncargado from "./components/Administrador/ModificarEncargado";
+
 import DetallesPedido from "./components/Pedido/DetallesPedido";
-import CrearAdmin from "./components/Administrador/CrearAdmin";
-import CrearCliente from "./components/Administrador/CrearCliente";
-import CrearClienteVip from "./components/Administrador/CrearClienteVip";
+
+
+
 import CrearPedidoRebastecimiento from "./components/Pedido/CrearPedidoRebastecimiento";
-import CrearEncargado from "./components/Administrador/CrearEncargado";
+
 import MostrarFacturas from "./components/Factura/MostrarFacturas";
 import MostrarFactura from "./components/Factura/MostrarFactura";
-import CrearComercial from "./components/Administrador/CrearComercial";
-import ListadoAdministrador from "./components/Administrador/ListadoAdministrador";
-import ListadoCliente from "./components/Administrador/ListadoCliente";
-import ListadoClienteVip from "./components/Administrador/ListadoClienteVip";
-import ListadoEncargado from "./components/Administrador/ListadoEncargado";
-import ListadoComerciales from "./components/Administrador/ListadoComercial";
+
 import Perfil from "./components/Conjunto/Perfil";
 import VerCatalogoCliente from "./components/Catalogo/VerCatalogoCliente";
 import VerArticulosCliente from "./components/Catalogo/VerArticulosCliente";
 import Stock from './components/stock/Stock';
 import CarritoCatalogo from "./components/Catalogo/CarritoCatalogo";
-
-
+import ModificarUsuario from "./components/Administrador/ModificarUsuario";
+import CrearUsuario from "./components/Administrador/CrearUsuario";
 const AppContent = () => {
   const { token, role } = useAuth();
   const navigate = useNavigate();
@@ -67,21 +59,17 @@ const AppContent = () => {
               <>
                 <Route path="/usuarios" element={<GestionUsuarios />} />
                 <Route path="/crear-catalogo" element={<Catalogos />} />
-                <Route path="/listado-comerciales" element={<ListadoComerciales />} />
-                <Route path="/listado-encargados" element={<ListadoEncargado />} />
-                <Route path="/listado-clientes-vip" element={<ListadoClienteVip />} />
-                <Route path="/listado-clientes" element={<ListadoCliente />} />
-                <Route path="/listado-administradores" element={<ListadoAdministrador />} />
-                <Route path="/crear-admin" element={<CrearAdmin />} />
-                <Route path="/crear-comercial" element={<CrearComercial />} />
-                <Route path="/crear-cliente" element={<CrearCliente />} />
-                <Route path="/crear-encargado" element={<CrearEncargado />} />
-                <Route path="/crear-clientevip" element={<CrearClienteVip />} />
-                <Route path="/modificar-admin/:id" element={<ModificarAdministrador />} />
-                <Route path="/modificar-comercial/:id" element={<ModificarComercial />} />
-                <Route path="/modificar-encargado/:id" element={<ModificarEncargado />} />
-                <Route path="/modificar-clientevip/:id" element={<ModificarClienteVip />} />
-                <Route path="/modificar-cliente/:id" element={<ModificarCliente />} />
+                
+                <Route path="/crear-admin" element={<CrearUsuario tipo="admin" />} />
+                <Route path="/crear-comercial" element={<CrearUsuario tipo="comercial" />} />
+                <Route path="/crear-cliente" element={<CrearUsuario tipo="cliente" />} />
+                <Route path="/crear-encargado" element={<CrearUsuario tipo="encargado" />} />
+                <Route path="/crear-clientevip" element={<CrearUsuario tipo="clienteVip" />} />
+                <Route path="/modificar-admin/:id" element={<ModificarUsuario tipo="admin" />} />
+                <Route path="/modificar-cliente/:id" element={<ModificarUsuario tipo="cliente" />} />
+                <Route path="/modificar-clientevip/:id" element={<ModificarUsuario tipo="clienteVip" />} />
+                <Route path="/modificar-comercial/:id" element={<ModificarUsuario tipo="comercial" />} />
+                <Route path="/modificar-encargado/:id" element={<ModificarUsuario tipo="encargado" />} />
                 <Route path="/tarifas" element={<div>Página de Tarifas</div>} />
                 <Route path="/estadisticas" element={<div>Estadísticas</div>} />
               </>
@@ -111,7 +99,7 @@ const AppContent = () => {
 
 
                 
-                {role === "cliente" && (
+                {role === "cliente" &&  (
                   <>
                     <Route path="/VerCatalogoCliente" element={<VerCatalogoCliente/>}/>
                     <Route path="/VerArticulosCliente/:id_catalogo" element={<VerArticulosCliente/>}/>
