@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const CarritoCatalogo = () => {
   const navigate = useNavigate();
   const [carrito, setCarrito] = useState([]);
-  const [showPago, setShowPago] = useState(false);
+  const [mostrarPago, setMostrarPago] = useState(false);
   const [pagoDatos, setPagoDatos] = useState({
     nombre: "",
     numeroTarjeta: "",
@@ -43,7 +43,7 @@ const CarritoCatalogo = () => {
   );
 
   
-  const handlePagoChange = (e) => {
+  const manejoPago = (e) => {
     setPagoDatos({ ...pagoDatos, [e.target.name]: e.target.value });
   };
 
@@ -54,7 +54,7 @@ const CarritoCatalogo = () => {
         2
       )} €`
     );
-    setShowPago(false);
+    setMostrarPago(false);
     setCarrito([]);
     localStorage.removeItem("carrito");
     setPagoDatos({ nombre: "", numeroTarjeta: "", expiracion: "", cvv: "" });
@@ -195,7 +195,7 @@ const CarritoCatalogo = () => {
 
           <div className="flex justify-end mt-4">
             <button
-              onClick={() => setShowPago(true)}
+              onClick={() => setMostrarPago(true)}
               className="bg-[#C8102E] text-white px-6 py-3 rounded-full text-lg font-bold hover:bg-red-800 transition"
             >
               Realizar pago
@@ -206,7 +206,7 @@ const CarritoCatalogo = () => {
 
 
       {/* ----- MODAL INTERMEDIO DE PAGO ----- */}
-      {showPago && (
+      {mostrarPago && (
         <div className="fixed inset-0 bg-[#C8102E] bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-sm">
             <h2 className="text-2xl font-bold mb-4">Datos de pago</h2>
@@ -216,7 +216,7 @@ const CarritoCatalogo = () => {
                 name="nombre"
                 placeholder="Nombre del titular"
                 value={pagoDatos.nombre}
-                onChange={handlePagoChange}
+                onChange={manejoPago}
                 required
                 className="p-2 border rounded"
               />
@@ -225,7 +225,7 @@ const CarritoCatalogo = () => {
                 name="numeroTarjeta"
                 placeholder="Número de tarjeta"
                 value={pagoDatos.numeroTarjeta}
-                onChange={handlePagoChange}
+                onChange={manejoPago}
                 required
                 className="p-2 border rounded"
               />
@@ -235,7 +235,7 @@ const CarritoCatalogo = () => {
                   name="expiracion"
                   placeholder="MM/AA"
                   value={pagoDatos.expiracion}
-                  onChange={handlePagoChange}
+                  onChange={manejoPago}
                   required
                   className="p-2 border rounded flex-1"
                 />
@@ -244,7 +244,7 @@ const CarritoCatalogo = () => {
                   name="cvv"
                   placeholder="CVV"
                   value={pagoDatos.cvv}
-                  onChange={handlePagoChange}
+                  onChange={manejoPago}
                   required
                   className="p-2 border rounded w-20"
                 />
@@ -252,7 +252,7 @@ const CarritoCatalogo = () => {
               <div className="flex justify-end gap-2 mt-2">
                 <button
                   type="button"
-                  onClick={() => setShowPago(false)}
+                  onClick={() => setMostrarPago(false)}
                   className="px-4 py-2 border rounded hover:bg-gray-200"
                 >
                   Cancelar
