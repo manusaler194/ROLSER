@@ -61,7 +61,7 @@ const ModificarCliente = () => {
             [e.target.name]: e.target.value
         });
     };
-
+    
     const manejarEnvio = async (e) => {
         e.preventDefault();
         setGuardando(true);
