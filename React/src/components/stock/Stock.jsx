@@ -29,7 +29,7 @@ const Stock = () => {
     const idProveedorDefecto = articulo.id_proveedor || 1; 
 
     try {
-        const responsePedido = await apiFetch('http://100.25.154.102/api/pedidos/reposicion/guardar', {
+        const responsePedido = await apiFetch('http://localhost/api/pedidos/reposicion/guardar', {
             method: 'POST',
             body: JSON.stringify({
                 fecha_pedido: new Date().toISOString().split('T')[0],
@@ -42,7 +42,7 @@ const Stock = () => {
 
         if (!responsePedido.ok) throw new Error("Error al crear");
 
-        const responseArt = await apiFetch(`http://100.25.154.102/api/articulo/actualizar/${articulo.id_articulo}`, {
+        const responseArt = await apiFetch(`http://localhost/api/articulo/actualizar/${articulo.id_articulo}`, {
             method: 'PUT',
             body: JSON.stringify({
                 ...articulo,

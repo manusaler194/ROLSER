@@ -11,12 +11,12 @@ const CrearPedidoRebastecimiento = () => {
   useEffect(() => {
     const cargarDatos = async () => {
       try {
-        const responseArt = await apiFetch('http://100.25.154.102/api/articulo');
+        const responseArt = await apiFetch('http://localhost/api/articulo');
         const dataArt = await responseArt.json();
         console.log(dataArt);
         setArticulos(dataArt.almacen);
 
-        const responseProv = await apiFetch('http://100.25.154.102/api/proveedor');
+        const responseProv = await apiFetch('http://localhost/api/proveedor');
         const dataProv = await responseProv.json();
         console.log(dataProv);
         setProveedores(dataProv.proveedor);
@@ -210,7 +210,7 @@ const CrearPedidoRebastecimiento = () => {
           <div className="bg-white p-5 sm:p-6 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-6 sm:gap-10 w-full sm:w-auto justify-between">
             <div className="flex flex-col">
               <span className="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest">Total del Pedido</span>
-              <span className="text-2xl sm:text-3xl font-black text-red-700">{totalPedido}€</span>
+              <span className="text-2xl sm:text-3xl font-black text-red-700">({totalPedido.toFixed(2)})€</span>
             </div>
             <div className="h-10 w-0.5 bg-gray-100 hidden sm:block"></div>
             <div className="hidden sm:flex flex-col text-right">

@@ -24,7 +24,7 @@ const CrearAlmacen = () => {
     const cargarEncargados = async () => {
       try {
         const response = await apiFetch(
-          "http://100.25.154.102/api/encargadoAlmacen",
+          "http://localhost/api/encargadoAlmacen",
         );
         const data = await response.json();
         console.log(data);
@@ -41,7 +41,7 @@ const CrearAlmacen = () => {
     e.preventDefault();
     try {
       const response = await apiFetch(
-        "http://100.25.154.102/api/almacenes/guardar",
+        "http://localhost/api/almacenes/guardar",
         {
           method: "POST",
           body: JSON.stringify(almacen),

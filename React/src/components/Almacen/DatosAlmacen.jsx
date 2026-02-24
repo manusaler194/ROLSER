@@ -13,7 +13,7 @@ const DatosAlmacen = () => {
   useEffect(() => {
     const cargarAlmacen = async () => {
       try {
-        const response = await apiFetch(`http://100.25.154.102/api/almacenes/${id}`);
+        const response = await apiFetch(`http://localhost/api/almacenes/${id}`);
         const data = await response.json();
         if (data.almacen && data.almacen.length > 0) {
           setAlmacen(data.almacen[0]);
