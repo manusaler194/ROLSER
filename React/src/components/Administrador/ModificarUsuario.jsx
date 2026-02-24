@@ -1,0 +1,237 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { apiFetch, BASE_URL } from '../../utils/api'; 
+
+const CONFIGURACION_USUARIOS = {
+    admin: {
+        titulo: 'Modificar Administrador',
+        urlGet: (id) => `${BASE_URL}/administradores/${id}`,
+        urlPut: (id) => `${BASE_URL}/administradores/actualizar/${id}`,
+        extraerDatos: (datos) => Array.isArray(datos) ? datos[0] : datos,
+        campos: ['nombre', 'apellidos', 'email', 'telefono']
+    },
+    cliente: {
+        titulo: 'Modificar Cliente',
+        urlGet: (id) => `${BASE_URL}/clientes/${id}`,
+        urlPut: (id) => `${BASE_URL}/clientes/actualizar/${id}`,
+        extraerDatos: (datos) => Array.isArray(datos.cliente) ? datos.cliente[0] : datos.cliente,
+        campos: ['nombre', 'email', 'telefono', 'direccion']
+    },
+    clienteVip: {
+        titulo: 'Modificar Cliente VIP',
+        urlGet: (id) => `${BASE_URL}/clientesVip/${id}`,
+        urlPut: (id) => `${BASE_URL}/clientesVip/actualizar/${id}`,
+        extraerDatos: (datos) => {
+            const data = datos.clienteVip || datos;
+            return Array.isArray(data) ? data[0] : data;
+        },
+        campos: ['nombre', 'email', 'telefono', 'direccion']
+    },
+    comercial: {
+        titulo: 'Modificar Comercial',
+        urlGet: (id) => `${BASE_URL}/comerciales/${id}`,
+        urlPut: (id) => `${BASE_URL}/comerciales/actualizar/${id}`,
+        extraerDatos: (datos) => {
+            const data = datos.comerciales || datos.comercial || datos;
+            return Array.isArray(data) ? data[0] : data;
+        },
+        campos: ['nombre', 'email', 'contacto'] 
+    },
+    encargado: {
+        titulo: 'Modificar Encargado',
+        urlGet: (id) => `${BASE_URL}/encargadoAlmacen/${id}`,
+        urlPut: (id) => `${BASE_URL}/encargadoAlmacen/actualizar/${id}`,
+        extraerDatos: (datos) => Array.isArray(datos) ? datos[0] : datos,
+        campos: ['nombre', 'email', 'telefono']
+    }
+};
+
+const ModificarUsuario = ({ tipo }) => {
+    const navegar = useNavigate();
+    const { id } = useParams();
+    const config = CONFIGURACION_USUARIOS[tipo];
+
+    const [usuario, setUsuario] = useState({
+        nombre: '',
+        apellidos: '',
+        email: '',
+        telefono: '',
+        contacto: '',
+        direccion: '',
+        password: ''
+    });
+
+    const [estaCargando, setEstaCargando] = useState(true);
+    const [guardando, setGuardando] = useState(false);
+
+    useEffect(() => {
+        if (!config) return;
+
+        const cargarDatos = async () => {
+            try {
+                const respuesta = await apiFetch(config.urlGet(id));
+                if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
+
+                const datosCrudos = await respuesta.json();
+                const datosUsuario = config.extraerDatos(datosCrudos);
+
+                if (datosUsuario) {
+                    setUsuario({
+                        nombre: datosUsuario.nombre || '',
+                        apellidos: datosUsuario.apellidos || '',
+                        email: datosUsuario.email || '',
+                        telefono: datosUsuario.telefono || datosUsuario.contacto || '', 
+                        contacto: datosUsuario.contacto || datosUsuario.telefono || '', 
+                        direccion: datosUsuario.direccion || '',
+                        password: '' 
+                    });
+                }
+            } catch (error) {
+                console.error("Error al cargar:", error);
+                alert(`No se pudieron cargar los datos del ${tipo}.`);
+            } finally {
+                setEstaCargando(false);
+            }
+        };
+
+        if (id) cargarDatos();
+    }, [id, tipo, config]);
+
+    const manejarCambio = (e) => {
+        setUsuario({ ...usuario, [e.target.name]: e.target.value });
+    };
+
+    const manejarEnvio = async (e) => {
+        e.preventDefault();
+        setGuardando(true);
+        try {
+            const datosAEnviar = {};
+            config.campos.forEach(campo => {
+                datosAEnviar[campo] = usuario[campo];
+            });
+
+            if (usuario.password) {
+                datosAEnviar.password = usuario.password;
+            }
+
+            const respuesta = await apiFetch(config.urlPut(id), {
+                method: 'PUT',
+                body: JSON.stringify(datosAEnviar)
+            });
+            
+            if (!respuesta.ok) {
+                const errorData = await respuesta.json();
+                throw { response: { status: respuesta.status, data: errorData } };
+            }
+            
+            alert(`${config.titulo.replace('Modificar ', '')} modificado con éxito`);
+            navegar('/usuarios');
+        } catch (error) {
+            console.error("Error al actualizar:", error);
+            if (error.response && error.response.status === 422) {
+                const mensajesError = Object.values(error.response.data.errors).flat().join("\n");
+                alert("Corrige estos errores:\n" + mensajesError);
+            } else {
+                const mensajeError = error.response?.data?.message || "Hubo un error al guardar los cambios.";
+                alert(mensajeError);
+            }
+        } finally {
+            setGuardando(false);
+        }
+    };
+
+    const clasesInput = "w-full bg-white border border-gray-400 p-3 text-gray-800 focus:outline-none focus:border-[#bd0026] focus:ring-1 focus:ring-[#bd0026] rounded-sm transition-all";
+    const claseLabel = "block text-xs font-bold text-gray-500 uppercase mb-1 ml-1";
+
+    if (!config) return <div className="p-10 text-center text-red-500">Error: Tipo de usuario desconocido.</div>;
+
+    if (estaCargando) {
+        return (
+            <div className="flex min-h-screen bg-gray-50 justify-center items-center">
+                <p className="text-gray-600 font-bold text-lg animate-pulse">Cargando datos...</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
+            <div className="w-full max-w-lg bg-white p-6 sm:p-10 shadow-2xl rounded-sm border-t-4 border-[#bd0026]">
+                <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-center text-black uppercase tracking-wider border-b pb-4">
+                    {config.titulo}
+                </h2>
+                
+                <form onSubmit={manejarEnvio} className="space-y-4 sm:space-y-5" autoComplete="off">
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label className={claseLabel}>{tipo === 'clienteVip' ? 'Nombre / Razón Social' : 'Nombre'}</label>
+                            <input type="text" name="nombre" value={usuario.nombre} onChange={manejarCambio} className={clasesInput} required />
+                        </div>
+                        
+                        {config.campos.includes('apellidos') && (
+                            <div>
+                                <label className={claseLabel}>Apellidos</label>
+                                <input type="text" name="apellidos" value={usuario.apellidos} onChange={manejarCambio} className={clasesInput} required />
+                            </div>
+                        )}
+
+                        {!config.campos.includes('apellidos') && config.campos.includes('telefono') && (
+                            <div>
+                                <label className={claseLabel}>Teléfono</label>
+                                <input type="text" name="telefono" value={usuario.telefono} onChange={manejarCambio} className={clasesInput} required />
+                            </div>
+                        )}
+                        
+                        {!config.campos.includes('apellidos') && config.campos.includes('contacto') && (
+                            <div>
+                                <label className={claseLabel}>Contacto / Teléfono</label>
+                                <input type="text" name="contacto" value={usuario.contacto} onChange={manejarCambio} className={clasesInput} required />
+                            </div>
+                        )}
+                    </div>
+
+                    <div>
+                        <label className={claseLabel}>Correo Electrónico</label>
+                        <input type="email" name="email" value={usuario.email} onChange={manejarCambio} className={clasesInput} required />
+                    </div>
+
+                    {config.campos.includes('apellidos') && config.campos.includes('telefono') && (
+                        <div>
+                            <label className={claseLabel}>Teléfono</label>
+                            <input type="text" name="telefono" value={usuario.telefono} onChange={manejarCambio} className={clasesInput} required />
+                        </div>
+                    )}
+
+                    {config.campos.includes('direccion') && (
+                        <div>
+                            <label className={claseLabel}>Dirección</label>
+                            <input type="text" name="direccion" value={usuario.direccion} onChange={manejarCambio} className={clasesInput} required />
+                        </div>
+                    )}
+
+                    <div>
+                        <label className={claseLabel}>Nueva Contraseña (Opcional)</label>
+                        <input 
+                            type="password" name="password" value={usuario.password} onChange={manejarCambio} 
+                            className={clasesInput} placeholder="Escribe para cambiar la contraseña" autoComplete="new-password"
+                        />
+                        <p className="text-[10px] text-gray-500 mt-1 ml-1">
+                            * Deja este campo en blanco si deseas mantener la contraseña actual.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col-reverse sm:flex-row justify-center pt-6 sm:pt-8 gap-3 sm:gap-4">
+                        <button type="button" onClick={() => navegar('/usuarios')} className="w-full sm:w-1/2 border border-gray-400 text-gray-600 font-bold py-3 px-4 rounded shadow hover:bg-gray-50 transition duration-300 uppercase tracking-wider">
+                            Cancelar
+                        </button>
+                        <button type="submit" disabled={guardando} className={`w-full sm:w-1/2 text-white font-bold py-3 px-4 rounded shadow-lg transition duration-300 uppercase tracking-wider ${guardando ? "bg-gray-500 cursor-not-allowed" : "bg-[#bd0026] hover:bg-red-800"}`}> 
+                            {guardando ? "Guardando..." : "Guardar Cambios"}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default ModificarUsuario;
