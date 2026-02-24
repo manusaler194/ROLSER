@@ -141,8 +141,12 @@ const GestionarPedidos = () => {
                 </div>
             </div>
 
+<<<<<<< Updated upstream
             {/* TABLA DE PEDIDOS */}
             <div className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden">
+=======
+            <div className="bg-white rounded-2xl shadow-md border border-gray-200 pb-16">
+>>>>>>> Stashed changes
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="bg-gray-100 text-gray-600 text-[10px] uppercase tracking-widest border-b border-gray-200">

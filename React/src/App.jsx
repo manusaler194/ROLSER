@@ -8,11 +8,9 @@ import Register from "./components/Auth/Register";
 import Catalogos from "./components/Catalogo/crearCatalogos";
 import GestionUsuarios from "./components/Administrador/GestionUsuarios";
 import GestionAlmacen from "./components/Almacen/GestionAlmacen";
-import GestionAlmacenEncargado from "./components/Almacen/GestionAlmacenEncargado";
 import CrearAlmacen from "./components/Almacen/CrearAlmacen";
 import ModificarAlmacen from "./components/Almacen/ModificarAlmacen";
 import DatosAlmacen from "./components/Almacen/DatosAlmacen";
-import DatosAlmacenEncargado from "./components/Almacen/DatosAlmacenEncargado";
 import ModificarAdministrador from "./components/Administrador/ModificarAdministrador";
 import GestionarPedidos from "./components/Pedido/GestionarPedidos";
 import ModificarCliente from "./components/Administrador/ModificarCliente";
@@ -98,8 +96,6 @@ const AppContent = () => {
                 <Route path="/crear-pedido-reabastecimiento" element={<CrearPedidoRebastecimiento />} />
                 {role === "encargadoalmacen" && (
                   <>
-                    <Route path="/GestionAlmacenEncargado" element={<GestionAlmacenEncargado />} />
-                    <Route path="/DatosAlmacenEncargado/:id" element={<DatosAlmacenEncargado />} />
                     <Route path="/stock" element={<Stock />} />
                   </>
                 )}
