@@ -52,7 +52,7 @@ class PedidoController extends Controller
             return response()->json([
                 'message' => 'Pedido creado con éxito.',
                 'pedidos' => $pedido,
-            ], 201); 
+            ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -140,4 +140,10 @@ class PedidoController extends Controller
             ], 500);
         }
     }
+
+
+    
+
+
+
 }

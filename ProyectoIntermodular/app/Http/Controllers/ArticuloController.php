@@ -99,7 +99,6 @@ class ArticuloController extends Controller {
 
 
     public function guardarCatalogo(Request $request){
-        // 1️⃣ Validar datos
         $request->validate([
             'nombre_catalogo' => 'required|string|max:255',
             'anyo' => 'required|integer',
@@ -108,14 +107,12 @@ class ArticuloController extends Controller {
             'articulos.*' => 'integer',
         ]);
 
-        // 2️⃣ Crear el catálogo
         $catalogo = Catalogo::create([
             'nombre_catalogo' => $request->nombre_catalogo,
             'anyo' => $request->anyo,
             'id_administrador' => $request->id_administrador,
         ]);
 
-        // 3️⃣ Asociar artículos si los hay
         if ($request->has('articulos')) {
             $catalogo->articulos()->attach($request->articulos, [
                 'created_at' => now(),

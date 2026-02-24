@@ -55,32 +55,32 @@ const crearCatalogo = () => {
           anyo: anyo,
           id_administrador: idAdministrador,
         }),
-      });
+    });
 
-      const dataCatalogo = await catalogo.json();
+    const dataCatalogo = await catalogo.json();
 
-      if (!catalogo.ok) {
-        setMensaje(dataCatalogo.error || "Error al crear el catálogo");
-        return;
-      }
+    if (!catalogo.ok) {
+      setMensaje(dataCatalogo.error || "Error al crear el catálogo");
+      return;
+    }
 
-      if (articulosSeleccionados.length > 0) {
-        await Promise.all(articulosSeleccionados.map(idArticulo => apiFetch("http://localhost/api/articulo_catalogo/guardar", {
-              method: "POST",
-              headers: {"Content-Type": "application/json"},
-              body: JSON.stringify({
-                id_catalogo: dataCatalogo.idCatalogo,
-                id_articulo: idArticulo,
-              }),
-            })
-          )
-        );
-      }
+    if (articulosSeleccionados.length > 0) {
+      await Promise.all(articulosSeleccionados.map(idArticulo => apiFetch("http://localhost/api/articulo_catalogo/guardar", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+              id_catalogo: dataCatalogo.idCatalogo,
+              id_articulo: idArticulo,
+            }),
+          })
+        )
+      );
+    }
 
-      setNombreCatalogo("");
-      setAnyo("");
-      setArticulosSeleccionados([]);
-      setMensaje("Catálogo creado correctamente");
+    setNombreCatalogo("");
+    setAnyo("");
+    setArticulosSeleccionados([]);
+    setMensaje("Catálogo creado correctamente");
 
     } catch (error) {
       console.error("Error:", error);
