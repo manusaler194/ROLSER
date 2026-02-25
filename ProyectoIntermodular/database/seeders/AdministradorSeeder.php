@@ -26,13 +26,13 @@ class AdministradorSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-       for ($i = 1; $i < 11; $i++) {
+       for ($i = 1; $i < 20; $i++) {
             DB::table('administradores')->insert([
                 'nombre' => $faker->firstName(),
                 'apellidos' => $faker->lastName() . ' ' . $faker->lastName(),
                 'email' => $faker->unique()->safeEmail(),
                 'telefono' => $faker->phoneNumber(),
-                'password' => Hash::make('password'), 
+                'password' => Hash::make('password'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

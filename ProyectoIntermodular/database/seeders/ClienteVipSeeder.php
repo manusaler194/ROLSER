@@ -27,12 +27,12 @@ class ClienteVipSeeder extends Seeder
             'direccion' => 'Avenida del Lujo 777, Valencia',
             'created_at' => now(),
             'updated_at' => now(),
-            'id_administrador' => 1, 
-            'id_catalogo' => 1,      
-            'id_comercial' => 1,     
+            'id_administrador' => 1,
+            'id_catalogo' => 1,
+            'id_comercial' => 1,
         ]);
 
-        for ($i = 1; $i < 11; $i++) {
+        for ($i = 1; $i < 21; $i++) {
             DB::table('clientes_vip')->insert([
 
                 'nombre' => $faker->name(),

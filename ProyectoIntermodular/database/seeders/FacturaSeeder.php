@@ -15,7 +15,7 @@ class FacturaSeeder extends Seeder
     {
         $faker = Faker::create('es_ES');
 
-        for ($i = 1; $i < 11; $i++) {
+        for ($i = 1; $i < 21; $i++) {
             $opcion = rand(1, 2);
             $base_imponible = $faker->randomFloat(2, 50, 1000);
             $total_iva =  $base_imponible * (21 / 100);

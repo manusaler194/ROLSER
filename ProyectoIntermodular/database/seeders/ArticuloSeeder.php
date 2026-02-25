@@ -17,7 +17,7 @@ class ArticuloSeeder extends Seeder
     public function run(): void{
         $faker = Faker::create('es_ES');
 
-        for ($i = 1; $i < 11; $i++) {
+        for ($i = 1; $i < 20; $i++) {
             DB::table('articulos')->insert([
             'nombre'=>$faker->randomElement(["Plancha", "Carrito", "Bolsas", "Escaleras", "Tabla de planchar", "Taburete", "funda de tabla", "carro plegable", "carro no plegable", "bolsas no adaptables"]),
             'descripcion' => $faker->randomElement(["Para viaje", "para estar en casita", "ideal para casa", "perfecto para viaje", "lo más barato del mercado", "Mejor calidad precio", "Lo mejor para regalar"]),

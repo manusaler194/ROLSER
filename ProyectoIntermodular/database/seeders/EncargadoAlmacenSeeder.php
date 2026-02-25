@@ -15,7 +15,7 @@ class EncargadoAlmacenSeeder extends Seeder
 
     public function run(): void{
         $faker = Faker::create('es_ES');
-        
+
         DB::table('encargados_de_almacen')->insert([
             'nombre' => 'Encargado Almacén',
             'telefono' => '622222222',
@@ -25,7 +25,7 @@ class EncargadoAlmacenSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        for ($i = 1; $i < 11; $i++) {
+        for ($i = 1; $i < 21; $i++) {
             DB::table('encargados_de_almacen')->insert([
                 'nombre' => $faker->name(),
                 'telefono' => $faker->phoneNumber(),

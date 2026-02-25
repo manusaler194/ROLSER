@@ -1,5 +1,4 @@
 export const apiFetch = async (url, options = {}) => {
-    
     const token = localStorage.getItem('token');
 
     const headers = {

@@ -38,19 +38,19 @@ const DatosAlmacen = () => {
 
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="space-y-1">
-            <label className="block ml-4 text-sm font-bold text-gray-600">Dirección</label>
+            <label className="block ml-4 text-md font-bold text-gray-600">Dirección</label>
             <input type="text" value={almacen.direccion || ''} className={inputClasses} readOnly />
 
-            <label className="block ml-4 text-sm font-bold text-gray-600">Capacidad Total</label>
+            <label className="block ml-4 text-md font-bold text-gray-600">Capacidad Total</label>
             <input type="text" value={almacen.capacidad ? `${almacen.capacidad} unidades` : ''} className={inputClasses} readOnly />
 
-            <label className="block ml-4 text-sm font-bold text-gray-600">Encargado</label>
+            <label className="block ml-4 text-md font-bold text-gray-600">Encargado</label>
             <input type="text" value={almacen.encargado_almacen?.nombre || 'Sin asignar'} className={inputClasses} readOnly />
           </div>
           
           <Link 
             to={"/GestionAlmacen"} 
-            className="block w-full py-4 mt-4 bg-[#bc002d] text-white font-bold rounded-full text-center shadow-md hover:bg-red-800 transition-colors active:scale-[0.98]"
+            className="block w-full py-4 mt-4 bg-[#bc002d] text-white font-bold rounded-full text-center shadow-md hover:bg-red-800 transition-colors active:scale-[0.98] text-2xl"
           > 
             Volver
           </Link>   

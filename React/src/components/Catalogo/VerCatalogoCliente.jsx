@@ -4,7 +4,7 @@ import {apiFetch} from '../../utils/api';
 
 
 // Imágenes
-import Bolso from "./imgCatalogo/bolsoRolser.jpg";
+import Bolso from "./imgCatalogo/bolsoRolser.jpg"
 import Carro from "./imgCatalogo/carroRolser.jpg";
 import Escalera from "./imgCatalogo/escaleraRolser.jpg";
 import Plancha from "./imgCatalogo/planchaRolser.jpg";

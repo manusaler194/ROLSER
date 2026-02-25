@@ -15,86 +15,98 @@
             background-color: #b91c1c;
             color: white;
         }
+
+        /* Ocultar botón al imprimir */
+        @media print {
+            .no-print {
+                display: none;
+            }
+            body {
+                background-color: white;
+                padding: 0;
+            }
+        }
     </style>
 </head>
 
-<body class="min-h-screen flex items-center justify-center py-12">
-        <div class="w-[450px] bg-white shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
+<body class="min-h-screen flex items-center justify-center p-4 sm:py-12">
+    <div class="w-full max-w-md bg-white shadow-2xl border border-gray-200 flex flex-col overflow-hidden rounded-lg">
 
-            <div class="p-12 flex flex-col">
+        <div class="p-6 sm:p-12 flex flex-col">
 
-                <div class="text-center mb-16">
-                    <p class="text-[11px] font-bold tracking-[0.5em] text-red-500 uppercase mb-2">Rolser</p>
-                    <h1 class="text-4xl font-black text-gray-900 uppercase tracking-tighter">Factura</h1>
-                    <div class="flex justify-center gap-4 text-xs font-bold uppercase tracking-widest">
-                        <span>Nº F-{{ $factura->id_factura }}</span>
-                    </div>
+            <div class="text-center mb-10 sm:mb-16">
+                <p class="text-[10px] sm:text-[11px] font-bold tracking-[0.5em] text-red-500 uppercase mb-2">Rolser</p>
+                <h1 class="text-3xl sm:text-4xl font-black text-gray-900 uppercase tracking-tighter">Factura</h1>
+                <div class="flex justify-center gap-4 text-[10px] sm:text-xs font-bold uppercase tracking-widest">
+                    <span>Nº F-{{ $factura->id_factura }}</span>
                 </div>
-
-                <div class="text-center mb-16 px-4">
-                    <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Facturar a:</h3>
-                    @if ($factura->cliente_vip)
-                        <p class="text-2xl font-black text-gray-900 leading-tight uppercase">
-                            {{ $factura->cliente_vip->nombre }}</p>
-                        <p class="text-sm text-gray-500 mt-3 italic underline decoration-indigo-100 underline-offset-4">
-                            {{ $factura->cliente_vip->email }}</p>
-                    @elseif($factura->cliente)
-                        <p class="text-2xl font-black text-gray-900 leading-tight uppercase">{{ $factura->cliente->nombre }}
-                        </p>
-                        <p class="text-sm text-gray-500 mt-3 italic underline decoration-indigo-100 underline-offset-4">
-                            {{ $factura->cliente->email }}</p>
-                    @endif
-                </div>
-                <div class="mb-16 text-center">
-                    <div class="border-b-2 border-gray-100 pb-3 mb-8">
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Detalle del Pedido</p>
-                    </div>
-
-                    <p class="text-sm font-bold text-gray-800 uppercase leading-relaxed mb-8 px-2">Datos del precio
-                        total del pedido a facturar</p>
-
-                    <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 inline-block w-full">
-                        <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Base
-                            Imponible</span>
-                        <span class="text-2xl font-black text-gray-900">{{ $factura->base_imponible }}€</span>
-                    </div>
-                </div>
-
-                <div class="pt-8 border-t border-gray-100 text-center">
-                    <div class="space-y-4 mb-12">
-                        <div class="flex flex-col items-center">
-                            <span class="text-[10px] font-bold text-gray-400 uppercase">Subtotal</span>
-                            <span class="text-md font-bold text-gray-800">{{ $factura->base_imponible }}€</span>
-                        </div>
-
-                        <div class="flex flex-col items-center">
-                            <span class="text-[10px] font-bold text-gray-400 uppercase">IVA
-                                ({{ $factura->iva_porcentaje }}%)</span>
-                            <span class="text-md font-bold text-gray-800">+{{ $factura->total_iva }}€</span>
-                        </div>
-
-                        <div class="bg-indigo-50 p-6 rounded-md mt-6 border-y-2">
-                            <span class="block text-xs font-black uppercase tracking-widest mb-2">Total Factura</span>
-                            <span
-                                class="text-4xl font-black text-red-700 tracking-tighter">{{ $factura->total_factura }}€</span>
-                        </div>
-                    </div>
-
-                    <div class="text-center">
-                        <p class="text-[10px] font-bold text-gray-300 uppercase tracking-[0.4em] mb-8 italic">Documento
-                            Oficial de Venta</p>
-                        <div class="no-print">
-                            <a href="/mostrar/facturas/{{ $tipo }}/{{ $id }}"
-                            class="btn-rojo inline-block w-full text-[11px] font-black uppercase tracking-widest px-8 py-4 rounded-lg shadow-lg hover:brightness-110 transition-all">
-                            Cerrar y Volver
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
             </div>
-        </div>
 
+            <div class="text-center mb-10 sm:mb-16 px-2 sm:px-4">
+                <h3 class="text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Facturar a:</h3>
+                @if ($factura->cliente_vip)
+                    <p class="text-xl sm:text-2xl font-black text-gray-900 leading-tight uppercase">
+                        {{ $factura->cliente_vip->nombre }}</p>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-3 italic underline decoration-indigo-100 underline-offset-4 break-words">
+                        {{ $factura->cliente_vip->email }}</p>
+                @elseif($factura->cliente)
+                    <p class="text-xl sm:text-2xl font-black text-gray-900 leading-tight uppercase">
+                        {{ $factura->cliente->nombre }}</p>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-3 italic underline decoration-indigo-100 underline-offset-4 break-words">
+                        {{ $factura->cliente->email }}</p>
+                @endif
+            </div>
+
+            <div class="mb-10 sm:mb-16 text-center">
+                <div class="border-b-2 border-gray-100 pb-3 mb-6 sm:mb-8">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Detalle del Pedido</p>
+                </div>
+
+                <p class="text-xs sm:text-sm font-bold text-gray-800 uppercase leading-relaxed mb-6 sm:mb-8 px-2">
+                    Datos del precio total del pedido a facturar
+                </p>
+
+                <div class="bg-gray-50 p-4 sm:p-6 rounded-lg border border-gray-100 inline-block w-full">
+                    <span class="block text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+                        Base Imponible
+                    </span>
+                    <span class="text-xl sm:text-2xl font-black text-gray-900">{{ $factura->base_imponible }}€</span>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-gray-100 text-center">
+                <div class="space-y-4 mb-8 sm:mb-12">
+                    <div class="flex flex-col items-center">
+                        <span class="text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase">Subtotal</span>
+                        <span class="text-sm sm:text-md font-bold text-gray-800">{{ $factura->base_imponible }}€</span>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <span class="text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase">IVA ({{ $factura->iva_porcentaje }}%)</span>
+                        <span class="text-sm sm:text-md font-bold text-gray-800">+{{ $factura->total_iva }}€</span>
+                    </div>
+
+                    <div class="bg-indigo-50 p-4 sm:p-6 rounded-md mt-6 border-y-2">
+                        <span class="block text-[10px] sm:text-xs font-black uppercase tracking-widest mb-2">Total Factura</span>
+                        <span class="text-3xl sm:text-4xl font-black text-red-700 tracking-tighter">{{ $factura->total_factura }}€</span>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-[9px] sm:text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em] sm:tracking-[0.4em] mb-6 sm:mb-8 italic">
+                        Documento Oficial de Venta
+                    </p>
+                    <div class="no-print">
+                        <a href="/mostrar/facturas/{{ $tipo }}/{{ $id }}"
+                            class="btn-rojo inline-block w-full text-[10px] sm:text-[11px] font-black uppercase tracking-widest px-4 sm:px-8 py-4 rounded-lg shadow-lg hover:brightness-110 transition-all">
+                            Cerrar y Volver
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </body>
 
 </html>

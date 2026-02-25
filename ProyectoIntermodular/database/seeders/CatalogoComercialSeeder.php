@@ -15,7 +15,7 @@ class CatalogoComercialSeeder extends Seeder
     public function run(): void{
         $faker = Faker::create('es_ES');
 
-        for ($i = 1; $i < 11; $i++) {
+        for ($i = 1; $i < 21; $i++) {
             DB::table('comerciales_catalogos')->insert([
             "id_comercial" => rand(1,10),
             "id_catalogo" => rand(1,10),

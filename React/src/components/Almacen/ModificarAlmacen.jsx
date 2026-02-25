@@ -83,7 +83,7 @@ const ModificarAlmacen = () =>{
       </h2>
       
       <form onSubmit={handleSubmit} className="space-y-2"> 
-        <label className="block ml-4 text-sm font-bold text-gray-600">Dirección</label>
+        <label className="block ml-4 text-md font-bold text-gray-600">Dirección</label>
         <input 
           type="text" 
           name="direccion" 
@@ -94,7 +94,7 @@ const ModificarAlmacen = () =>{
           required
         />
 
-        <label className="block ml-4 text-sm font-bold text-gray-600">Capacidad</label>
+        <label className="block ml-4 text-md font-bold text-gray-600">Capacidad</label>
         <input 
           type="number" 
           name="capacidad" 
@@ -105,12 +105,12 @@ const ModificarAlmacen = () =>{
           required
         />
 
-        <label className="block ml-4 text-sm font-bold text-gray-600">Encargado de Almacén</label>
+        <label className="block ml-4 text-md font-bold text-gray-600">Encargado de Almacén</label>
         <div className="relative mb-8">
           <select 
             name="id_encargado" 
             value={almacen.id_encargado} 
-            className={`${inputClasses} appearance-none`} 
+            className={inputClasses} 
             onChange={handleEncargado} 
             onFocus={() => setMenu(true)} 
             required

@@ -17,7 +17,7 @@ class ArticuloCatalogoSeeder extends Seeder
     public function run(): void {
         $faker = Faker::create('es_ES');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             DB::table('articulos_catalogos')->insert([
             'id_catalogo' => rand(1,10),
             'id_articulo' => rand(1,10),

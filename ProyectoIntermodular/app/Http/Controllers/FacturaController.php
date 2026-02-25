@@ -84,7 +84,7 @@ class FacturaController extends Controller
     public function mostrarFactura($id_factura)
     {
 
-        $factura = Facturas::with(['cliente', 'clienteVip'])->where('id_factura', $id_factura);
+        $factura = Facturas::with(['cliente', 'clienteVip'])->where('id_factura', $id_factura)->first();
 
         if ($factura->id_clientevip) {
             $tipo = 'clientevip';

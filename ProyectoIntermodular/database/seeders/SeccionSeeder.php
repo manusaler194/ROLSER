@@ -15,7 +15,7 @@ class SeccionSeeder extends Seeder
     {
         $faker = Faker::create('es_ES');
 
-        for ($i = 1; $i < 11; $i++) {
+        for ($i = 1; $i < 21; $i++) {
             DB::table('secciones')->insert([
 
                 'stock' => $faker->numberBetween(1,100),

@@ -10,7 +10,7 @@ const GestionAlmacen = () => {
   const [abrirMenu, setAbrirMenu] = useState(null);
   const [almacenes, setAlmacenes] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
-  const registrosPorPagina = 5;
+  const registrosPorPagina = 10;
 
   console.log(user)
   const isAdmin = user?.role === "admin";
@@ -107,7 +107,7 @@ const GestionAlmacen = () => {
                         abrirMenu === almacen.id_almacen ? null : almacen.id_almacen
                       )
                     }
-                    className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-sm font-bold text-gray-700 transition-all cursor-pointer"
+                    className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-md font-bold text-gray-700 transition-all cursor-pointer"
                   >
                     Opciones
                     <img 
@@ -119,7 +119,7 @@ const GestionAlmacen = () => {
 
                   {abrirMenu === almacen.id_almacen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 shadow-xl rounded-lg overflow-hidden z-50 animate-in fade-in zoom-in duration-200">
-                      <div className="flex flex-col text-sm">
+                      <div className="flex flex-col text-md">
                         {isAdmin ? (
                           <>
                             <Link
