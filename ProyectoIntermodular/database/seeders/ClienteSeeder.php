@@ -21,13 +21,13 @@ class ClienteSeeder extends Seeder{
             'email' => 'cliente@gmail.com',
             'password' => Hash::make('12345678'),
             'direccion' => 'Calle Falsa 123, Valencia',
-            'id_administrador' => 1, 
+            'id_administrador' => 1,
             'id_comercial' => 1,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        for ($i = 1; $i < 11; $i++) {
+        for ($i = 1; $i < 21; $i++) {
             DB::table('clientes')->insert([
                 'nombre' => $faker->name(),
                 'telefono' => $faker->phoneNumber(),

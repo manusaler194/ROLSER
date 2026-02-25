@@ -25,7 +25,7 @@ class ComercialSeeder extends Seeder
             'id_administrador' => 1,
         ]);
 
-        for ($i = 1; $i < 11; $i++) {
+        for ($i = 1; $i < 21; $i++) {
             DB::table('comerciales')->insert([
                 'nombre' => $faker->name(),
                 'contacto' => $faker->phoneNumber(),

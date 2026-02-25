@@ -13,7 +13,7 @@ class PedidoSeeder extends Seeder
     public function run(): void{
         $faker = Faker::create('es_ES');
 
-        for ($i = 1; $i < 11; $i++) {
+        for ($i = 1; $i < 21; $i++) {
             $opcion = rand(1,2);
             if($opcion == 1){
                 DB::table('pedidos')->insert([

@@ -17,7 +17,7 @@ class CatalogoSeeder extends Seeder
     public function run(): void {
         $faker = Faker::create('es_ES');
 
-        for ($i = 1; $i < 11; $i++) {
+        for ($i = 1; $i < 21; $i++) {
             DB::table('catalogos')->insert([
             'nombre_catalogo' => $faker->randomElement(["Catalogo 1","Catalogo 2","Catalogo 3","Catalogo 4","Catalogo 5","Catalogo 6","Catalogo 7","Catalogo 8","Catalogo 9","Catalogo 10","Catalogo 11","Catalogo 12","Catalogo 13","Catalogo 14", ]),
             'anyo' => $faker->numberBetween(2000, 2026),
