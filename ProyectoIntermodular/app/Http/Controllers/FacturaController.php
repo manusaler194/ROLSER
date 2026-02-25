@@ -128,4 +128,25 @@ class FacturaController extends Controller
             ], 500);
         }
     }
+
+
+    public function guardarFacturaIndividual(Request $request) {
+        $validated = $request->validate([
+            'total' => 'required|numeric',
+            'cantidad' => 'required|integer',
+            'id_cliente' => 'required|integer',
+            'id_comercial' => 'nullable|integer',
+        ]);
+
+        $factura = Facturas::create([
+            'fecha' => now(),
+            'cantidad' => $validated['cantidad'],
+            'precio' => $validated['total'],
+            'id_cliente' => $validated['id_cliente'],
+            'id_comercial' => $validated['id_comercial'],
+        ]);
+
+        return response()->json(['id_factura' => $factura->id_factura], 201);
+    }
+
 }

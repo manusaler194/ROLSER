@@ -188,7 +188,7 @@ const GestionarPedidos = () => {
                                         <span className="px-3 py-1.5 rounded-full border text-xs bg-gray-50 text-gray-600 inline-block">{pedido.estado}</span>
                                     )}
                                 </td>
-                                    <td className="px-6 py-4">{pedido.encargado_almacen.nombre}</td>
+                                    <td className="px-6 py-4">{pedido.encargado_almacen.nombre || "Sin asignar"}</td>
                                 <td className="px-6 py-4 text-right">
                                     <Link 
                                         to={`/DetallesPedido/${pedido.id_pedido}`}
