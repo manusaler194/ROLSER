@@ -24,7 +24,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/clientes/guardar', [ClienteController::class, 'guardar']);
 
-
+Route::get('/users', [AdministradorController::class, 'userIndex']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -44,7 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/lineasPedido/guardar', [LineaPedidoController::class, 'guardar']);
         Route::put('/lineasPedido/actualizar/{id_linea}', [LineaPedidoController::class, 'actualizar']);
         Route::get('/articulo', [ArticuloController::class, 'mostrarArticulos']);
-   
+
     });
 
     Route::middleware('role:administrador,encargadoalmacen')->group(function () {
@@ -91,12 +91,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/comerciales/actualizar/{id_comercial}', [ComercialController::class, 'actualizar']);
     });
 
+
     Route::middleware('role:administrador')->group(function () {
         Route::get('/administradores', [AdministradorController::class, 'mostrar']);
         Route::get('/administradores/{id_administrador}', [AdministradorController::class, 'mostrarAdministrador']);
         Route::post('/administradores/guardar', [AdministradorController::class, 'guardar']);
         Route::put('/administradores/actualizar/{id_administrador}', [AdministradorController::class, 'actualizar']);
-        Route::get('/users', [AdministradorController::class, 'userIndex']);
 
         Route::get('/encargadoAlmacen', [EncargadoAlmacenController::class, 'mostrar']);
         Route::get('/encargadoAlmacen/{id_cliente}', [EncargadoAlmacenController::class, 'mostrarEncargadoAlmacen']);

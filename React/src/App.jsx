@@ -15,7 +15,7 @@ import DatosAlmacen from "./components/Almacen/DatosAlmacen";
 import GestionarPedidos from "./components/Pedido/GestionarPedidos";
 
 import DetallesPedido from "./components/Pedido/DetallesPedido";
-
+import ModificarPerfil from "./components/Conjunto/ModificarPerfil";
 
 
 import CrearPedidoRebastecimiento from "./components/Pedido/CrearPedidoRebastecimiento";
@@ -23,7 +23,7 @@ import CrearPedidoRebastecimiento from "./components/Pedido/CrearPedidoRebasteci
 import MostrarFacturas from "./components/Factura/MostrarFacturas";
 import MostrarFactura from "./components/Factura/MostrarFactura";
 
-import Perfil from "./components/Conjunto/Perfil";
+import Perfil from "./components/Conjunto/MostrarPerfil";
 import VerCatalogoCliente from "./components/Catalogo/VerCatalogoCliente";
 import VerArticulosCliente from "./components/Catalogo/VerArticulosCliente";
 import Stock from './components/stock/Stock';
@@ -54,7 +54,7 @@ const AppContent = () => {
           <Routes>
 
             <Route path="/perfil" element={<Perfil />} />
-
+            <Route path="/modificar-perfil" element={<ModificarPerfil />} />
             {role === "admin" && (
               <>
                 <Route path="/usuarios" element={<GestionUsuarios />} />

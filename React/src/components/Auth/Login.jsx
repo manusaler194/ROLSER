@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
     try {
       console.log("INTENTANDO CONECTAR A LA IP:", "100.25.154.102");
-      const response = await axios.post("http://192.168.0.14:8008/api/login", {
+      const response = await axios.post("http://localhost/api/login", {
         email,
         password
       });

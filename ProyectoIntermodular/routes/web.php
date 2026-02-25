@@ -3,6 +3,7 @@
 <?php
 
 use App\Http\Controllers\FacturaController;
+use App\Http\Controllers\PerfilController;
 use Illuminate\Http\Request;
 use App\Models\Almacen;
 use App\Http\Controllers\ProfileController;
@@ -24,5 +25,4 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::get('/mostrar/factura/{id_factura}', [FacturaController::class, 'mostrarFactura']);
 Route::get('/mostrar/facturas/{tipo}/{id}', [FacturaController::class, 'mostrar'])->name("mostrarFacturas");
-
-require __DIR__.'/auth.php';
+Route::get('/mostrar/perfil/{tipo}/{id}', [PerfilController::class, 'mostrarVista'])->name("mostrarPerfil");
