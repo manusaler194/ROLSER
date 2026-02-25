@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from "../../context/AuthContext";
 import { apiFetch } from "../../utils/api"; 
+import { getAlmacen} from "../../utils/api";
 
 const DatosAlmacen = () => {
   const [almacen, setAlmacen] = useState({});
@@ -11,19 +12,21 @@ const DatosAlmacen = () => {
   const isAdmin = user?.role === "admin";
 
   useEffect(() => {
-    const cargarAlmacen = async () => {
-      try {
-        const response = await apiFetch(`http://localhost/api/almacenes/${id}`);
-        const data = await response.json();
-        if (data.almacen && data.almacen.length > 0) {
-          setAlmacen(data.almacen[0]);
-        }
-      } catch (error) {
-        console.error("Error cargando almacén:", error);
+  const cargarAlmacen = async () => {
+    try {
+      const response = await getAlmacen(id);
+      const data = await response.json();
+
+      if (data.almacen && data.almacen.length > 0) {
+        setAlmacen(data.almacen[0]);
       }
-    };
-    cargarAlmacen();
-  }, [id]);
+    } catch (error) {
+      console.error("Error cargando almacén:", error);
+    }
+  };
+
+  cargarAlmacen();
+}, [id]);
 
   const inputClasses = "w-full px-5 py-3 mb-6 border border-gray-400 rounded-full focus:outline-none bg-gray-50 text-gray-700 cursor-default appearance-none";
 

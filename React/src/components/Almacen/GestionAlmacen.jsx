@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import iconoDesplegable from "/src/assets/desplegable.svg";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { apiFetch } from "../../utils/api";
+import { getAlmacenes, deleteAlmacen } from "../../utils/api";
 import Paginacion from "../Conjunto/Paginacion";
 
 const GestionAlmacen = () => {
@@ -15,38 +15,37 @@ const GestionAlmacen = () => {
   console.log(user)
   const isAdmin = user?.role === "admin";
 
-  const cargarAlmacenes = async () => {
-    try {
-      const response = await apiFetch("http://localhost/api/almacenes");
-      const data = await response.json();
-      console.log(data.almacen)
-      setAlmacenes(data.almacen);
-    }catch (error) {
-      console.error("Error al cargar:", error);
-    }
-  };
+ const cargarAlmacenes = async () => {
+  try {
+    const response = await getAlmacenes();
+    const data = await response.json();
+    setAlmacenes(data.almacen);
+  } catch (error) {
+    console.error("Error al cargar:", error);
+  }
+};
 
   useEffect(() => {
     cargarAlmacenes();
   }, []);
 
   const handleEliminar = async (id) => {
-    if (!window.confirm("¿Seguro que quieres eliminar este almacén?")) return;
-    
-    try {
-      const response = await apiFetch(
-        `http://localhost/api/almacenes/borrar/${id}`,
-        { method: "DELETE" }
-      );
-      if (response.ok) {
-        setAbrirMenu(null);
-        alert("Almacén eliminado");
-        cargarAlmacenes();
-      }
-    } catch (error) {
-      console.error("Error al eliminar:", error);
+  if (!window.confirm("¿Seguro que quieres eliminar este almacén?")) return;
+
+  try {
+    const response = await deleteAlmacen(id);
+
+    if (response.ok) {
+      setAbrirMenu(null);
+
+      setAlmacenes(prev => prev.filter(a => a.id_almacen !== id));
+
+      alert("Almacén eliminado");
     }
-  };
+  } catch (error) {
+    console.error("Error al eliminar:", error);
+  }
+};
 
   const almacenesFiltrados = isAdmin
     ? almacenes
@@ -158,7 +157,7 @@ const GestionAlmacen = () => {
           ) : (
             <div className="p-10 text-center text-gray-400">
               {isAdmin ? (
-                "No se encontraron almacenes."
+                "...cargando"
               ) : (
                 <span className="italic text-lg">No tienes almacenes asignados actualmente.</span>
               )}

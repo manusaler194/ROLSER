@@ -2,6 +2,12 @@ import React, { useEffect, useState } from "react";
 import { apiFetch } from "../../utils/api";
 import { useAuth } from "../../context/AuthContext";
 import Paginacion from "../Conjunto/Paginacion";
+import {
+  getArticulos,
+  updateArticulo,
+  createPedidoReposicion,
+  getProveedores,
+} from "../../utils/api";
 
 const CrearPedidoRebastecimiento = () => {
   const { user, role } = useAuth();
@@ -15,17 +21,18 @@ const CrearPedidoRebastecimiento = () => {
   useEffect(() => {
     const cargarDatos = async () => {
       try {
-        const responseArt = await apiFetch('http://localhost/api/articulo');
+        const responseArt = await getArticulos();
         const dataArt = await responseArt.json();
         setArticulos(dataArt.almacen || []);
 
-        const responseProv = await apiFetch('http://localhost/api/proveedor');
+        const responseProv = await getProveedores();
         const dataProv = await responseProv.json();
         setProveedores(dataProv.proveedor || []);
       } catch (error) {
         console.error("Error al cargar datos iniciales:", error);
       }
     };
+
     cargarDatos();
   }, []);
 
@@ -36,14 +43,20 @@ const CrearPedidoRebastecimiento = () => {
 
   const handleCantidad = (id, nuevaCantidad) => {
     const valor = parseInt(nuevaCantidad) || 0;
-    setArticulos(prevArticulo =>
-      prevArticulo.map(articulo =>
-        articulo.id_articulo === id ? { ...articulo, cantidad: valor } : articulo
-      )
+    setArticulos((prevArticulo) =>
+      prevArticulo.map((articulo) =>
+        articulo.id_articulo === id
+          ? { ...articulo, cantidad: valor }
+          : articulo,
+      ),
     );
   };
 
-  const totalPedido = articulos.reduce((contador, articulo) => contador + ((articulo.cantidad || 0) * (articulo.precio || 0)), 0);
+  const totalPedido = articulos.reduce(
+    (contador, articulo) =>
+      contador + (articulo.cantidad || 0) * (articulo.precio || 0),
+    0,
+  );
 
   const crearReabastecimiento = async () => {
     if (!idProveedor) {
@@ -51,7 +64,7 @@ const CrearPedidoRebastecimiento = () => {
       return;
     }
 
-    const productosParaActualizar = articulos.filter(a => a.cantidad > 0);
+    const productosParaActualizar = articulos.filter((a) => a.cantidad > 0);
 
     if (productosParaActualizar.length === 0) {
       alert("Selecciona al menos un producto con cantidad mayor a 0.");
@@ -60,41 +73,42 @@ const CrearPedidoRebastecimiento = () => {
 
     try {
       const datosPedido = {
-        fecha_pedido: new Date().toISOString().split('T')[0],
-        estado: 'En preparación',
+        fecha_pedido: new Date().toISOString().split("T")[0],
+        estado: "En preparación",
         id_proveedor: idProveedor,
-        id_administrador: role === 'admin' ? user.id_adminsitrador : null,
-        id_encargado: role === 'encargado_almacen' ? user.id_encargado : null
+        id_administrador: role === "admin" ? user.id_adminsitrador : null,
+        id_encargado: role === "encargado_almacen" ? user.id_encargado : null,
       };
 
-      const responsePedido = await apiFetch('http://localhost/api/pedidos/reposicion/guardar', {
-        method: 'POST',
-        body: JSON.stringify(datosPedido)
-      });
+      const responsePedido = await createPedidoReposicion(datosPedido);
 
       if (!responsePedido.ok) throw new Error("Error al guardar el pedido");
 
       for (const articulo of productosParaActualizar) {
-        const responseArt = await apiFetch(`http://localhost/api/articulo/actualizar/${articulo.id_articulo}`, {
-          method: 'PUT',
-          body: JSON.stringify({
-            id_articulo: articulo.id_articulo,
-            nombre: articulo.nombre,
-            descripcion: articulo.descripcion,
-            precio: articulo.precio,
-            stock_actual: Number(articulo.stock_actual) + Number(articulo.cantidad),
-            id_seccion: articulo.id_seccion,
-            id_administrador: user.id_administrador || null
-          })
+        const responseArt = await updateArticulo(articulo.id_articulo, {
+          id_articulo: articulo.id_articulo,
+          nombre: articulo.nombre,
+          descripcion: articulo.descripcion,
+          precio: articulo.precio,
+          stock_actual:
+            Number(articulo.stock_actual) + Number(articulo.cantidad),
+          id_seccion: articulo.id_seccion,
+          id_administrador: user.id_administrador || null,
         });
-        if (!responseArt.ok) console.error(`Error actualizando stock de: ${articulo.nombre}`);
+
+        if (!responseArt.ok) {
+          console.error(`Error actualizando stock de: ${articulo.nombre}`);
+        }
       }
 
       alert("Pedido de reposición creado y stock actualizado con éxito.");
-      setArticulos(prev => prev.map(articulo => ({ ...articulo, cantidad: 0 })));
+
+      setArticulos((prev) =>
+        prev.map((articulo) => ({ ...articulo, cantidad: 0 })),
+      );
+
       setIdProveedor("");
       setPaginaActual(1);
-
     } catch (error) {
       console.error(error);
       alert("Hubo un error en el proceso.");
@@ -104,13 +118,14 @@ const CrearPedidoRebastecimiento = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-8 font-sans">
       <div className="max-w-6xl mx-auto">
-
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">
               Crear Pedido Reposición
             </h1>
-            <p className="text-gray-500 text-sm sm:text-base">Gestiona la entrada de stock</p>
+            <p className="text-gray-500 text-sm sm:text-base">
+              Gestiona la entrada de stock
+            </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto items-stretch sm:items-end">
@@ -124,8 +139,10 @@ const CrearPedidoRebastecimiento = () => {
                 className="p-3 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-[#bc002d] outline-none shadow-sm transition-all"
               >
                 <option value="">Seleccione un proveedor</option>
-                {proveedores.map(prov => (
-                  <option key={prov.id_proveedor} value={prov.id_proveedor}>{prov.nombre_empresa}</option>
+                {proveedores.map((prov) => (
+                  <option key={prov.id_proveedor} value={prov.id_proveedor}>
+                    {prov.nombre_empresa}
+                  </option>
                 ))}
               </select>
             </div>
@@ -143,34 +160,58 @@ const CrearPedidoRebastecimiento = () => {
           <table className="w-full text-left border-collapse">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-4 font-bold text-gray-700 text-md uppercase">Producto</th>
-                <th className="px-6 py-4 text-center font-bold text-gray-700 text-md uppercase">Stock Actual</th>
-                <th className="px-6 py-4 font-bold text-gray-700 text-md uppercase">Precio Unit.</th>
-                <th className="px-6 py-4 text-center font-bold text-gray-700 text-md uppercase">Cantidad</th>
-                <th className="px-6 py-4 font-bold text-gray-700 text-md uppercase text-right">Subtotal</th>
+                <th className="px-6 py-4 font-bold text-gray-700 text-md uppercase">
+                  Producto
+                </th>
+                <th className="px-6 py-4 text-center font-bold text-gray-700 text-md uppercase">
+                  Stock Actual
+                </th>
+                <th className="px-6 py-4 font-bold text-gray-700 text-md uppercase">
+                  Precio Unit.
+                </th>
+                <th className="px-6 py-4 text-center font-bold text-gray-700 text-md uppercase">
+                  Cantidad
+                </th>
+                <th className="px-6 py-4 font-bold text-gray-700 text-md uppercase text-right">
+                  Subtotal
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {articulosPaginados.map((articulo) => (
-                <tr key={articulo.id_articulo} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 font-semibold text-xl text-gray-900">{articulo.nombre}</td>
+                <tr
+                  key={articulo.id_articulo}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  <td className="px-6 py-4 font-semibold text-xl text-gray-900">
+                    {articulo.nombre}
+                  </td>
                   <td className="px-6 py-4 text-center">
-                    <span className={`px-3 py-1 text-md font-bold rounded-full ${articulo.stock_actual < 50 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                    <span
+                      className={`px-3 py-1 text-md font-bold rounded-full ${articulo.stock_actual < 50 ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}
+                    >
                       {articulo.stock_actual}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-gray-600 text-xl font-medium">{articulo.precio}€</td>
+                  <td className="px-6 py-4 text-gray-600 text-xl font-medium">
+                    {articulo.precio}€
+                  </td>
                   <td className="px-6 py-4 text-center">
                     <input
                       type="number"
                       min="0"
                       value={articulo.cantidad || 0}
-                      onChange={(e) => handleCantidad(articulo.id_articulo, e.target.value)}
+                      onChange={(e) =>
+                        handleCantidad(articulo.id_articulo, e.target.value)
+                      }
                       className="w-20 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 outline-none text-center text-xl font-bold"
                     />
                   </td>
                   <td className="px-6 py-4 font-bold text-red-700 text-right text-xl">
-                    {((articulo.cantidad || 0) * (articulo.precio || 0)).toFixed(2)}€
+                    {(
+                      (articulo.cantidad || 0) * (articulo.precio || 0)
+                    ).toFixed(2)}
+                    €
                   </td>
                 </tr>
               ))}
@@ -180,29 +221,51 @@ const CrearPedidoRebastecimiento = () => {
 
         <div className="md:hidden space-y-4">
           {articulosPaginados.map((articulo) => (
-            <div key={articulo.id_articulo} className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+            <div
+              key={articulo.id_articulo}
+              className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm"
+            >
               <div className="flex justify-between items-start mb-4">
-                <h3 className="font-bold text-gray-900 text-lg">{articulo.nombre}</h3>
-                <span className={`px-2 py-1 text-[10px] font-black rounded-full uppercase ${articulo.stock_actual < 50 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                <h3 className="font-bold text-gray-900 text-lg">
+                  {articulo.nombre}
+                </h3>
+                <span
+                  className={`px-2 py-1 text-[10px] font-black rounded-full uppercase ${articulo.stock_actual < 50 ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}
+                >
                   Stock: {articulo.stock_actual}
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-4 items-center">
                 <div>
-                  <p className="text-xs text-gray-500 font-bold uppercase">Precio Unit.</p>
-                  <p className="font-medium text-gray-800">{articulo.precio}€</p>
+                  <p className="text-xs text-gray-500 font-bold uppercase">
+                    Precio Unit.
+                  </p>
+                  <p className="font-medium text-gray-800">
+                    {articulo.precio}€
+                  </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-gray-500 font-bold uppercase">Subtotal</p>
-                  <p className="font-bold text-red-700">{((articulo.cantidad || 0) * (articulo.precio || 0)).toFixed(2)}€</p>
+                  <p className="text-xs text-gray-500 font-bold uppercase">
+                    Subtotal
+                  </p>
+                  <p className="font-bold text-red-700">
+                    {(
+                      (articulo.cantidad || 0) * (articulo.precio || 0)
+                    ).toFixed(2)}
+                    €
+                  </p>
                 </div>
                 <div className="col-span-2 pt-2 border-t border-gray-100 mt-2">
-                  <label className="text-xs text-gray-500 font-bold uppercase block mb-2">Cantidad a pedir</label>
+                  <label className="text-xs text-gray-500 font-bold uppercase block mb-2">
+                    Cantidad a pedir
+                  </label>
                   <input
                     type="number"
                     min="0"
                     value={articulo.cantidad || 0}
-                    onChange={(e) => handleCantidad(articulo.id_articulo, e.target.value)}
+                    onChange={(e) =>
+                      handleCantidad(articulo.id_articulo, e.target.value)
+                    }
                     className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-600 outline-none text-center font-bold"
                   />
                 </div>
@@ -212,21 +275,25 @@ const CrearPedidoRebastecimiento = () => {
         </div>
 
         {totalPaginas > 1 && (
-           <div className="mt-8 flex justify-center">
-             <Paginacion 
-               paginaActual={paginaActual} 
-               totalPaginas={totalPaginas} 
-               cambiarPagina={setPaginaActual} 
-             />
-           </div>
+          <div className="mt-8 flex justify-center">
+            <Paginacion
+              paginaActual={paginaActual}
+              totalPaginas={totalPaginas}
+              cambiarPagina={setPaginaActual}
+            />
+          </div>
         )}
 
         <div className="mt-8 flex justify-end">
           <div className="bg-white p-5 sm:p-6 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-6 sm:gap-10 w-full sm:w-auto justify-between">
             <div className="flex flex-col">
-              <span className="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest">Total del Pedido</span>
-              <span className="text-2xl sm:text-3xl font-black text-red-700">{totalPedido.toFixed(2)}€</span>
-            </div>            
+              <span className="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest">
+                Total del Pedido
+              </span>
+              <span className="text-2xl sm:text-3xl font-black text-red-700">
+                {totalPedido.toFixed(2)}€
+              </span>
+            </div>
           </div>
         </div>
       </div>

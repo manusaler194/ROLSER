@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiFetch } from "../../utils/api";
+import { getEncargados, createAlmacen } from "../../utils/api";
 
 const CrearAlmacen = () => {
   const [almacen, setAlmacen] = useState({
@@ -23,38 +24,31 @@ const CrearAlmacen = () => {
   useEffect(() => {
     const cargarEncargados = async () => {
       try {
-        const response = await apiFetch(
-          "http://localhost/api/encargadoAlmacen",
-        );
+        const response = await getEncargados();
         const data = await response.json();
-        console.log(data);
         setEncargados(data.encargadoAlmacen);
       } catch (error) {
         console.error("Error:", error);
       }
     };
+
     cargarEncargados();
   }, []);
 
   const handleSubmit = async (e) => {
-    console.log("a");
-    e.preventDefault();
-    try {
-      const response = await apiFetch(
-        "http://localhost/api/almacenes/guardar",
-        {
-          method: "POST",
-          body: JSON.stringify(almacen),
-        },
-      );
-      const data = await response.json();
-      alert("Almacén creado con éxito");
-      navigate("/GestionAlmacen");
-    } catch (error) {
-      console.error("Error al enviar datos:", error.message);
-      alert(error.message);
-    }
-  };
+  e.preventDefault();
+
+  try {
+    const response = await createAlmacen(almacen);
+    await response.json();
+
+    alert("Almacén creado con éxito");
+    navigate("/GestionAlmacen");
+  } catch (error) {
+    console.error("Error al enviar datos:", error.message);
+    alert(error.message);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-8 font-sans">

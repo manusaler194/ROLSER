@@ -3,30 +3,32 @@ import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import logo from "/src/assets/Header/logo.jpg";
+import { loginRequest} from "../../utils/api";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-      console.log("INTENTANDO CONECTAR A LA IP:", "100.25.154.102");
-      const response = await axios.post("http://localhost/api/login", {
-        email,
-        password
-      });
-      const { user, token, role } = response.data;
-      const userConRole = { ...user, role: role };
-      login(userConRole, token);
-      navigate("/");
-    } catch (error) {
-      console.error(error);
-      alert("Error: Usuario o contraseña incorrecto");
-    }
-  };
+  try {
+    const response = await loginRequest(email, password);
+    const data = await response.json();
+
+    const { user, token, role } = data;
+
+    const userConRole = { ...user, role };
+    login(userConRole, token);
+
+    navigate("/");
+  } catch (error) {
+    console.error(error);
+    alert("Error: Usuario o contraseña incorrecto");
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#b5121b] p-4">

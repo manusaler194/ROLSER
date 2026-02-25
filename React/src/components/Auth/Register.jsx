@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import { apiFetch } from "../../utils/api"; 
 import { useNavigate } from "react-router-dom";
 import logo from "/src/assets/Header/logo.jpg";
+import { registerRequest } from "../../utils/api";
 
 const Register = () => {
-
   const [formData, setFormData] = useState({
-    nombre: "",     
+    nombre: "",
     email: "",
     password: "",
-    telefono: "",   
-    direccion: "",  
+    telefono: "",
+    direccion: "",
   });
-  
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -21,18 +20,16 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await apiFetch("http://localhost/api/register", {
-        method: "POST",
-        body: JSON.stringify(formData),
-      });
+      const response = await registerRequest(formData);
 
       if (response.ok) {
         alert("Registro completado");
-        navigate("/login"); 
+        navigate("/login");
       } else {
         const errorData = await response.json();
-        alert("Error: " + (errorData.message));
+        alert("Error: " + errorData.message);
       }
     } catch (error) {
       console.error("Error en la conexión:", error);
@@ -42,12 +39,17 @@ const Register = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#b5121b] p-4">
-      <form onSubmit={handleSubmit} className="bg-white w-full max-w-md p-8 rounded shadow-lg">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white w-full max-w-md p-8 rounded shadow-lg"
+      >
         <div className="flex justify-center mb-6">
           <img src={logo} alt="Logo" className="h-40 object-contain" />
         </div>
 
-        <h2 className="text-center text-xl font-bold mb-4 text-gray-700">Registro de Cliente</h2>
+        <h2 className="text-center text-xl font-bold mb-4 text-gray-700">
+          Registro de Cliente
+        </h2>
 
         <div className="space-y-4">
           <input
