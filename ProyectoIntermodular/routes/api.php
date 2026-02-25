@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/pedidos/{id_pedido}', [PedidoController::class, 'mostrarPedido']);
         Route::post('/pedidos/guardar', [PedidoController::class, 'guardar']);
         Route::put('/pedidos/actualizar/{id_pedido}', [PedidoController::class, 'actualizar']);
+        Route::post('/facturas/guardar', [FacturaController::class, 'guardar']);
 
         Route::get('/lineasPedido', [LineaPedidoController::class, 'mostrar']);
         Route::post('/lineasPedido/guardar', [LineaPedidoController::class, 'guardar']);
@@ -123,4 +124,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/comerciales/borrar/{id_comercial}', [ComercialController::class, 'eliminar']);
         Route::delete('/pedidos/reposicion/borrar/{id_pedidoReposicion}', [PedidoReposicionController::class, 'eliminar']);
     });
+
 });

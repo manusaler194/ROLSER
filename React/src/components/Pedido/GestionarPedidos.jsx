@@ -134,6 +134,7 @@ const GestionarPedido = () => {
             </div>
         </div>
 
+
         <div className="bg-white rounded-3xl shadow-md border border-gray-200 overflow-hidden">
             <table className="w-full text-left border-collapse">
                 <thead className="hidden md:table-header-group bg-gray-50 border-b border-gray-100">
@@ -188,6 +189,7 @@ const GestionarPedido = () => {
                                     ))}
                                 </div>
                             </div>
+
                         )}
                     </div>
                 ) : (

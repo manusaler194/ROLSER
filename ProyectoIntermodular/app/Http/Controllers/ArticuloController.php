@@ -139,6 +139,18 @@ class ArticuloController extends Controller {
         ]);
     }
 
+    public function actualizarStockIndividual(Request $request) {
+        $request->validate([
+            'id_articulo' => 'required|integer',
+            'cantidad' => 'required|integer',
+        ]);
 
+        $articulo = Articulo::find($request->id_articulo);
+        if ($articulo) {
+            $articulo->decrement('stock_actual', $request->cantidad);
+            return response()->json(['message' => 'Stock actualizado'], 200);
+        }
+        return response()->json(['message' => 'No encontrado'], 404);
+    }
 
 }

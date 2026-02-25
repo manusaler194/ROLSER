@@ -21,7 +21,7 @@ const GestionAlmacen = () => {
       const data = await response.json();
       console.log(data.almacen)
       setAlmacenes(data.almacen);
-    } catch (error) {
+    }catch (error) {
       console.error("Error al cargar:", error);
     }
   };
