@@ -54,12 +54,10 @@ const CarritoCatalogo = () => {
   const pagoTarjeta = async (e) => {
     e.preventDefault();
 
-    // --- Cálculos Automáticos para la Factura ---
     const ivaPorcentaje = 21; 
     const baseImponible = total / (1 + (ivaPorcentaje / 100));
     const totalIva = total - baseImponible;
 
-    // --- Identificación de Usuario (Automática) ---
     const payloadIdentidad = {
       id_cliente: role === 'cliente' ? user?.id_cliente : null,
       id_clientevip: role === 'clientevip' ? user?.id_clientevip : null,
@@ -67,8 +65,7 @@ const CarritoCatalogo = () => {
     };
 
     try {
-      // 1. Crear Factura (Ahora con todos los campos que pide tu Controller)
-      const resFactura = await apiFetch("http://localhost/api/facturas/guardar", {
+      const resFactura = await apiFetch("http://localhost/api/factura/guardar", {
         method: "POST",
         body: JSON.stringify({
           base_imponible: baseImponible.toFixed(2),
@@ -82,11 +79,8 @@ const CarritoCatalogo = () => {
       });
 
       
-      
-      // Si el backend devuelve la factura, extraemos el ID para el pedido
       const dataFactura = await resFactura.json();
 
-      // 2. Crear Pedido vinculado
       await apiFetch("http://localhost/api/pedidos/guardar", {
         method: "POST",
         body: JSON.stringify({
@@ -98,16 +92,19 @@ const CarritoCatalogo = () => {
         }),
       });
 
-      // 3. Actualizar Stock individual
       for (const item of carrito) {
+
+        const nuevoStock = item.stock_actual - item.cantidad;
+
         await apiFetch(`http://localhost/api/articulo/actualizar/${item.id_articulo}`, {
-          method: "POST",
+          method: "PUT",
           body: JSON.stringify({
+            nombre : item.nombre,
             descripcion: item.descripcion,
-            prcio: item.precio,
-            stock_actual: item.stock_actual - cantidadCompra,
+            precio: item.precio,
+            stock_actual: nuevoStock,
             id_seccion: item.id_seccion,
-            id_articulo: item.id_articulo,
+            id_administrador: item.id_administrador,
           }),
         });
       }
@@ -144,9 +141,28 @@ const CarritoCatalogo = () => {
                 <span className="text-lg font-medium">{item.nombre}</span>
               </div>
               <div className="flex items-center gap-2 w-32 justify-center">
-                <button onClick={() => setCantidadCompra(cantidadCompra -1)} disabled={item.cantidad <= 1} className="px-2 py-1 border rounded hover:bg-gray-200">↓</button>
-                <input type="number" min={1} value={item.cantidad} onChange={() => setCantidadCompra(e.target.value)} className="w-12 p-1 border rounded text-center" />
-                <button onClick={() => setCantidadCompra(cantidadCompra -1)} className="px-2 py-1 border rounded hover:bg-gray-200">↑</button>
+                <button 
+                  onClick={() => actualizarCantidad(item.id_articulo, item.cantidad - 1)} 
+                  disabled={item.cantidad <= 1} 
+                  className="px-2 py-1 border rounded hover:bg-gray-200"
+                >
+                  ↓
+                </button>
+                
+                <input 
+                  type="number" 
+                  min={1} 
+                  value={item.cantidad} 
+                  onChange={(e) => actualizarCantidad(item.id_articulo, e.target.value)} 
+                  className="w-12 p-1 border rounded text-center" 
+                />
+                
+                <button 
+                  onClick={() => actualizarCantidad(item.id_articulo, item.cantidad + 1)} 
+                  className="px-2 py-1 border rounded hover:bg-gray-200"
+                >
+                  ↑
+                </button>
               </div>
               <div className="w-32 text-right font-semibold">{(item.precio * item.cantidad).toFixed(2)} €</div>
               <button onClick={() => eliminarArticulo(item.id_articulo)} className="ml-4 text-red-600 font-bold hover:underline">X</button>
