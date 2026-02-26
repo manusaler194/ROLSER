@@ -113,7 +113,7 @@ const CarritoCatalogo = () => {
       setCarrito([]);
       localStorage.removeItem("carrito");
       setMostrarPago(false);
-      navigate("/GestionarPedidos");
+      navigate("/pedidos");
 
     } catch (error) {
       console.error("Detalle del error:", error);

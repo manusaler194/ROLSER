@@ -13,7 +13,7 @@ const GestionarPedido = () => {
     const [menuCambioEstadoAbierto, setMenuCambioEstadoAbierto] = useState(null);
     
     const [paginaActual, setPaginaActual] = useState(1);
-    const registrosPorPagina = 10;
+    const registrosPorPagina = 5;
 
     const esAdmin = role === 'admin';
     const esEncargado = role === 'encargadoalmacen'; 
@@ -134,7 +134,7 @@ const GestionarPedido = () => {
         </div>
 
 
-        <div className="bg-white rounded-3xl shadow-md border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-3xl shadow-md border border-gray-200">
             <table className="w-full text-left border-collapse">
                 <thead className="hidden md:table-header-group bg-gray-50 border-b border-gray-100">
                     <tr className="text-gray-500 text-xl uppercase tracking-widest">

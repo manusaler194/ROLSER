@@ -10,7 +10,7 @@ const GestionAlmacen = () => {
   const [abrirMenu, setAbrirMenu] = useState(null);
   const [almacenes, setAlmacenes] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
-  const registrosPorPagina = 10;
+  const registrosPorPagina = 5;
 
   console.log(user)
   const isAdmin = user?.role === "admin";

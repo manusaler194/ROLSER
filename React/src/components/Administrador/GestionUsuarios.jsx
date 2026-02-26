@@ -19,7 +19,7 @@ const GestionUsuarios = () => {
   const [pestañaActual, setPestañaActual] = useState("admins");
   const [busqueda, setBusqueda] = useState("");
   const [paginaActual, setPaginaActual] = useState(1);
-  const ITEMS_POR_PAGINA = 3;
+  const ITEMS_POR_PAGINA = 5;
   
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
 
