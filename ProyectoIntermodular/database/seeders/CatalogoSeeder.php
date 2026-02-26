@@ -17,14 +17,36 @@ class CatalogoSeeder extends Seeder
     public function run(): void {
         $faker = Faker::create('es_ES');
 
-        for ($i = 1; $i < 21; $i++) {
-            DB::table('catalogos')->insert([
-            'nombre_catalogo' => $faker->randomElement(["Bolso","Carro","Escalera","Plancha"]),
+        DB::table('catalogos')->insert([
+            'nombre_catalogo' => "Bolso",
             'anyo' => $faker->numberBetween(2000, 2026),
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
             'id_administrador' => rand(1,10),
         ]);
-        }
+
+        DB::table('catalogos')->insert([
+            'nombre_catalogo' => "Carro",
+            'anyo' => $faker->numberBetween(2000, 2026),
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+            'id_administrador' => rand(1,10),
+        ]);
+
+        DB::table('catalogos')->insert([
+            'nombre_catalogo' => "Escalera",
+            'anyo' => $faker->numberBetween(2000, 2026),
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+            'id_administrador' => rand(1,10),
+        ]);
+
+        DB::table('catalogos')->insert([
+            'nombre_catalogo' => "Plancha",
+            'anyo' => $faker->numberBetween(2000, 2026),
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+            'id_administrador' => rand(1,10),
+        ]);
     }
 }
