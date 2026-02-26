@@ -54,7 +54,11 @@ const CarritoCatalogo = () => {
   const pagoTarjeta = async (e) => {
     e.preventDefault();
 
-    const ivaPorcentaje = 21; 
+    let ivaPorcentaje = 21;
+    if(role === "clientevip"){
+      ivaPorcentaje = 0;
+    }
+
     const baseImponible = total / (1 + (ivaPorcentaje / 100));
     const totalIva = total - baseImponible;
 
