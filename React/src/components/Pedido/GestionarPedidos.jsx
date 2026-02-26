@@ -133,16 +133,15 @@ const GestionarPedido = () => {
             </div>
         </div>
 
-
         <div className="bg-white rounded-3xl shadow-md border border-gray-200">
             <table className="w-full text-left border-collapse">
                 <thead className="hidden md:table-header-group bg-gray-50 border-b border-gray-100">
                     <tr className="text-gray-500 text-xl uppercase tracking-widest">
-                        <th className="px-6 py-4">ID Pedido</th>
-                        <th className="px-6 py-4">Cliente</th>
-                        <th className="px-6 py-4 w-56">Estado</th>
-                        <th className="px-6 py-4">Encargado</th>
-                        <th className="px-6 py-4 text-right w-56">Acciones</th>
+                        <th className="px-6 py-4 w-50">ID Pedido</th>
+                        <th className="px-6 py-4 w-60">Cliente</th>
+                        <th className="px-6 py-4 w-72">Estado</th>
+                        <th className="px-6 py-4 w-60">Encargado</th>
+                        <th className="px-6 py-4 text-right w-60">Acciones</th>
                     </tr>
                 </thead>
 
@@ -164,12 +163,12 @@ const GestionarPedido = () => {
             </td>
 
             <td className="px-6 py-1 md:py-4 md:table-cell flex justify-between items-center relative">
-                <span className="md:hidden text-[10px] font-black text-gray-400 uppercase">Estado</span>
+                <span className="md:hidden text-xl font-black text-gray-400 uppercase">Estado</span>
                 {esPrivilegiado ? (
                     <div className="relative inline-block text-left">
                         <button 
                             onClick={() => setMenuCambioEstadoAbierto(menuCambioEstadoAbierto === pedido.id_pedido ? null : pedido.id_pedido)}
-                            className="px-3 py-1.5 rounded-full border border-gray-300 -xs bg-white hover:bg-gray-100 flex items-center gap-2 cursor-pointer transition-colors text-xl"
+                            className="px-3 py-1.5 rounded-full border border-gray-300 bg-white hover:bg-gray-100 flex items-center justify-center gap-2 cursor-pointer transition-colors text-xl whitespace-nowrap"
                         >
                             {pedido.estado}
                         </button>
@@ -192,7 +191,7 @@ const GestionarPedido = () => {
                         )}
                     </div>
                 ) : (
-                    <span className="px-3 py-1.5 rounded-full border text-xl bg-gray-50 text-gray-600 inline-block">{pedido.estado}</span>
+                    <span className="px-3 py-1.5 rounded-full border text-xl bg-gray-50 text-gray-600 inline-block whitespace-nowrap text-center">{pedido.estado}</span>
                 )}
             </td>
 
