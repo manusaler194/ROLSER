@@ -65,7 +65,7 @@ const CarritoCatalogo = () => {
     };
 
     try {
-      const resFactura = await apiFetch("http://localhost/api/factura/guardar", {
+      const resFactura = await apiFetch("http://100.25.154.102/api/factura/guardar", {
         method: "POST",
         body: JSON.stringify({
           base_imponible: baseImponible.toFixed(2),
@@ -81,7 +81,7 @@ const CarritoCatalogo = () => {
       
       const dataFactura = await resFactura.json();
 
-      await apiFetch("http://localhost/api/pedidos/guardar", {
+      await apiFetch("http://100.25.154.102/api/pedidos/guardar", {
         method: "POST",
         body: JSON.stringify({
           fecha_pedido: new Date().toISOString().split("T")[0],
@@ -96,7 +96,7 @@ const CarritoCatalogo = () => {
 
         const nuevoStock = item.stock_actual - item.cantidad;
 
-        await apiFetch(`http://localhost/api/articulo/actualizar/${item.id_articulo}`, {
+        await apiFetch(`http://100.25.154.102/api/articulo/actualizar/${item.id_articulo}`, {
           method: "PUT",
           body: JSON.stringify({
             nombre : item.nombre,

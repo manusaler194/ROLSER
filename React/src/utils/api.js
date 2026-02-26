@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost/api";
+export const BASE_URL = "http://100.25.154.102/api";
 export const apiFetch = async (url, options = {}) => {
   const token = localStorage.getItem("token");
 

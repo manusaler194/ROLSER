@@ -25,7 +25,7 @@ const VerCatalogoCliente = () => {
   useEffect(() => {
     const cargarCatalogos = async () => {
       try {
-        const response = await apiFetch("http://localhost/api/catalogo");
+        const response = await apiFetch("http://100.25.154.102/api/catalogo");
         const data = await response.json();
         setCatalogos(data.catalogo);
       } catch (error) {
@@ -35,7 +35,7 @@ const VerCatalogoCliente = () => {
 
     const cargarArticulos = async () => {
       try {
-        const response = await apiFetch("http://localhost/api/articulo");
+        const response = await apiFetch("http://100.25.154.102/api/articulo");
         const data = await response.json();
         setArticulos(data.almacen);
       } catch (error) {

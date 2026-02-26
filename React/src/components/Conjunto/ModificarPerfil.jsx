@@ -78,7 +78,7 @@ const ModificarPerfil = () => {
             }
 
             // 3. Petición a la API de Laravel
-            await axios.put(`http://localhost/api/${endpoint}/actualizar/${userId}`, datosAEnviar, {
+            await axios.put(`http://100.25.154.102/api/${endpoint}/actualizar/${userId}`, datosAEnviar, {
                 headers: { Authorization: `Bearer ${token}` }
             }); 
             

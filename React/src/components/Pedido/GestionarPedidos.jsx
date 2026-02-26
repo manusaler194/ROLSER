@@ -26,7 +26,7 @@ const GestionarPedido = () => {
 
     const obtenerPedidos = async () => {
         try {
-            const response = await apiFetch('http://localhost/api/pedidos');
+            const response = await apiFetch('http://100.25.154.102/api/pedidos');
             const data = await response.json();
             let pedidos = data.pedidos;
 
@@ -76,7 +76,7 @@ const GestionarPedido = () => {
     const modificarEstadoPedido = async (pedido, nuevoEstado) => {
         try {
             const respuesta = await apiFetch(
-                `http://localhost/api/pedidos/actualizar/${pedido.id_pedido}`,
+                `http://100.25.154.102/api/pedidos/actualizar/${pedido.id_pedido}`,
                 {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
