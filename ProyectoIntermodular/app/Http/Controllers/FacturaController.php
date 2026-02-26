@@ -61,25 +61,28 @@ class FacturaController extends Controller
     }
 
 
-    public function mostrar($tipo, $id)
-    {
-        try {
-            if ($tipo === 'cliente') {
-                $facturas = Facturas::with(['cliente', 'comercial'])->where("id_cliente", $id)->get();
-            } else
-                if ($tipo === 'clientevip') {
-                $facturas = Facturas::with(['clienteVip'])->where("id_clientevip", $id)->get();
-            } else
-                    if ($tipo === 'comercial') {
-                $facturas = Facturas::with(['cliente', 'comercial'])->where("id_comercial", $id)->get();
-            }
+    public function mostrar($tipo, $id){
 
-
-            return view("mostrarFacturas", compact("facturas"));
-        } catch (\Exception $e) {
-            return "Error: " . $e->getMessage();
+    try {
+        if ($tipo === 'cliente') {
+            $facturas = Facturas::with(['cliente', 'comercial'])->where("id_cliente", $id)->get();
+        } elseif ($tipo === 'clientevip') {
+            $facturas = Facturas::with(['clienteVip'])->where("id_clientevip", $id)->get();
+        } elseif ($tipo === 'comercial') {
+            $facturas = Facturas::with(['cliente', 'comercial'])->where("id_comercial", $id)->get();
+        } else {
+            return "Rol no válido";
         }
+
+        return response()
+            ->view("mostrarFacturas", compact("facturas", "tipo", "id"))
+            ->header('X-Frame-Options', 'ALLOW-ALL') 
+            ->header('Content-Security-Policy', "frame-ancestors *");
+
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
     }
+}
 
     public function mostrarFactura($id_factura)
     {
