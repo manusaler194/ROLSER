@@ -35,7 +35,7 @@ const ModificarPerfil = () => {
     if (!user || !role) {
         return (
             <div className="w-full h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-gray-500 font-bold text-xl animate-pulse">Cargando formulario...</p>
+                <p className="text-gray-500 font-bold text-xl sm:text-2xl animate-pulse">Cargando formulario...</p>
             </div>
         );
     }
@@ -95,21 +95,27 @@ const ModificarPerfil = () => {
         }
     }
 
-    // Clases CSS reutilizables para mantener el mismo diseño
-    const claseInput = "w-full bg-white border border-gray-300 rounded-full py-3 px-5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#bd0026] focus:border-transparent transition-all shadow-sm";
-    const claseLabel = "block text-sm font-bold text-gray-600 uppercase mb-2 pl-2 sm:pl-4 tracking-wide";
+    // Clases CSS reutilizables escaladas
+    // Aumentamos el padding (py-3 sm:py-4, px-5 sm:px-6) y el tamaño del texto (text-base sm:text-lg)
+    const claseInput = "w-full bg-white border border-gray-300 rounded-full py-3 sm:py-4 px-5 sm:px-6 text-base sm:text-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#bd0026] focus:border-transparent transition-all shadow-sm";
+    
+    // Aumentamos el texto de las etiquetas (text-base sm:text-lg) y el margen inferior (mb-2 sm:mb-3)
+    const claseLabel = "block text-base sm:text-lg font-bold text-gray-600 uppercase mb-2 sm:mb-3 pl-2 sm:pl-4 tracking-wide";
 
     return (
         <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center p-4 font-sans">
-            <div className="w-full max-w-lg bg-white p-6 sm:p-10 shadow-xl rounded-[30px] border border-gray-200">
+            {/* Contenedor más ancho: max-w-lg -> max-w-2xl para acomodar mejor los textos grandes */}
+            <div className="w-full max-w-2xl bg-white p-6 sm:p-12 shadow-xl rounded-[30px] border border-gray-200">
                 
-                <h2 className="text-2xl font-black mb-8 text-center text-gray-900 tracking-tight">
+                {/* Título más grande: text-2xl -> text-3xl sm:text-4xl */}
+                <h2 className="text-3xl sm:text-4xl font-black mb-8 sm:mb-10 text-center text-gray-900 tracking-tight">
                     Modificar Mis Datos
                 </h2>
 
-                <form onSubmit={handleSubmit} className="space-y-5" autoComplete="off">
+                <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8" autoComplete="off">
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Aumentamos un poco el espacio entre columnas: gap-4 -> gap-5 sm:gap-6 */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                         <div>
                             <label className={claseLabel}>Nombre</label>
                             <input type="text" name="nombre" value={perfil.nombre} onChange={handleChange} className={claseInput} required />
@@ -130,26 +136,26 @@ const ModificarPerfil = () => {
                         <input type="text" name="telefono" value={perfil.telefono} onChange={handleChange} className={claseInput} required />
                     </div>
 
-                    <hr className="border-gray-100 my-6" />
+                    <hr className="border-gray-100 my-8 sm:my-10" />
 
                     <div>
-                        <label className={claseLabel}>Nueva Contraseña <span className="text-gray-400 font-normal lowercase">(opcional)</span></label>
+                        <label className={claseLabel}>Nueva Contraseña <span className="text-gray-400 font-normal lowercase text-sm sm:text-base">(opcional)</span></label>
                         <input type="password" name="password" value={perfil.password} onChange={handleChange} className={claseInput} placeholder="Déjalo en blanco para no cambiarla" autoComplete="new-password"/>
                     </div>
 
-                    {/* Botones */}
-                    <div className="flex flex-col-reverse sm:flex-row justify-center pt-8 gap-3 sm:gap-4">
+                    {/* Botones - Texto y padding más grandes (text-lg/xl y py-3/4) */}
+                    <div className="flex flex-col-reverse sm:flex-row justify-center pt-8 sm:pt-10 gap-4 sm:gap-6">
                         <button 
                             type="button" 
                             onClick={() => navigate('/perfil')} 
-                            className="w-full sm:w-1/2 border border-gray-300 text-gray-600 font-bold py-3 px-4 rounded-full shadow-sm hover:bg-gray-100 transition-colors active:scale-95 transform"
+                            className="w-full sm:w-1/2 border border-gray-300 text-gray-600 text-lg sm:text-xl font-bold py-3 sm:py-4 px-4 rounded-full shadow-sm hover:bg-gray-100 transition-colors active:scale-95 transform"
                         >
                             Cancelar
                         </button>
                         <button 
                             type="submit" 
                             disabled={guardando}
-                            className={`w-full sm:w-1/2 text-white font-bold py-3 px-4 rounded-full shadow-md transition-colors active:scale-95 transform ${guardando ? "bg-gray-400 cursor-not-allowed" : "bg-[#bd0026] hover:bg-red-800"}`}
+                            className={`w-full sm:w-1/2 text-white text-lg sm:text-xl font-bold py-3 sm:py-4 px-4 rounded-full shadow-md transition-colors active:scale-95 transform ${guardando ? "bg-gray-400 cursor-not-allowed" : "bg-[#bd0026] hover:bg-red-800"}`}
                         > 
                             {guardando ? "Guardando..." : "Guardar Cambios"}
                         </button>
