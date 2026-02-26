@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import logo from "/src/assets/Header/logo.jpg";
-import { loginRequest} from "../../utils/api";
+import { loginRequest } from "../../utils/api";
+import Swal from 'sweetalert2'; // <-- Importamos SweetAlert2
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -11,24 +11,45 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const response = await loginRequest(email, password);
-    const data = await response.json();
+    try {
+      const response = await loginRequest(email, password);
+      
+      // Si la respuesta no es exitosa, forzamos el error para que vaya al catch
+      if (!response.ok) {
+        throw new Error("Usuario o contraseña incorrecto");
+      }
 
-    const { user, token, role } = data;
+      const data = await response.json();
+      const { user, token, role } = data;
 
-    const userConRole = { ...user, role };
-    login(userConRole, token);
+      const userConRole = { ...user, role };
+      login(userConRole, token);
 
-    navigate("/");
-  } catch (error) {
-    console.error(error);
-    alert("Error: Usuario o contraseña incorrecto");
-  }
-};
+      // Pequeña alerta de éxito antes de redirigir
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Bienvenido!',
+        text: 'Has iniciado sesión correctamente.',
+        showConfirmButton: false,
+        timer: 1500, // Desaparece rápido en 1.5 segundos
+        timerProgressBar: true
+      });
+
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      // Alerta de error con Swal
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de acceso',
+        text: 'Usuario o contraseña incorrectos.',
+        confirmButtonColor: '#b5121b' // Usamos el mismo rojo del fondo del login
+      });
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#b5121b] p-4">

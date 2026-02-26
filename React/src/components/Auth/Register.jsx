@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "/src/assets/Header/logo.jpg";
 import { registerRequest } from "../../utils/api";
+import Swal from 'sweetalert2'; // <-- Importamos SweetAlert2
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -25,15 +26,35 @@ const Register = () => {
       const response = await registerRequest(formData);
 
       if (response.ok) {
-        alert("Registro completado");
+        // Alerta de éxito con auto-cierre
+        await Swal.fire({
+          icon: 'success',
+          title: '¡Registro completado!',
+          text: 'Tu cuenta ha sido creada con éxito.',
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true
+        });
         navigate("/login");
       } else {
         const errorData = await response.json();
-        alert("Error: " + errorData.message);
+        // Alerta de error si el servidor devuelve fallo (ej. email ya registrado)
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al registrar',
+          text: errorData.message || 'Hubo un problema al crear la cuenta.',
+          confirmButtonColor: '#b5121b'
+        });
       }
     } catch (error) {
       console.error("Error en la conexión:", error);
-      alert("No se pudo conectar");
+      // Alerta de error de conexión
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión',
+        text: 'No se pudo conectar con el servidor. Inténtalo de nuevo más tarde.',
+        confirmButtonColor: '#b5121b'
+      });
     }
   };
 

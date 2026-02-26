@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {apiFetch} from '../../utils/api';
+import { apiFetch } from '../../utils/api';
+import Swal from "sweetalert2"; // <-- Importamos SweetAlert2
 
 // Importamos todas las imágenes
 import Bolso1 from "./imgArticulos/Bolso1.jpg";
@@ -88,7 +89,13 @@ const VerArticulosCliente = () => {
     const cantidad = cantidades[articulo.id_articulo];
 
     if (!cantidad || cantidad <= 0) {
-      alert("Selecciona una cantidad válida");
+      // <-- Reemplazo de alert de advertencia
+      Swal.fire({
+        icon: "warning",
+        title: "Atención",
+        text: "Selecciona una cantidad válida antes de añadir al carrito.",
+        confirmButtonColor: "#C8102E",
+      });
       return;
     }
 
@@ -120,7 +127,21 @@ const VerArticulosCliente = () => {
     }
 
     localStorage.setItem("carrito", JSON.stringify(nuevoCarrito));
-    alert(`${articulo.nombre} añadido al carrito`);
+    
+    // <-- Reemplazo de alert de éxito (con temporizador para no interrumpir la navegación)
+    Swal.fire({
+      icon: "success",
+      title: "¡Añadido!",
+      text: `${articulo.nombre} se ha añadido al carrito.`,
+      showConfirmButton: false,
+      timer: 1500, // Se cierra solo después de 1.5 segundos
+    });
+
+    // Opcional: Reiniciar la cantidad del input después de añadir al carrito
+    setCantidades((prev) => ({
+      ...prev,
+      [articulo.id_articulo]: 0,
+    }));
   };
 
   return (

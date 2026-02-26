@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getAlmacenes, deleteAlmacen } from "../../utils/api";
 import Paginacion from "../Conjunto/Paginacion";
+import Swal from 'sweetalert2'; // <-- Importamos SweetAlert2
 
 const GestionAlmacen = () => {
   const { user } = useAuth();
@@ -15,37 +16,79 @@ const GestionAlmacen = () => {
   console.log(user)
   const isAdmin = user?.role === "admin";
 
- const cargarAlmacenes = async () => {
-  try {
-    const response = await getAlmacenes();
-    const data = await response.json();
-    setAlmacenes(data.almacen);
-  } catch (error) {
-    console.error("Error al cargar:", error);
-  }
-};
+  const cargarAlmacenes = async () => {
+    try {
+      const response = await getAlmacenes();
+      const data = await response.json();
+      setAlmacenes(data.almacen);
+    } catch (error) {
+      console.error("Error al cargar:", error);
+      // Notificación de error si falla la carga inicial
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión',
+        text: 'No se pudieron cargar los almacenes.',
+        confirmButtonColor: '#bd0026'
+      });
+    }
+  };
 
   useEffect(() => {
     cargarAlmacenes();
   }, []);
 
   const handleEliminar = async (id) => {
-  if (!window.confirm("¿Seguro que quieres eliminar este almacén?")) return;
+    // Reemplazamos window.confirm por Swal.fire
+    const confirmacion = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¿Seguro que quieres eliminar este almacén? Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#bd0026',
+      cancelButtonColor: '#000000',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
 
-  try {
-    const response = await deleteAlmacen(id);
+    // Si el usuario confirma, procedemos al borrado
+    if (confirmacion.isConfirmed) {
+      try {
+        const response = await deleteAlmacen(id);
 
-    if (response.ok) {
-      setAbrirMenu(null);
+        if (response.ok) {
+          setAbrirMenu(null);
+          setAlmacenes(prev => prev.filter(a => a.id_almacen !== id));
 
-      setAlmacenes(prev => prev.filter(a => a.id_almacen !== id));
-
-      alert("Almacén eliminado");
+          // Alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Eliminado!',
+            text: 'Almacén eliminado con éxito.',
+            confirmButtonColor: '#000000',
+            timer: 2000,
+            timerProgressBar: true
+          });
+        } else {
+          // Si el response no es ok, mostramos error
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al eliminar',
+            text: 'Hubo un problema al intentar eliminar el almacén.',
+            confirmButtonColor: '#bd0026'
+          });
+        }
+      } catch (error) {
+        console.error("Error al eliminar:", error);
+        // Error de conexión o fallo en la petición
+        Swal.fire({
+          icon: 'error',
+          title: 'Error inesperado',
+          text: 'Hubo un problema de conexión al servidor.',
+          confirmButtonColor: '#bd0026'
+        });
+      }
     }
-  } catch (error) {
-    console.error("Error al eliminar:", error);
-  }
-};
+  };
 
   const almacenesFiltrados = isAdmin
     ? almacenes

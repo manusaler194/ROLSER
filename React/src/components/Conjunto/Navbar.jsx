@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom'; // <-- Importamos useLocation
 
 import iconoUsuario from "/src/assets/Navbar/usuario.svg";
 import iconoAlmacen from "/src/assets/Navbar/almacen.svg";
@@ -13,6 +13,7 @@ import iconoPedido from "/src/assets/Navbar/pedido.svg";
 
 const Navbar = ({ usuario }) => {
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const location = useLocation(); // <-- Obtenemos la ruta actual
 
   const menu = [
       { label: 'Gestionar usuarios', icon: iconoUsuario , rol: ['admin'], path: '/usuarios' },
@@ -29,6 +30,7 @@ const Navbar = ({ usuario }) => {
 
   return (
     <>
+      {/* Botón flotante para móvil */}
       <button
         onClick={() => setMenuAbierto(!menuAbierto)}
         className="md:hidden fixed bottom-6 right-6 z-50 bg-[#454545] text-white p-4 rounded-full shadow-2xl focus:outline-none hover:bg-gray-700 transition-colors"
@@ -44,35 +46,52 @@ const Navbar = ({ usuario }) => {
         )}
       </button>
 
+      {/* Menú lateral */}
       <div className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-[#454545] transform transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none
+        fixed inset-y-0 left-0 z-40 w-72 bg-[#454545] transform transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none
         ${menuAbierto ? 'translate-x-0' : '-translate-x-full'}
         md:relative md:translate-x-0 md:min-h-screen border-r border-gray-600
       `}>
-        <nav className="h-full overflow-y-auto pt-8 pb-24 md:pt-0 md:pb-0">
-          {individual.map((item, index) => (
-            <Link
-              key={index}
-              to={item.path}
-              onClick={() => setMenuAbierto(false)} 
-              className="flex items-center gap-4 p-4 md:p-5 text-gray-200 hover:bg-[#575757] border-b border-gray-600 transition-colors w-full"
-            >
-              <div className="w-6 h-6 flex items-center justify-center shrink-0">
-                <img 
-                  src={item.icon}  
-                  alt={item.label}
-                  className="w-full h-full brightness-0 invert opacity-80" 
-                />
-              </div>
-              <span className="text-sm font-medium">{item.label}</span>
-            </Link>
-          ))}
+        <nav className="h-full overflow-y-auto pt-8 pb-24 md:pt-0 md:pb-0 flex flex-col">
+          {individual.map((item, index) => {
+            // Comprobamos si la ruta actual coincide con la ruta del botón
+            const isActive = location.pathname === item.path;
+
+            return (
+              <Link
+                key={index}
+                to={item.path}
+                onClick={() => setMenuAbierto(false)} 
+                className={`
+                  flex items-center gap-5 p-5 md:px-6 md:py-6 border-b border-gray-600 transition-all w-full
+                  ${isActive 
+                    ? 'bg-[#bc002d] text-white border-l-4 border-l-white' // Estilos si está activo (Fondo rojo, borde blanco)
+                    : 'text-gray-300 hover:bg-[#575757] hover:text-white border-l-4 border-l-transparent' // Estilos inactivos
+                  }
+                `}
+              >
+                {/* Icono más grande (w-8 h-8 en lugar de w-6 h-6) */}
+                <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                  <img 
+                    src={item.icon}  
+                    alt={item.label}
+                    className={`w-full h-full brightness-0 invert transition-opacity ${isActive ? 'opacity-100' : 'opacity-70'}`} 
+                  />
+                </div>
+                {/* Letra más grande (text-base md:text-lg) y negrita si está activo */}
+                <span className={`text-base md:text-lg ${isActive ? 'font-bold' : 'font-medium'}`}>
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
         </nav>
       </div>
 
+      {/* Fondo oscuro para móvil cuando el menú está abierto */}
       {menuAbierto && (
         <div 
-          className="md:hidden fixed inset-0 bg-opacity-50 z-30 transition-opacity"
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30 transition-opacity"
           onClick={() => setMenuAbierto(false)}
         ></div>
       )}

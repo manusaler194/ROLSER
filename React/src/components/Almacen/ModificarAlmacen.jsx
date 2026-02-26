@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { getAlmacen, updateAlmacen, getEncargados } from "../../utils/api";
+import Swal from 'sweetalert2'; // <-- Importamos SweetAlert2
+
 const ModificarAlmacen = () => {
   const [almacen, setAlmacen] = useState({
     direccion: "",
@@ -36,6 +38,13 @@ const ModificarAlmacen = () => {
         });
       } catch (error) {
         console.error("Error cargando almacén:", error);
+        // Notificación de error con Swal
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de carga',
+          text: 'No se pudieron obtener los datos del almacén.',
+          confirmButtonColor: '#bd0026'
+        });
       }
     };
 
@@ -46,6 +55,13 @@ const ModificarAlmacen = () => {
         setEncargados(data.encargadoAlmacen);
       } catch (error) {
         console.error("Error al obtener encargados:", error);
+        // Notificación de error con Swal
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de conexión',
+          text: 'No se pudo cargar la lista de encargados.',
+          confirmButtonColor: '#bd0026'
+        });
       }
     };
 
@@ -61,14 +77,34 @@ const ModificarAlmacen = () => {
 
       if (response.ok) {
         await response.json();
-        alert("Almacén actualizado con éxito");
+        // Alerta de éxito con Swal
+        await Swal.fire({
+          icon: 'success',
+          title: '¡Actualizado!',
+          text: 'Almacén actualizado con éxito',
+          confirmButtonColor: '#000000',
+          timer: 2000,
+          timerProgressBar: true
+        });
         navigate("/GestionAlmacen");
       } else {
-        alert("Hubo un error al modificar el almacén");
+        // Alerta de error con Swal si la respuesta no es ok
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al modificar',
+          text: 'Hubo un error al intentar modificar el almacén.',
+          confirmButtonColor: '#bd0026'
+        });
       }
     } catch (error) {
       console.error("Error al enviar datos:", error);
-      alert("Hubo un error al modificar el almacén");
+      // Alerta de error general
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión',
+        text: 'Hubo un error al modificar el almacén.',
+        confirmButtonColor: '#bd0026'
+      });
     }
   };
 
@@ -118,7 +154,6 @@ const ModificarAlmacen = () => {
               value={almacen.id_encargado}
               className={inputClasses}
               onChange={handleEncargado}
-              onFocus={() => setMenu(true)}
               required
             >
               <option value="" disabled>

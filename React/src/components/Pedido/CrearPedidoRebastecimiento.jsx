@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { apiFetch } from "../../utils/api";
 import { useAuth } from "../../context/AuthContext";
 import Paginacion from "../Conjunto/Paginacion";
+import Swal from "sweetalert2"; // <-- Importamos SweetAlert2
 import {
   getArticulos,
   updateArticulo,
@@ -60,14 +61,26 @@ const CrearPedidoRebastecimiento = () => {
 
   const crearReabastecimiento = async () => {
     if (!idProveedor) {
-      alert("Por favor, selecciona un proveedor.");
+      // <-- Reemplazo de alert por SweetAlert2
+      Swal.fire({
+        icon: "warning",
+        title: "Atención",
+        text: "Por favor, selecciona un proveedor.",
+        confirmButtonColor: "#bc002d",
+      });
       return;
     }
 
     const productosParaActualizar = articulos.filter((a) => a.cantidad > 0);
 
     if (productosParaActualizar.length === 0) {
-      alert("Selecciona al menos un producto con cantidad mayor a 0.");
+      // <-- Reemplazo de alert por SweetAlert2
+      Swal.fire({
+        icon: "warning",
+        title: "Sin productos",
+        text: "Selecciona al menos un producto con cantidad mayor a 0.",
+        confirmButtonColor: "#bc002d",
+      });
       return;
     }
 
@@ -101,7 +114,13 @@ const CrearPedidoRebastecimiento = () => {
         }
       }
 
-      alert("Pedido de reposición creado y stock actualizado con éxito.");
+      // <-- Reemplazo de alert de éxito por SweetAlert2
+      Swal.fire({
+        icon: "success",
+        title: "¡Pedido completado!",
+        text: "Pedido de reposición creado y stock actualizado con éxito.",
+        confirmButtonColor: "#bc002d",
+      });
 
       setArticulos((prev) =>
         prev.map((articulo) => ({ ...articulo, cantidad: 0 })),
@@ -111,7 +130,14 @@ const CrearPedidoRebastecimiento = () => {
       setPaginaActual(1);
     } catch (error) {
       console.error(error);
-      alert("Hubo un error en el proceso.");
+      
+      // <-- Reemplazo de alert de error por SweetAlert2
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hubo un error en el proceso.",
+        confirmButtonColor: "#bc002d",
+      });
     }
   };
 
