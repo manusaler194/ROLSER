@@ -5,41 +5,92 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
+
 class PedidoSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-    public function run(): void{
+    public function run(): void
+    {
         $faker = Faker::create('es_ES');
 
+
+
+        DB::table('pedidos')->insert([
+            'estado' => $faker->randomElement(["En preparación", "En proceso de entrega", "Entregado"]),
+            'fecha_pedido' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+            "id_comercial" => 1,
+            "id_cliente" => 1,
+            "id_clientevip" => null,
+            "id_encargado" => 1,
+            "id_factura" => rand(1, 10)
+        ]);
+
+        DB::table('pedidos')->insert([
+            'estado' => $faker->randomElement(["En preparación", "En proceso de entrega", "Entregado"]),
+            'fecha_pedido' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+            "id_comercial" => 1,
+            "id_cliente" => 1,
+            "id_clientevip" => null,
+            "id_encargado" => 1,
+            "id_factura" => rand(1, 10)
+        ]);
+        DB::table('pedidos')->insert([
+            'estado' => $faker->randomElement(["En preparación", "En proceso de entrega", "Entregado"]),
+            'fecha_pedido' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+            "id_comercial" => null,
+            "id_cliente" => null,
+            "id_clientevip" => 1,
+            "id_encargado" => rand(1, 10),
+            "id_factura" => rand(1, 10)
+        ]);
+
+        DB::table('pedidos')->insert([
+            'estado' => $faker->randomElement(["En preparación", "En proceso de entrega", "Entregado"]),
+            'fecha_pedido' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+            "id_comercial" => null,
+            "id_cliente" => null,
+            "id_clientevip" => 1,
+            "id_encargado" => rand(1, 10),
+            "id_factura" => rand(1, 10)
+        ]);
         for ($i = 1; $i < 21; $i++) {
-            $opcion = rand(1,2);
-            if($opcion == 1){
+            $opcion = rand(1, 2);
+            if ($opcion == 1) {
                 DB::table('pedidos')->insert([
-               'estado' => $faker->randomElement(["En preparación", "En proceso de entrega", "Entregado"]),
-               'fecha_pedido' => now(),
-               'created_at' => now(),
-               'updated_at' => now(),
-               "id_comercial" => rand(1,10),
-               "id_cliente" => rand(1,10),
-               "id_clientevip" => null,
-               "id_encargado" => rand(1,10),
-               "id_factura" => rand(1,10)]);
-            }else{
+                    'estado' => $faker->randomElement(["En preparación", "En proceso de entrega", "Entregado"]),
+                    'fecha_pedido' => now(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    "id_comercial" => rand(1, 10),
+                    "id_cliente" => rand(1, 10),
+                    "id_clientevip" => null,
+                    "id_encargado" => rand(1, 10),
+                    "id_factura" => rand(1, 10)
+                ]);
+            } else {
 
                 DB::table('pedidos')->insert([
-               'estado' => $faker->randomElement(["En preparación", "En proceso de entrega", "Entregado"]),
-               'fecha_pedido' => now(),
-               'created_at' => now(),
-               'updated_at' => now(),
-               "id_comercial" => null,
-               "id_cliente" => null,
-               "id_clientevip" => rand(1,10),
-               "id_encargado" => rand(1,10),
-               "id_factura" => rand(1,10)]);
+                    'estado' => $faker->randomElement(["En preparación", "En proceso de entrega", "Entregado"]),
+                    'fecha_pedido' => now(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    "id_comercial" => null,
+                    "id_cliente" => null,
+                    "id_clientevip" => rand(1, 10),
+                    "id_encargado" => rand(1, 10),
+                    "id_factura" => rand(1, 10)
+                ]);
             }
         }
     }
 }
-
