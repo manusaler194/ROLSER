@@ -32,7 +32,7 @@ class AdministradorSeeder extends Seeder
                 'apellidos' => $faker->lastName() . ' ' . $faker->lastName(),
                 'email' => $faker->unique()->safeEmail(),
                 'telefono' => $faker->phoneNumber(),
-                'password' => Hash::make('password'),
+                'password' => Hash::make('12345678'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

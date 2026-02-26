@@ -31,7 +31,7 @@ class ComercialSeeder extends Seeder
                 'contacto' => $faker->phoneNumber(),
                 'email' => $faker->unique()->safeEmail(),
                 'email_verified_at' => now(),
-                'password' => Hash::make('123456'),
+                'password' => Hash::make('12345678'),
                 'remember_token' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
