@@ -8,7 +8,7 @@ const CONFIGURACION_CREAR = {
         titulo: 'Nuevo Administrador',
         urlPost: `${BASE_URL}/administradores/guardar`,
         campos: ['nombre', 'apellidos', 'email', 'telefono', 'password'],
-        necesitaListas: [] // Qué selects necesita cargar
+        necesitaListas: [] 
     },
     cliente: {
         titulo: 'Nuevo Cliente',
