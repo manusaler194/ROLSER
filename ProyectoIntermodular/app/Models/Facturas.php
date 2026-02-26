@@ -18,7 +18,7 @@ protected $fillable = ['base_imponible','iva_porcentaje','total_iva','total_fact
     }
 
     public function comercial(){
-        return $this->belongsTo(Cliente::class, 'id_comercial');
+        return $this->belongsTo(Comercial::class, 'id_comercial');
     }
     public function clienteVip(){
         return $this->belongsTo(ClienteVip::class, 'id_clientevip');

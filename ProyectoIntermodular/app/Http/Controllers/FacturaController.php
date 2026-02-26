@@ -51,7 +51,7 @@ class FacturaController extends Controller
             }
             $factura->save();
 
-            return redirect()->route("mostrarFactura");
+            return redirect()->route("mostrarFacturas");
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al crear la factura.',
