@@ -19,7 +19,7 @@ class ArticuloCatalogoSeeder extends Seeder
 
         for ($i = 0; $i < 20; $i++) {
             DB::table('articulos_catalogos')->insert([
-            'id_catalogo' => rand(1,10),
+            'id_catalogo' => rand(1,4),
             'id_articulo' => rand(1,10),
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d')]);

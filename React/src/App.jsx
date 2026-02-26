@@ -96,16 +96,12 @@ const AppContent = () => {
                 <Route path="/factura/:id" element={<MostrarFactura />} />
                 <Route path="/pedidos" element={<GestionarPedidos />} />
                 <Route path="/DetallesPedido/:id" element={<DetallesPedido />} />
-
+                <Route path="/catalogo" element={<VerCatalogoCliente/>}/>
+                <Route path="/VerArticulosCliente/:id_catalogo" element={<VerArticulosCliente/>}/>
+                <Route path="/CarritoCatalogo" element={<CarritoCatalogo/>}/>
 
                 
-                {role === "cliente" &&  (
-                  <>
-                    <Route path="/VerCatalogoCliente" element={<VerCatalogoCliente/>}/>
-                    <Route path="/VerArticulosCliente/:id_catalogo" element={<VerArticulosCliente/>}/>
-                    <Route path="/CarritoCatalogo" element={<CarritoCatalogo/>}/>
-                  </>
-                )}
+                
 
                 {["comercial", "clientevip"].includes(role) && (
                   <>

@@ -20,11 +20,7 @@ const Navbar = ({ usuario }) => {
       { label: 'Gestionar pedidos', icon: iconoPedido , rol: ['admin', 'encargadoalmacen', 'cliente', 'clientevip', 'comercial'], path: '/pedidos' },
       { label: 'Gestionar almacén', icon: iconoAlmacen, rol: ['admin', 'encargadoalmacen'], path: '/GestionAlmacen' },
       { label: 'Ver facturas', icon: iconoInforme, rol: ['comercial', 'cliente', 'clientevip'], path: '/facturas' },
-      { label: 'Ver catálogo', icon: iconoCatalogo, rol: ['clientevip', 'comercial'], path: '/catalogo' },
-      { label: 'Ver catálogo', icon: iconoCatalogo, rol: ['cliente'], path: '/VerCatalogoCliente' },
-      { label: 'Ver catálogos', icon: iconoCatalogo, rol: ['admin'], path: '/catalogos' },
-      { label: 'Realizar pedido', icon: iconoCarrito, rol: ['clientevip', 'comercial'], path: '/realizar-pedido' },
-      { label: 'Aplicar descuento', icon: iconoDescuento, rol: ['comercial'], path: '/aplicar-descuento' },
+      { label: 'Ver catálogo', icon: iconoCatalogo, rol: ['clientevip', 'comercial', 'cliente', 'admin'], path: '/catalogo' },
       { label: 'Stock', icon: iconoCarrito, rol: ['encargadoalmacen'], path: '/stock' },
       { label: 'Crear pedido reabastecimiento', icon: iconoPedido, rol: ['encargadoalmacen', 'admin'], path: '/crear-pedido-reabastecimiento' },
   ];

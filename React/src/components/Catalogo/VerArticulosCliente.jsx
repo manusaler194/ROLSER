@@ -132,7 +132,7 @@ const VerArticulosCliente = () => {
       {/* Botón volver */}
       <div className="flex justify-center mb-8">
         <button
-          onClick={() => navigate("/VerCatalogoCliente")}
+          onClick={() => navigate("/catalogo")}
           className="bg-[#bc002d] text-white px-12 py-4 rounded-3xl text-2xl font-bold hover:bg-red-800 shadow-lg transition-transform active:scale-95 cursor-pointer"
         >
           Volver

@@ -18,7 +18,7 @@ class CatalogoComercialSeeder extends Seeder
         for ($i = 1; $i < 21; $i++) {
             DB::table('comerciales_catalogos')->insert([
             "id_comercial" => rand(1,10),
-            "id_catalogo" => rand(1,10),
+            "id_catalogo" => rand(1,4),
            'created_at' => date('Y-m-d'),
            'updated_at' => date('Y-m-d')]);
         }

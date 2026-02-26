@@ -43,7 +43,7 @@ class ClienteVipSeeder extends Seeder
                 'created_at' => $faker->date(),
                 'updated_at' => $faker->date(),
                 'id_administrador' => rand(1,10),
-                'id_catalogo' => rand(1,10),
+                'id_catalogo' => rand(1,4),
                 'id_comercial' => rand(1,10),
             ]);
         }
