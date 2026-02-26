@@ -39,18 +39,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/pedidos/{id_pedido}', [PedidoController::class, 'mostrarPedido']);
         Route::post('/pedidos/guardar', [PedidoController::class, 'guardar']);
         Route::put('/pedidos/actualizar/{id_pedido}', [PedidoController::class, 'actualizar']);
-        Route::post('/facturas/guardar', [FacturaController::class, 'guardar']);
+        Route::post('/factura/guardar', [FacturaController::class, 'guardar']);
 
         Route::get('/lineasPedido', [LineaPedidoController::class, 'mostrar']);
         Route::post('/lineasPedido/guardar', [LineaPedidoController::class, 'guardar']);
         Route::put('/lineasPedido/actualizar/{id_linea}', [LineaPedidoController::class, 'actualizar']);
         Route::get('/articulo', [ArticuloController::class, 'mostrarArticulos']);
+        Route::put('/articulo/actualizar/{id_articulo}', [ArticuloController::class, 'articuloActualizar']);
 
     });
 
-    Route::middleware('role:administrador,encargadoalmacen')->group(function () {
+    Route::middleware('role:administrador,encargadoalmacen, cliente, clientevip')->group(function () {
         Route::post('/articulo/guardar', [ArticuloController::class, 'articuloNuevo']);
-        Route::put('/articulo/actualizar/{id_articulo}', [ArticuloController::class, 'articuloActualizar']);
 
         Route::post('/secciones/guardar', [SeccionController::class, 'guardar']);
         Route::put('/secciones/actualizar/{id_seccion}', [SeccionController::class, 'actualizar']);
