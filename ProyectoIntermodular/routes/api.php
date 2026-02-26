@@ -46,6 +46,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/lineasPedido/actualizar/{id_linea}', [LineaPedidoController::class, 'actualizar']);
         Route::get('/articulo', [ArticuloController::class, 'mostrarArticulos']);
         Route::put('/articulo/actualizar/{id_articulo}', [ArticuloController::class, 'articuloActualizar']);
+        Route::post("/articulo_catalogo/guardar", [CatalogoController::class, 'guardar']);
+
 
     });
 
@@ -57,7 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/catalogo/guardar', [CatalogoController::class, 'catalogoNuevo']);
         Route::put('/catalogo/actualizar/{id_catalogo}', [CatalogoController::class, 'catalogoActualizar']);
-    }); 
+    });
 
 
     Route::middleware('role:administrador,encargadoalmacen')->group(function () {

@@ -32,7 +32,6 @@ class CatalogoController extends Controller{
 
         try {
             $administrador = Administrador::findOrFail($validatedData['id_administrador']);
-            $articulo = Articulo::findOrFail($validatedData['id_articulo']);
 
             $catalogo = new Catalogo([
                 'nombre_catalogo' => $validatedData['nombre_catalogo'],
@@ -40,7 +39,6 @@ class CatalogoController extends Controller{
             ]);
 
             $catalogo->administradores()->associate($administrador);
-            $articulo->articulos()->associate($articulo);
             $catalogo->save();
 
             return response()->json([
@@ -90,8 +88,8 @@ class CatalogoController extends Controller{
     }
 
     public function guardarArticuloCatalogo(Request $request){
-        $catalogo = Catalogo::find($request->catalogo_id);
-        $articulo = Articulo::find($request->articulos);
+        $catalogo = Catalogo::find($request->id_catalogo);
+        $articulo = Articulo::find($request->id_articulo);
 
         $catalogo->articulos()->attach($articulo, [
             'created_at' => now(),
