@@ -6,7 +6,7 @@ const MostrarFacturas = () => {
 
   const userId = role === 'clientevip' ? user.id_clientevip : role === "cliente" ? user.id_cliente : user.id_comercial;
 
-  const urlIframe = `http://localhost/mostrar/facturas/${role}/${userId}`;
+  const urlIframe = `http://100.25.154.102/mostrar/facturas/${role}/${userId}`;
   console.log("Cargando iframe en:", urlIframe);
 
   return (
