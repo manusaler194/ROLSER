@@ -148,31 +148,35 @@ const CrearUsuario = ({ tipo }) => {
         }
     };
 
-    // Clases estandarizadas
-    const claseInput = "w-full bg-white border border-gray-400 p-3 text-gray-800 focus:outline-none focus:border-[#bd0026] focus:ring-1 focus:ring-[#bd0026] rounded-sm transition-all";
-    const claseLabel = "block text-xs font-bold text-gray-500 uppercase mb-1 ml-1";
+    // Clases estandarizadas redimensionadas
+    // Se aumentó el padding (p-3 a p-4) y el tamaño del texto (text-base sm:text-lg)
+    const claseInput = "w-full bg-white border border-gray-400 p-3 sm:p-4 text-base sm:text-lg text-gray-800 focus:outline-none focus:border-[#bd0026] focus:ring-1 focus:ring-[#bd0026] rounded-sm transition-all";
+    // Se aumentó el tamaño de las etiquetas (text-xs a text-sm sm:text-base) y el margen inferior
+    const claseLabel = "block text-sm sm:text-base font-bold text-gray-500 uppercase mb-2 ml-1";
 
-    if (!config) return <div className="p-10 text-center text-red-500">Error: Tipo de usuario desconocido.</div>;
+    if (!config) return <div className="p-10 text-center text-xl text-red-500">Error: Tipo de usuario desconocido.</div>;
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
-            <div className="w-full max-w-xl bg-white p-6 sm:p-10 shadow-2xl rounded-sm border-t-4 border-[#bd0026]">
-                <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-center text-black uppercase tracking-wider border-b pb-4">
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 font-sans">
+            {/* Contenedor más ancho: max-w-xl -> max-w-2xl para acomodar textos más grandes */}
+            <div className="w-full max-w-2xl bg-white p-6 sm:p-12 shadow-2xl rounded-sm border-t-4 border-[#bd0026]">
+                {/* Título más grande: text-xl/2xl -> text-3xl/4xl */}
+                <h2 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-10 text-center text-black uppercase tracking-wider border-b pb-4 sm:pb-6">
                     {config.titulo}
                 </h2>
 
                 {error && (
-                    <div className="mb-6 p-3 bg-red-100 border-l-4 border-red-500 text-red-700 font-bold text-sm whitespace-pre-line">
+                    <div className="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 font-bold text-base sm:text-lg whitespace-pre-line">
                         {error}
                     </div>
                 )}
 
-                <form onSubmit={manejarEnvio} className="space-y-4 sm:space-y-5" autoComplete="off">
+                <form onSubmit={manejarEnvio} className="space-y-5 sm:space-y-6" autoComplete="off">
                     
                     {/* Fila 1: Nombre y Apellidos/Teléfono */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
-                            <label className={claseLabel}>{tipo === 'clienteVip' ? 'Nombre Completo / Razón Social' : 'Nombre'}</label>
+                            <label className={claseLabel}>{tipo === 'clienteVip' ? 'Nombre Completo' : 'Nombre'}</label>
                             <input type="text" name="nombre" value={usuario.nombre} onChange={manejarCambio} required className={claseInput} placeholder="Ej. Juan" />
                         </div>
                         
@@ -228,7 +232,7 @@ const CrearUsuario = ({ tipo }) => {
 
                     {/* Selects: Administrador y Comercial */}
                     {(config.campos.includes('id_administrador') || config.campos.includes('id_comercial')) && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             {config.campos.includes('id_administrador') && (
                                 <div>
                                     <label className={claseLabel}>Administrador</label>
@@ -274,12 +278,12 @@ const CrearUsuario = ({ tipo }) => {
                         </div>
                     )}
 
-                    {/* Botones */}
-                    <div className="flex flex-col-reverse sm:flex-row justify-center pt-6 sm:pt-8 gap-3 sm:gap-4">
-                        <button type="button" onClick={() => navegar(-1)} className="w-full sm:w-1/2 border border-gray-400 text-gray-600 font-bold py-3 px-4 rounded shadow hover:bg-gray-50 transition duration-300 uppercase">
+                    {/* Botones - Texto y padding más grandes */}
+                    <div className="flex flex-col-reverse sm:flex-row justify-center pt-8 sm:pt-10 gap-4 sm:gap-6">
+                        <button type="button" onClick={() => navegar(-1)} className="w-full sm:w-1/2 border border-gray-400 text-gray-600 text-lg sm:text-xl font-bold py-3 sm:py-4 px-4 rounded shadow hover:bg-gray-50 transition duration-300 uppercase">
                             Cancelar
                         </button>
-                        <button type="submit" disabled={cargando} className={`w-full sm:w-1/2 text-white font-bold py-3 px-4 rounded shadow-lg transition duration-300 uppercase ${cargando ? "bg-gray-500 cursor-not-allowed" : "bg-[#bd0026] hover:bg-red-800"}`}>
+                        <button type="submit" disabled={cargando} className={`w-full sm:w-1/2 text-white text-lg sm:text-xl font-bold py-3 sm:py-4 px-4 rounded shadow-lg transition duration-300 uppercase ${cargando ? "bg-gray-500 cursor-not-allowed" : "bg-[#bd0026] hover:bg-red-800"}`}>
                             {cargando ? "Guardando..." : "Crear"}
                         </button>
                     </div>

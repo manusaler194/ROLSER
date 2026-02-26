@@ -140,29 +140,33 @@ const ModificarUsuario = ({ tipo }) => {
         }
     };
 
-    const clasesInput = "w-full bg-white border border-gray-400 p-3 text-gray-800 focus:outline-none focus:border-[#bd0026] focus:ring-1 focus:ring-[#bd0026] rounded-sm transition-all";
-    const claseLabel = "block text-xs font-bold text-gray-500 uppercase mb-1 ml-1";
+    // Clases estandarizadas y agrandadas (igual que en CrearUsuario)
+    const clasesInput = "w-full bg-white border border-gray-400 p-3 sm:p-4 text-base sm:text-lg text-gray-800 focus:outline-none focus:border-[#bd0026] focus:ring-1 focus:ring-[#bd0026] rounded-sm transition-all";
+    const claseLabel = "block text-sm sm:text-base font-bold text-gray-500 uppercase mb-2 ml-1";
 
-    if (!config) return <div className="p-10 text-center text-red-500">Error: Tipo de usuario desconocido.</div>;
+    if (!config) return <div className="p-10 text-center text-xl text-red-500">Error: Tipo de usuario desconocido.</div>;
 
     if (estaCargando) {
         return (
             <div className="flex min-h-screen bg-gray-50 justify-center items-center">
-                <p className="text-gray-600 font-bold text-lg animate-pulse">Cargando datos...</p>
+                <p className="text-gray-600 font-bold text-xl sm:text-2xl animate-pulse">Cargando datos...</p>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
-            <div className="w-full max-w-lg bg-white p-6 sm:p-10 shadow-2xl rounded-sm border-t-4 border-[#bd0026]">
-                <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-center text-black uppercase tracking-wider border-b pb-4">
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 font-sans">
+            {/* Contenedor más ancho: de max-w-lg a max-w-2xl y más padding */}
+            <div className="w-full max-w-2xl bg-white p-6 sm:p-12 shadow-2xl rounded-sm border-t-4 border-[#bd0026]">
+                {/* Título más grande: de text-xl/2xl a text-3xl/4xl */}
+                <h2 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-10 text-center text-black uppercase tracking-wider border-b pb-4 sm:pb-6">
                     {config.titulo}
                 </h2>
                 
-                <form onSubmit={manejarEnvio} className="space-y-4 sm:space-y-5" autoComplete="off">
+                <form onSubmit={manejarEnvio} className="space-y-5 sm:space-y-6" autoComplete="off">
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Grid con más espacio entre columnas (gap-4 a gap-5) */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
                             <label className={claseLabel}>{tipo === 'clienteVip' ? 'Nombre / Razón Social' : 'Nombre'}</label>
                             <input type="text" name="nombre" value={usuario.nombre} onChange={manejarCambio} className={clasesInput} required />
@@ -215,16 +219,18 @@ const ModificarUsuario = ({ tipo }) => {
                             type="password" name="password" value={usuario.password} onChange={manejarCambio} 
                             className={clasesInput} placeholder="Escribe para cambiar la contraseña" autoComplete="new-password"
                         />
-                        <p className="text-[10px] text-gray-500 mt-1 ml-1">
+                        {/* Texto de ayuda un poco más grande: text-[10px] a text-xs sm:text-sm */}
+                        <p className="text-xs sm:text-sm text-gray-500 mt-2 ml-1">
                             * Deja este campo en blanco si deseas mantener la contraseña actual.
                         </p>
                     </div>
 
-                    <div className="flex flex-col-reverse sm:flex-row justify-center pt-6 sm:pt-8 gap-3 sm:gap-4">
-                        <button type="button" onClick={() => navegar('/usuarios')} className="w-full sm:w-1/2 border border-gray-400 text-gray-600 font-bold py-3 px-4 rounded shadow hover:bg-gray-50 transition duration-300 uppercase tracking-wider">
+                    {/* Botones - Texto y padding más grandes (text-lg/xl y py-3/4) */}
+                    <div className="flex flex-col-reverse sm:flex-row justify-center pt-8 sm:pt-10 gap-4 sm:gap-6">
+                        <button type="button" onClick={() => navegar('/usuarios')} className="w-full sm:w-1/2 border border-gray-400 text-gray-600 text-lg sm:text-xl font-bold py-3 sm:py-4 px-4 rounded shadow hover:bg-gray-50 transition duration-300 uppercase tracking-wider">
                             Cancelar
                         </button>
-                        <button type="submit" disabled={guardando} className={`w-full sm:w-1/2 text-white font-bold py-3 px-4 rounded shadow-lg transition duration-300 uppercase tracking-wider ${guardando ? "bg-gray-500 cursor-not-allowed" : "bg-[#bd0026] hover:bg-red-800"}`}> 
+                        <button type="submit" disabled={guardando} className={`w-full sm:w-1/2 text-white text-lg sm:text-xl font-bold py-3 sm:py-4 px-4 rounded shadow-lg transition duration-300 uppercase tracking-wider ${guardando ? "bg-gray-500 cursor-not-allowed" : "bg-[#bd0026] hover:bg-red-800"}`}> 
                             {guardando ? "Guardando..." : "Guardar Cambios"}
                         </button>
                     </div>
