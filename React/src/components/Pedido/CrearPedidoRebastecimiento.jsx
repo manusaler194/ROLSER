@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { apiFetch } from "../../utils/api";
 import { useAuth } from "../../context/AuthContext";
 import Paginacion from "../Conjunto/Paginacion";
-import Swal from "sweetalert2"; // <-- Importamos SweetAlert2
+import Swal from "sweetalert2";
 import {
   getArticulos,
   updateArticulo,
@@ -61,7 +60,6 @@ const CrearPedidoRebastecimiento = () => {
 
   const crearReabastecimiento = async () => {
     if (!idProveedor) {
-      // <-- Reemplazo de alert por SweetAlert2
       Swal.fire({
         icon: "warning",
         title: "Atención",
@@ -74,7 +72,6 @@ const CrearPedidoRebastecimiento = () => {
     const productosParaActualizar = articulos.filter((a) => a.cantidad > 0);
 
     if (productosParaActualizar.length === 0) {
-      // <-- Reemplazo de alert por SweetAlert2
       Swal.fire({
         icon: "warning",
         title: "Sin productos",
@@ -89,22 +86,22 @@ const CrearPedidoRebastecimiento = () => {
         fecha_pedido: new Date().toISOString().split("T")[0],
         estado: "En preparación",
         id_proveedor: idProveedor,
-        id_administrador: role === "admin" ? user.id_adminsitrador : null,
+        id_administrador: role === "admin" ? user.id_administrador : null,
         id_encargado: role === "encargado_almacen" ? user.id_encargado : null,
       };
 
       const responsePedido = await createPedidoReposicion(datosPedido);
-
       if (!responsePedido.ok) throw new Error("Error al guardar el pedido");
 
       for (const articulo of productosParaActualizar) {
+        const nuevoStock = Number(articulo.stock_actual) + Number(articulo.cantidad);
+        
         const responseArt = await updateArticulo(articulo.id_articulo, {
           id_articulo: articulo.id_articulo,
           nombre: articulo.nombre,
           descripcion: articulo.descripcion,
           precio: articulo.precio,
-          stock_actual:
-            Number(articulo.stock_actual) + Number(articulo.cantidad),
+          stock_actual: nuevoStock,
           id_seccion: articulo.id_seccion,
           id_administrador: user.id_administrador || null,
         });
@@ -114,7 +111,24 @@ const CrearPedidoRebastecimiento = () => {
         }
       }
 
-      // <-- Reemplazo de alert de éxito por SweetAlert2
+
+      setArticulos((prev) =>
+        prev.map((articulo) => {
+          const itemActualizado = productosParaActualizar.find(
+            (p) => p.id_articulo === articulo.id_articulo
+          );
+          
+          if (itemActualizado) {
+            return {
+              ...articulo,
+              stock_actual: Number(articulo.stock_actual) + Number(articulo.cantidad),
+              cantidad: 0, 
+            };
+          }
+          return articulo;
+        })
+      );
+
       Swal.fire({
         icon: "success",
         title: "¡Pedido completado!",
@@ -122,16 +136,9 @@ const CrearPedidoRebastecimiento = () => {
         confirmButtonColor: "#bc002d",
       });
 
-      setArticulos((prev) =>
-        prev.map((articulo) => ({ ...articulo, cantidad: 0 })),
-      );
-
       setIdProveedor("");
-      setPaginaActual(1);
     } catch (error) {
       console.error(error);
-      
-      // <-- Reemplazo de alert de error por SweetAlert2
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -150,7 +157,7 @@ const CrearPedidoRebastecimiento = () => {
               Crear Pedido Reposición
             </h1>
             <p className="text-gray-500 text-sm sm:text-base">
-              Gestiona la entrada de stock
+              Gestiona la entrada de stock (Admin/Encargado)
             </p>
           </div>
 
@@ -186,58 +193,34 @@ const CrearPedidoRebastecimiento = () => {
           <table className="w-full text-left border-collapse">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-4 font-bold text-gray-700 text-md uppercase">
-                  Producto
-                </th>
-                <th className="px-6 py-4 text-center font-bold text-gray-700 text-md uppercase">
-                  Stock Actual
-                </th>
-                <th className="px-6 py-4 font-bold text-gray-700 text-md uppercase">
-                  Precio Unit.
-                </th>
-                <th className="px-6 py-4 text-center font-bold text-gray-700 text-md uppercase">
-                  Cantidad
-                </th>
-                <th className="px-6 py-4 font-bold text-gray-700 text-md uppercase text-right">
-                  Subtotal
-                </th>
+                <th className="px-6 py-4 font-bold text-gray-700 text-md uppercase">Producto</th>
+                <th className="px-6 py-4 text-center font-bold text-gray-700 text-md uppercase">Stock Actual</th>
+                <th className="px-6 py-4 font-bold text-gray-700 text-md uppercase">Precio Unit.</th>
+                <th className="px-6 py-4 text-center font-bold text-gray-700 text-md uppercase">Cantidad</th>
+                <th className="px-6 py-4 font-bold text-gray-700 text-md uppercase text-right">Subtotal</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {articulosPaginados.map((articulo) => (
-                <tr
-                  key={articulo.id_articulo}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4 font-semibold text-xl text-gray-900">
-                    {articulo.nombre}
-                  </td>
+                <tr key={articulo.id_articulo} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-6 py-4 font-semibold text-xl text-gray-900">{articulo.nombre}</td>
                   <td className="px-6 py-4 text-center">
-                    <span
-                      className={`px-3 py-1 text-md font-bold rounded-full ${articulo.stock_actual < 50 ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}
-                    >
+                    <span className={`px-3 py-1 text-md font-bold rounded-full ${articulo.stock_actual < 50 ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}>
                       {articulo.stock_actual}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-gray-600 text-xl font-medium">
-                    {articulo.precio}€
-                  </td>
+                  <td className="px-6 py-4 text-gray-600 text-xl font-medium">{articulo.precio}€</td>
                   <td className="px-6 py-4 text-center">
                     <input
                       type="number"
                       min="0"
                       value={articulo.cantidad || 0}
-                      onChange={(e) =>
-                        handleCantidad(articulo.id_articulo, e.target.value)
-                      }
+                      onChange={(e) => handleCantidad(articulo.id_articulo, e.target.value)}
                       className="w-20 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 outline-none text-center text-xl font-bold"
                     />
                   </td>
                   <td className="px-6 py-4 font-bold text-red-700 text-right text-xl">
-                    {(
-                      (articulo.cantidad || 0) * (articulo.precio || 0)
-                    ).toFixed(2)}
-                    €
+                    {((articulo.cantidad || 0) * (articulo.precio || 0)).toFixed(2)}€
                   </td>
                 </tr>
               ))}
@@ -245,53 +228,31 @@ const CrearPedidoRebastecimiento = () => {
           </table>
         </div>
 
+        {/* ... (El resto del código móvil y paginación se mantiene igual) */}
         <div className="md:hidden space-y-4">
           {articulosPaginados.map((articulo) => (
-            <div
-              key={articulo.id_articulo}
-              className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm"
-            >
+            <div key={articulo.id_articulo} className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
               <div className="flex justify-between items-start mb-4">
-                <h3 className="font-bold text-gray-900 text-lg">
-                  {articulo.nombre}
-                </h3>
-                <span
-                  className={`px-2 py-1 text-[10px] font-black rounded-full uppercase ${articulo.stock_actual < 50 ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}
-                >
+                <h3 className="font-bold text-gray-900 text-lg">{articulo.nombre}</h3>
+                <span className={`px-2 py-1 text-[10px] font-black rounded-full uppercase ${articulo.stock_actual < 50 ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}>
                   Stock: {articulo.stock_actual}
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-4 items-center">
                 <div>
-                  <p className="text-xs text-gray-500 font-bold uppercase">
-                    Precio Unit.
-                  </p>
-                  <p className="font-medium text-gray-800">
-                    {articulo.precio}€
-                  </p>
+                  <p className="text-xs text-gray-500 font-bold uppercase">Precio Unit.</p>
+                  <p className="font-medium text-gray-800">{articulo.precio}€</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-gray-500 font-bold uppercase">
-                    Subtotal
-                  </p>
-                  <p className="font-bold text-red-700">
-                    {(
-                      (articulo.cantidad || 0) * (articulo.precio || 0)
-                    ).toFixed(2)}
-                    €
-                  </p>
+                  <p className="text-xs text-gray-500 font-bold uppercase">Subtotal</p>
+                  <p className="font-bold text-red-700">{((articulo.cantidad || 0) * (articulo.precio || 0)).toFixed(2)}€</p>
                 </div>
                 <div className="col-span-2 pt-2 border-t border-gray-100 mt-2">
-                  <label className="text-xs text-gray-500 font-bold uppercase block mb-2">
-                    Cantidad a pedir
-                  </label>
                   <input
                     type="number"
                     min="0"
                     value={articulo.cantidad || 0}
-                    onChange={(e) =>
-                      handleCantidad(articulo.id_articulo, e.target.value)
-                    }
+                    onChange={(e) => handleCantidad(articulo.id_articulo, e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-600 outline-none text-center font-bold"
                   />
                 </div>
@@ -302,23 +263,15 @@ const CrearPedidoRebastecimiento = () => {
 
         {totalPaginas > 1 && (
           <div className="mt-8 flex justify-center">
-            <Paginacion
-              paginaActual={paginaActual}
-              totalPaginas={totalPaginas}
-              cambiarPagina={setPaginaActual}
-            />
+            <Paginacion paginaActual={paginaActual} totalPaginas={totalPaginas} cambiarPagina={setPaginaActual} />
           </div>
         )}
 
         <div className="mt-8 flex justify-end">
           <div className="bg-white p-5 sm:p-6 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-6 sm:gap-10 w-full sm:w-auto justify-between">
             <div className="flex flex-col">
-              <span className="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest">
-                Total del Pedido
-              </span>
-              <span className="text-2xl sm:text-3xl font-black text-red-700">
-                {totalPedido.toFixed(2)}€
-              </span>
+              <span className="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest">Total del Pedido</span>
+              <span className="text-2xl sm:text-3xl font-black text-red-700">{totalPedido.toFixed(2)}€</span>
             </div>
           </div>
         </div>
