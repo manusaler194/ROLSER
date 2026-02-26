@@ -118,7 +118,6 @@ const GestionarPedido = () => {
                         <option value="Entregado">Entregado</option>
                     </select>
                 </div>
-
                 {!esCliente && (
                     <div className="flex flex-col gap-1 w-full sm:flex-1">
                         <label className="text-sm font-black text-gray-400 uppercase ml-2 tracking-wider">Buscar Cliente</label>
@@ -138,12 +137,12 @@ const GestionarPedido = () => {
         <div className="bg-white rounded-3xl shadow-md border border-gray-200 overflow-hidden">
             <table className="w-full text-left border-collapse">
                 <thead className="hidden md:table-header-group bg-gray-50 border-b border-gray-100">
-                    <tr className="text-gray-500 text-md uppercase tracking-widest">
+                    <tr className="text-gray-500 text-xl uppercase tracking-widest">
                         <th className="px-6 py-4">ID Pedido</th>
                         <th className="px-6 py-4">Cliente</th>
-                        <th className="px-6 py-4">Estado</th>
+                        <th className="px-6 py-4 w-56">Estado</th>
                         <th className="px-6 py-4">Encargado</th>
-                        <th className="px-6 py-4 text-right">Acciones</th>
+                        <th className="px-6 py-4 text-right w-56">Acciones</th>
                     </tr>
                 </thead>
 
@@ -153,13 +152,13 @@ const GestionarPedido = () => {
         <tr key={pedido.id_pedido} className="flex flex-col md:table-row hover:bg-gray-50 transition-colors p-4 md:p-0 border-b md:border-none">
             
             <td className="px-6 py-1 md:py-4 font-bold md:table-cell flex justify-between items-center">
-                <span className="md:hidden text-[10px] font-black text-gray-400 uppercase">ID Pedido</span>
+                <span className="md:hidden text-xl font-black text-gray-400 uppercase">ID Pedido</span>
                 <span>#{pedido.id_pedido}</span>
             </td>
 
             <td className="px-6 py-1 md:py-4 md:table-cell flex justify-between items-center">
                 <span className="md:hidden text-[10px] font-black text-gray-400 uppercase">Cliente</span>
-                <span className="text-gray-700 text-right md:text-left">
+                <span className="text-gray-700 text-right md:text-left text-xl">
                     {pedido.cliente?.nombre || pedido.cliente_vip?.nombre || "N/A"}
                 </span>
             </td>
@@ -170,7 +169,7 @@ const GestionarPedido = () => {
                     <div className="relative inline-block text-left">
                         <button 
                             onClick={() => setMenuCambioEstadoAbierto(menuCambioEstadoAbierto === pedido.id_pedido ? null : pedido.id_pedido)}
-                            className="px-3 py-1.5 rounded-full border border-gray-300 text-xs bg-white hover:bg-gray-100 flex items-center gap-2 cursor-pointer transition-colors"
+                            className="px-3 py-1.5 rounded-full border border-gray-300 -xs bg-white hover:bg-gray-100 flex items-center gap-2 cursor-pointer transition-colors text-xl"
                         >
                             {pedido.estado}
                         </button>
@@ -182,7 +181,7 @@ const GestionarPedido = () => {
                                         <button
                                             key={estadoOpcion}
                                             onClick={() => modificarEstadoPedido(pedido, estadoOpcion)}
-                                            className={`w-full text-left block px-4 py-2 text-sm ${pedido.estado === estadoOpcion ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-100'}`}
+                                            className={`w-full text-left block px-4 py-2 text-md ${pedido.estado === estadoOpcion ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-100'}`}
                                         >
                                             {estadoOpcion}
                                         </button>
@@ -193,13 +192,13 @@ const GestionarPedido = () => {
                         )}
                     </div>
                 ) : (
-                    <span className="px-3 py-1.5 rounded-full border text-xs bg-gray-50 text-gray-600 inline-block">{pedido.estado}</span>
+                    <span className="px-3 py-1.5 rounded-full border text-xl bg-gray-50 text-gray-600 inline-block">{pedido.estado}</span>
                 )}
             </td>
 
             <td className="px-6 py-1 md:py-4 md:table-cell flex justify-between items-center">
                 <span className="md:hidden text-[10px] font-black text-gray-400 uppercase">Encargado</span>
-                <span className="text-gray-500 text-right md:text-left">
+                <span className="text-gray-500 text-right md:text-left text-xl">
                     {pedido.encargado_almacen?.nombre || "Sin asignar"}
                 </span>
             </td>
@@ -207,7 +206,7 @@ const GestionarPedido = () => {
             <td className="px-6 py-3 md:py-4 text-right md:table-cell flex justify-center border-t border-gray-50 mt-2 md:mt-0 md:border-none">
                 <Link 
                     to={`/DetallesPedido/${pedido.id_pedido}`}
-                    className="w-full md:w-auto text-center bg-red-50 md:bg-transparent text-red-600 hover:text-red-800 font-bold text-xs py-2 md:py-0 rounded-lg transition-colors uppercase tracking-widest"
+                    className="w-full md:w-auto text-center bg-red-50 md:bg-transparent text-red-600 hover:text-red-800 font-bold text-xl py-2 md:py-0 rounded-lg transition-colors uppercase tracking-widest"
                 >
                     Ver Detalles
                 </Link>

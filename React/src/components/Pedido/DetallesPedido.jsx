@@ -39,7 +39,7 @@ const DetallesPedido = () => {
     ? "border-2 border-yellow-400 shadow-[0_20px_50px_rgba(234,179,8,0.15)] bg-white" 
     : "border border-gray-200 shadow-lg bg-white";
 
-  const clasesInput = "w-full px-5 py-3 mb-4 border border-gray-400 rounded-full bg-gray-50 text-gray-700 cursor-default focus:outline-none";
+  const clasesInput = "w-full px-5 py-3 mb-4 border border-gray-400 rounded-full bg-gray-50 text-gray-700 cursor-default focus:outline-none text-xl";
 
   return (
   <div className="flex justify-center items-center min-h-screen bg-gray-50 p-2 sm:p-4 md:py-10">
@@ -72,14 +72,14 @@ const DetallesPedido = () => {
 
       {esCualquierCliente && pedido.comercial && (
         <div className={`mb-6 sm:mb-8 p-4 sm:p-5 rounded-3xl border transition-colors ${esVIP ? 'bg-yellow-50 border-yellow-200' : 'bg-red-50 border-red-100'}`}>
-          <label className={`block mb-3 text-[10px] font-black uppercase ${esVIP ? 'text-yellow-700' : 'text-red-800'}`}>
+          <label className={`block mb-3 text-xl font-black uppercase ${esVIP ? 'text-yellow-700' : 'text-red-800'}`}>
             Agente Comercial Responsable
           </label>
           <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-full shrink-0 flex items-center justify-center font-bold text-white ${esVIP ? 'bg-yellow-500' : 'bg-[#bc002d]'}`}>
+            <div className={`w-10 h-10 text-xl rounded-full shrink-0 flex items-center justify-center font-bold text-white ${esVIP ? 'bg-yellow-500' : 'bg-[#bc002d]'}`}>
               {pedido.comercial.nombre ? pedido.comercial.nombre[0].toUpperCase() : "C"}
             </div>
-            <span className="font-bold text-gray-800 text-sm sm:text-base">
+            <span className="font-bold text-gray-800 text-xl sm:text-base">
               {pedido.comercial.nombre}
             </span>
           </div>
@@ -88,11 +88,11 @@ const DetallesPedido = () => {
 
       {(esComercial || esAdmin || esEncargado) && (
         <div className="mb-6 sm:mb-8 p-4 sm:p-5 bg-gray-100 rounded-3xl border border-gray-200">
-          <label className="block mb-2 text-[10px] font-black text-gray-500 uppercase">
+          <label className="block mb-2 text-xl font-black text-gray-500 uppercase">
             {esComercial ? "Cliente Bajo tu Gestión" : "Detalles del Cliente"}
           </label>
           <div className="flex justify-between items-center gap-2">
-            <span className="font-bold text-base sm:text-lg text-gray-800 truncate">
+            <span className="font-bold sm:text-lg text-gray-800 truncate text-xl">
               {pedido.cliente?.nombre || pedido.cliente_vip?.nombre || "Cliente Online"}
             </span>
             {pedido.id_clientevip && (
@@ -105,7 +105,7 @@ const DetallesPedido = () => {
       )}
 
       <div className="mb-8">
-        <h3 className="sm:text-lg font-black text-gray-800 mb-4 ml-2 flex items-center gap-2">
+        <h3 className="sm:text-lg font-black text-gray-800 mb-4 ml-2 flex items-center gap-2 text-xl">
           <span className={`w-1.5 h-5 rounded-full ${esVIP ? 'bg-yellow-500' : 'bg-[#bc002d]'}`}></span>
           DETALLE DE PRODUCTOS
         </h3>
@@ -114,18 +114,18 @@ const DetallesPedido = () => {
           <table className="w-full text-left hidden sm:table">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-md font-black text-gray-400 uppercase">Producto</th>
-                <th className="px-6 py-3 text-md font-black text-gray-400 uppercase text-center">Cant.</th>
-                <th className="px-6 py-3 text-md font-black text-gray-400 uppercase text-right">Total</th>
+                <th className="px-6 py-3 text-xl font-black text-gray-400 uppercase">Producto</th>
+                <th className="px-6 py-3 text-xl font-black text-gray-400 uppercase text-center">Cant.</th>
+                <th className="px-6 py-3 text-xl font-black text-gray-400 uppercase text-right">Total</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {pedido.linea_pedidos ? (
                 pedido.linea_pedidos.map((linea) => (
                   <tr key={linea.id_linea} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-md font-medium text-gray-700">{linea.articulo?.nombre}</td>
-                    <td className="px-6 py-4 text-md text-center font-bold text-gray-600">{linea.cantidad}</td>
-                    <td className="px-6 py-4 text-md font-black text-right text-gray-900">
+                    <td className="px-6 py-4 text-xl font-medium text-gray-700">{linea.articulo?.nombre}</td>
+                    <td className="px-6 py-4 text-xl text-center font-bold text-gray-600">{linea.cantidad}</td>
+                    <td className="px-6 py-4 text-xl font-black text-right text-gray-900">
                       {(linea.precio * linea.cantidad).toFixed(2)} €
                     </td>
                   </tr>
@@ -141,8 +141,8 @@ const DetallesPedido = () => {
             {pedido.linea_pedidos ? (
               pedido.linea_pedidos.map((linea) => (
                 <div key={linea.id_linea} className="p-4 flex flex-col gap-1">
-                  <div className="text-sm font-bold text-gray-800">{linea.articulo?.nombre}</div>
-                  <div className="flex justify-between items-center text-xs">
+                  <div className="text-xl font-bold text-gray-800">{linea.articulo?.nombre}</div>
+                  <div className="flex justify-between items-center text-xl">
                     <span className="text-gray-500">Cantidad: <span className="font-bold">{linea.cantidad}</span></span>
                     <span className="font-black text-gray-900">{(linea.precio * linea.cantidad).toFixed(2)} €</span>
                   </div>
@@ -156,7 +156,7 @@ const DetallesPedido = () => {
       </div>
       <Link 
         to="/pedidos" 
-        className={`block w-full py-4 text-sm sm:text-base text-white font-black rounded-full text-center shadow-lg transition-all active:scale-95 ${
+        className={`block w-full py-4 text-xl sm:text-base text-white font-black rounded-full text-center shadow-lg transition-all active:scale-95 ${
           esVIP ? 'bg-yellow-600 hover:bg-yellow-700 shadow-yellow-200' : 'bg-[#bc002d] hover:bg-red-800'
         }`}
       >
