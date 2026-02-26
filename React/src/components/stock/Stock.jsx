@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { apiFetch } from "../../utils/api";
 import { useAuth } from "../../context/AuthContext";
 import Paginacion from "../Conjunto/Paginacion";
+import Swal from "sweetalert2"; // <-- Importamos SweetAlert2
 import { getArticulos, updateArticulo, createPedidoReposicion} from "../../utils/api";
 
 const Stock = () => {
@@ -64,11 +65,26 @@ const Stock = () => {
       });
 
       if (responseArt.ok) {
+        // <-- Añadimos una alerta de éxito para mejorar la experiencia de usuario
+        Swal.fire({
+          icon: "success",
+          title: "¡Reposición exitosa!",
+          text: `Se han añadido ${cantidad} unidades a ${articulo.nombre}.`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        
         cargarArticulos();
       }
     } catch (error) {
       console.error(error);
-      alert("Error en la reposición rápida");
+      // <-- Reemplazo de la alerta de error por SweetAlert2
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error en la reposición rápida. Por favor, inténtalo de nuevo.",
+        confirmButtonColor: "#bc002d",
+      });
     }
   };
 

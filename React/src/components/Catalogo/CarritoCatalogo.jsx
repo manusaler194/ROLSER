@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../../utils/api";
-import { useAuth } from "../../context/AuthContext"; // Importamos el contexto
+import { useAuth } from "../../context/AuthContext";
+import Swal from "sweetalert2"; // <-- Importamos SweetAlert2
 
 const CarritoCatalogo = () => {
   const navigate = useNavigate();
@@ -32,7 +33,6 @@ const CarritoCatalogo = () => {
     );
     setCarrito(nuevoCarrito);
     localStorage.setItem("carrito", JSON.stringify(nuevoCarrito));
-
   };
 
   // Eliminar artículo
@@ -78,7 +78,6 @@ const CarritoCatalogo = () => {
         }),
       });
 
-      
       const dataFactura = await resFactura.json();
 
       await apiFetch("http://100.25.154.102/api/pedidos/guardar", {
@@ -93,7 +92,6 @@ const CarritoCatalogo = () => {
       });
 
       for (const item of carrito) {
-
         const nuevoStock = item.stock_actual - item.cantidad;
 
         await apiFetch(`http://100.25.154.102/api/articulo/actualizar/${item.id_articulo}`, {
@@ -109,21 +107,35 @@ const CarritoCatalogo = () => {
         });
       }
 
-      alert("¡Compra procesada con éxito!");
-      setCarrito([]);
-      localStorage.removeItem("carrito");
-      setMostrarPago(false);
-      navigate("/pedidos");
+      // <-- Reemplazo de alert de éxito por SweetAlert2
+      Swal.fire({
+        icon: "success",
+        title: "¡Éxito!",
+        text: "¡Compra procesada con éxito!",
+        confirmButtonColor: "#C8102E",
+        confirmButtonText: "Ir a mis pedidos"
+      }).then(() => {
+        setCarrito([]);
+        localStorage.removeItem("carrito");
+        setMostrarPago(false);
+        navigate("/pedidos");
+      });
 
     } catch (error) {
       console.error("Detalle del error:", error);
-      alert("No se pudo completar: " + error.message);
+      
+      // <-- Reemplazo de alert de error por SweetAlert2
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "No se pudo completar: " + error.message,
+        confirmButtonColor: "#C8102E",
+      });
     }
   };
 
   return (
     <div className="w-full max-w-6xl mx-auto p-10 mt-10">
-      {/* ... Resto del JSX del carrito (sin cambios) ... */}
       <h2 className="text-3xl font-bold mb-6 text-center">Carrito de Compra</h2>
       {carrito.length === 0 ? (
         <p className="text-center text-lg text-gray-700">Tu carrito está vacío.</p>

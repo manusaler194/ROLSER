@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch, BASE_URL } from '../../utils/api'; 
+import Swal from 'sweetalert2'; // <-- Importamos SweetAlert2
 
 import Ficha from "./Ficha";
 
@@ -87,29 +88,54 @@ const GestionUsuarios = () => {
 
   const actualConf = configPestañas[pestañaActual];
 
+  // --- FUNCIÓN ACTUALIZADA CON SWEETALERT2 ---
   const eliminarUsuario = async (id) => {
-    if (!window.confirm(`¿Estás seguro de que quieres eliminar este ${actualConf.titulo}?`)) {
-      return;
-    }
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: `¿Quieres eliminar este ${actualConf.titulo.toLowerCase()}? Esta acción no se puede deshacer.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#bd0026', // Color rojo de tu interfaz
+      cancelButtonColor: '#000000',  // Color negro de los botones
+      confirmButtonText: 'Sí, borrar',
+      cancelButtonText: 'Cancelar'
+    });
 
-    try {
-      const response = await apiFetch(`${BASE_URL}/${actualConf.endpoint}/borrar/${id}`, {
-        method: "DELETE",
-      });
+    if (result.isConfirmed) {
+      try {
+        const response = await apiFetch(`${BASE_URL}/${actualConf.endpoint}/borrar/${id}`, {
+          method: "DELETE",
+        });
 
-      if (response.ok) {
-        setDatos(prev => ({
-          ...prev,
-          [pestañaActual]: prev[pestañaActual].filter(item => item[actualConf.idKey] !== id)
-        }));
-        alert(`${actualConf.titulo} eliminado con éxito.`);
-      } else {
-        alert("Error al eliminar.");
+        if (response.ok) {
+          setDatos(prev => ({
+            ...prev,
+            [pestañaActual]: prev[pestañaActual].filter(item => item[actualConf.idKey] !== id)
+          }));
+          
+          Swal.fire(
+            '¡Eliminado!',
+            `${actualConf.titulo} ha sido eliminado con éxito.`,
+            'success'
+          );
+        } else {
+          Swal.fire(
+            'Error',
+            'Hubo un error al intentar eliminar el registro.',
+            'error'
+          );
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        Swal.fire(
+          'Error',
+          'Ocurrió un error inesperado al conectar con el servidor.',
+          'error'
+        );
       }
-    } catch (error) {
-      console.error("Error:", error);
     }
   };
+  // ---------------------------------------------
 
   const listaActiva = datos[pestañaActual] || [];
   

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch, BASE_URL } from '../../utils/api'; 
+import Swal from 'sweetalert2'; // <-- Importamos SweetAlert2
 
 // Configuraciones específicas para cada tipo de usuario a crear
 const CONFIGURACION_CREAR = {
@@ -59,7 +60,6 @@ const CrearUsuario = ({ tipo }) => {
     const [comerciales, setComerciales] = useState([]);
     const [catalogos, setCatalogos] = useState([]);
 
-    const [error, setError] = useState(null);
     const [cargando, setCargando] = useState(false);
 
     // Cargar las listas necesarias para los combos desplegables
@@ -91,7 +91,13 @@ const CrearUsuario = ({ tipo }) => {
                 }
             } catch (err) {
                 console.error("Error cargando listas:", err);
-                setError("No se pudieron cargar algunas opciones del formulario.");
+                // Alerta si fallan los desplegables
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de conexión',
+                    text: 'No se pudieron cargar algunas opciones del formulario.',
+                    confirmButtonColor: '#bd0026'
+                });
             }
         };
 
@@ -108,7 +114,6 @@ const CrearUsuario = ({ tipo }) => {
     const manejarEnvio = async (e) => {
         e.preventDefault();
         setCargando(true);
-        setError(null);
 
         try {
             // Filtramos solo los campos que este 'tipo' necesita enviar
@@ -132,16 +137,36 @@ const CrearUsuario = ({ tipo }) => {
                 throw { response: { status: respuesta.status, data: errorData } };
             }
 
-            alert(`${config.titulo.replace('Nuevo ', '').replace('Registrar ', '')} creado con éxito.`);
+            // Alerta de éxito con SweetAlert2
+            await Swal.fire({
+                icon: 'success',
+                title: '¡Creado!',
+                text: `${config.titulo.replace('Nuevo ', '').replace('Registrar ', '')} creado con éxito.`,
+                confirmButtonColor: '#000000',
+                timer: 2000,
+                timerProgressBar: true
+            });
             navegar('/usuarios');
         } catch (err) {
             console.error("Error completo:", err);
             if (err.response && err.response.status === 422) {
                 const mensajesError = Object.values(err.response.data.errors || err.response.data).flat().join("\n");
-                setError("Corrige estos errores:\n" + mensajesError);
+                // Alerta de errores de validación
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Faltan datos o son incorrectos',
+                    text: "Corrige estos errores:\n" + mensajesError,
+                    confirmButtonColor: '#bd0026'
+                });
             } else {
                 const mensaje = err.response?.data?.message || err.message || "Error al crear el usuario";
-                setError(mensaje);
+                // Alerta de error general
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al crear',
+                    text: mensaje,
+                    confirmButtonColor: '#bd0026'
+                });
             }
         } finally {
             setCargando(false);
@@ -149,9 +174,7 @@ const CrearUsuario = ({ tipo }) => {
     };
 
     // Clases estandarizadas redimensionadas
-    // Se aumentó el padding (p-3 a p-4) y el tamaño del texto (text-base sm:text-lg)
     const claseInput = "w-full bg-white border border-gray-400 p-3 sm:p-4 text-base sm:text-lg text-gray-800 focus:outline-none focus:border-[#bd0026] focus:ring-1 focus:ring-[#bd0026] rounded-sm transition-all";
-    // Se aumentó el tamaño de las etiquetas (text-xs a text-sm sm:text-base) y el margen inferior
     const claseLabel = "block text-sm sm:text-base font-bold text-gray-500 uppercase mb-2 ml-1";
 
     if (!config) return <div className="p-10 text-center text-xl text-red-500">Error: Tipo de usuario desconocido.</div>;
@@ -164,12 +187,6 @@ const CrearUsuario = ({ tipo }) => {
                 <h2 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-10 text-center text-black uppercase tracking-wider border-b pb-4 sm:pb-6">
                     {config.titulo}
                 </h2>
-
-                {error && (
-                    <div className="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 font-bold text-base sm:text-lg whitespace-pre-line">
-                        {error}
-                    </div>
-                )}
 
                 <form onSubmit={manejarEnvio} className="space-y-5 sm:space-y-6" autoComplete="off">
                     

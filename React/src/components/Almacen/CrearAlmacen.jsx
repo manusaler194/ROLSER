@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiFetch } from "../../utils/api";
 import { getEncargados, createAlmacen } from "../../utils/api";
+import Swal from 'sweetalert2'; // <-- Importamos SweetAlert2
 
 const CrearAlmacen = () => {
   const [almacen, setAlmacen] = useState({
@@ -21,6 +22,7 @@ const CrearAlmacen = () => {
   const handleEncargado = (e) => {
     setAlmacen({ ...almacen, id_encargado: e.target.value });
   };
+
   useEffect(() => {
     const cargarEncargados = async () => {
       try {
@@ -29,6 +31,13 @@ const CrearAlmacen = () => {
         setEncargados(data.encargadoAlmacen);
       } catch (error) {
         console.error("Error:", error);
+        // Alerta si falla la carga de encargados
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de conexión',
+          text: 'No se pudo cargar la lista de encargados.',
+          confirmButtonColor: '#bd0026'
+        });
       }
     };
 
@@ -36,19 +45,33 @@ const CrearAlmacen = () => {
   }, []);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const response = await createAlmacen(almacen);
-    await response.json();
+    try {
+      const response = await createAlmacen(almacen);
+      await response.json();
 
-    alert("Almacén creado con éxito");
-    navigate("/GestionAlmacen");
-  } catch (error) {
-    console.error("Error al enviar datos:", error.message);
-    alert(error.message);
-  }
-};
+      // Reemplazo del alert de éxito por Swal
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Creado!',
+        text: 'Almacén creado con éxito',
+        confirmButtonColor: '#000000',
+        timer: 2000, // Se cierra solo después de 2 segundos
+        timerProgressBar: true
+      });
+      navigate("/GestionAlmacen");
+    } catch (error) {
+      console.error("Error al enviar datos:", error.message);
+      // Reemplazo del alert de error por Swal
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al crear',
+        text: error.message || 'Hubo un problema al crear el almacén.',
+        confirmButtonColor: '#bd0026'
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-8 font-sans">

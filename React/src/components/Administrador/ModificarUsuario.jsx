@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { apiFetch, BASE_URL } from '../../utils/api'; 
+import Swal from 'sweetalert2'; // <-- Importamos SweetAlert2
 
 const CONFIGURACION_USUARIOS = {
     admin: {
@@ -88,7 +89,13 @@ const ModificarUsuario = ({ tipo }) => {
                 }
             } catch (error) {
                 console.error("Error al cargar:", error);
-                alert(`No se pudieron cargar los datos del ${tipo}.`);
+                // Reemplazado alert por Swal
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de carga',
+                    text: `No se pudieron cargar los datos del ${tipo}.`,
+                    confirmButtonColor: '#bd0026'
+                });
             } finally {
                 setEstaCargando(false);
             }
@@ -124,16 +131,36 @@ const ModificarUsuario = ({ tipo }) => {
                 throw { response: { status: respuesta.status, data: errorData } };
             }
             
-            alert(`${config.titulo.replace('Modificar ', '')} modificado con éxito`);
+            // Reemplazado alert de éxito por Swal
+            await Swal.fire({
+                icon: 'success',
+                title: '¡Actualizado!',
+                text: `${config.titulo.replace('Modificar ', '')} modificado con éxito`,
+                confirmButtonColor: '#000000',
+                timer: 2000, // Se cierra solo en 2 segundos
+                timerProgressBar: true
+            });
             navegar('/usuarios');
         } catch (error) {
             console.error("Error al actualizar:", error);
             if (error.response && error.response.status === 422) {
                 const mensajesError = Object.values(error.response.data.errors).flat().join("\n");
-                alert("Corrige estos errores:\n" + mensajesError);
+                // Reemplazado alert de errores de validación por Swal
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Faltan datos o son incorrectos',
+                    text: "Corrige estos errores:\n" + mensajesError,
+                    confirmButtonColor: '#bd0026'
+                });
             } else {
                 const mensajeError = error.response?.data?.message || "Hubo un error al guardar los cambios.";
-                alert(mensajeError);
+                // Reemplazado alert de error general por Swal
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al guardar',
+                    text: mensajeError,
+                    confirmButtonColor: '#bd0026'
+                });
             }
         } finally {
             setGuardando(false);

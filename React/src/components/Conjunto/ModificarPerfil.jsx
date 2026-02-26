@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext'; 
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import Swal from "sweetalert2"; // <-- Importamos SweetAlert2
 
 const ModificarPerfil = () => {
     const { role, user, token } = useAuth(); 
@@ -82,14 +83,28 @@ const ModificarPerfil = () => {
                 headers: { Authorization: `Bearer ${token}` }
             }); 
             
-            alert("¡Perfil actualizado con éxito!");
-            
-            // Volvemos a la página principal de perfil (ajusta esta ruta si se llama distinto)
-            navigate('/perfil'); 
+            // <-- Reemplazo de alert de éxito por SweetAlert2
+            Swal.fire({
+                icon: "success",
+                title: "¡Perfil actualizado!",
+                text: "Tus datos se han guardado con éxito.",
+                confirmButtonColor: "#bd0026",
+                confirmButtonText: "Aceptar"
+            }).then(() => {
+                // Volvemos a la página principal de perfil una vez que el usuario cierra la alerta
+                navigate('/perfil'); 
+            });
 
         } catch (error) {
             console.error("Error al actualizar:", error);
-            alert("Hubo un error al guardar los cambios. Revisa la consola.");
+            
+            // <-- Reemplazo de alert de error por SweetAlert2
+            Swal.fire({
+                icon: "error",
+                title: "Error al guardar",
+                text: "Hubo un error al guardar los cambios. Revisa la consola o intenta de nuevo.",
+                confirmButtonColor: "#bd0026",
+            });
         } finally {
             setGuardando(false);
         }
