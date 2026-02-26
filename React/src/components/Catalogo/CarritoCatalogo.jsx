@@ -69,7 +69,7 @@ const CarritoCatalogo = () => {
     try {
       // 1️⃣ Crear factura
       const resFactura = await apiFetch(
-        "http://100.25.154.102/api/factura/guardar",
+        "http://54.221.244.244/api/factura/guardar",
         {
           method: "POST",
           body: JSON.stringify({
@@ -88,7 +88,7 @@ const CarritoCatalogo = () => {
 
       // 2️⃣ Crear pedido
       const resPedido = await apiFetch(
-        "http://100.25.154.102/api/pedidos/guardar",
+        "http://54.221.244.244/api/pedidos/guardar",
         {
           method: "POST",
           body: JSON.stringify({
@@ -107,7 +107,7 @@ const CarritoCatalogo = () => {
       // 3️⃣ Crear líneas de pedido
       for (const item of carrito) {
         await apiFetch(
-          "http://100.25.154.102/api/lineasPedido/guardar",
+          "http://54.221.244.244/api/lineasPedido/guardar",
           {
             method: "POST",
             body: JSON.stringify({
@@ -125,7 +125,7 @@ const CarritoCatalogo = () => {
         const nuevoStock = item.stock_actual - item.cantidad;
 
         await apiFetch(
-          `http://100.25.154.102/api/articulo/actualizar/${item.id_articulo}`,
+          `http://54.221.244.244/api/articulo/actualizar/${item.id_articulo}`,
           {
             method: "PUT",
             body: JSON.stringify({

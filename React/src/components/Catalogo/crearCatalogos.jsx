@@ -14,7 +14,7 @@ const crearCatalogo = () => {
   useEffect(() => {
     const cargarAdministradores = async () => {
       try {
-        const response = await apiFetch("http://100.25.154.102/api/administradores");
+        const response = await apiFetch("http://54.221.244.244/api/administradores");
         const data = await response.json();
         setAdministradores(data.admin);
       } catch (error) {
@@ -29,7 +29,7 @@ const crearCatalogo = () => {
   useEffect(() => {
     const cargarArticulos = async () => {
       try {
-        const response = await apiFetch("http://100.25.154.102/api/articulo");
+        const response = await apiFetch("http://54.221.244.244/api/articulo");
         const data = await response.json();
         setArticulos(data.almacen);
       } catch (error) {
@@ -46,7 +46,7 @@ const crearCatalogo = () => {
     const idAdministrador = e.target.administrador.value;
     
     try {
-      const catalogo = await apiFetch("http://100.25.154.102/api/catalogo/guardar", {
+      const catalogo = await apiFetch("http://54.221.244.244/api/catalogo/guardar", {
         method: "POST",
         body: JSON.stringify({
           nombre_catalogo: nombreCatalogo,
@@ -62,7 +62,7 @@ const crearCatalogo = () => {
     }
     if (articulosSeleccionados.length > 0) {
       console.log(articulosSeleccionados);
-      await Promise.all(articulosSeleccionados.map(articulo => apiFetch("http://100.25.154.102/api/articulo_catalogo/guardar", {
+      await Promise.all(articulosSeleccionados.map(articulo => apiFetch("http://54.221.244.244/api/articulo_catalogo/guardar", {
             method: "POST",
             body: JSON.stringify({
               id_catalogo: 4,

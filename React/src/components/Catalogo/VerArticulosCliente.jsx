@@ -61,7 +61,7 @@ const VerArticulosCliente = () => {
     const cargarArticulos = async () => {
       try {
         const response = await apiFetch(
-          `http://100.25.154.102/api/catalogo/${id_catalogo}/articulos`
+          `http://54.221.244.244/api/catalogo/${id_catalogo}/articulos`
         );
         const data = await response.json();
 
