@@ -16,7 +16,7 @@ const CrearPedidoRebastecimiento = () => {
   const [idProveedor, setIdProveedor] = useState("");
 
   const [paginaActual, setPaginaActual] = useState(1);
-  const registrosPorPagina = 10;
+  const registrosPorPagina = 5;
 
   useEffect(() => {
     const cargarDatos = async () => {
