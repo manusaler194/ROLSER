@@ -70,8 +70,8 @@ const AppContent = () => {
                 <Route path="/modificar-clientevip/:id" element={<ModificarUsuario tipo="clienteVip" />} />
                 <Route path="/modificar-comercial/:id" element={<ModificarUsuario tipo="comercial" />} />
                 <Route path="/modificar-encargado/:id" element={<ModificarUsuario tipo="encargado" />} />
-                <Route path="/tarifas" element={<div>Página de Tarifas</div>} />
-                <Route path="/estadisticas" element={<div>Estadísticas</div>} />
+                <Route path="/tarifas" element={<div>Página de Tarifas</div>}/>
+                <Route path="/estadisticas" element={<div>Estadísticas</div>}/>
               </>
             )}
 
