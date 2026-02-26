@@ -25,10 +25,30 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/clientes/guardar', [ClienteController::class, 'guardar']);
 
 Route::get('/users', [AdministradorController::class, 'userIndex']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) { return $request->user(); });
+
+    // ==========================================
+    // RUTAS DE ACTUALIZACIÓN DE PERFIL (CORREGIDAS)
+    // ==========================================
+    // Permitimos que el cliente se edite a sí mismo
+    Route::middleware('role:administrador,comercial,cliente')->group(function () {
+        Route::put('/clientes/actualizar/{id_cliente}', [ClienteController::class, 'actualizar']);
+    });
+
+    // Permitimos que el cliente VIP se edite a sí mismo
+    Route::middleware('role:administrador,comercial,clientevip')->group(function () {
+        Route::put('/clientesVip/actualizar/{id_clientevip}', [ClienteVipController::class, 'actualizar']);
+    });
+
+    // Permitimos que el encargado de almacén se edite a sí mismo
+    Route::middleware('role:administrador,encargadoalmacen')->group(function () {
+        Route::put('/encargadoAlmacen/actualizar/{id_encargado}', [EncargadoAlmacenController::class, 'encargadoAlmacenActualizar']);
+    });
+    // ==========================================
 
     Route::middleware('role:administrador,comercial,encargadoalmacen,cliente,clientevip')->group(function () {
         Route::get('/secciones', [SeccionController::class, 'mostrar']);
@@ -47,13 +67,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/articulo', [ArticuloController::class, 'mostrarArticulos']);
         Route::put('/articulo/actualizar/{id_articulo}', [ArticuloController::class, 'articuloActualizar']);
         Route::post("/articulo_catalogo/guardar", [CatalogoController::class, 'guardar']);
-
-
     });
 
-    Route::middleware('role:administrador,encargadoalmacen, cliente, clientevip')->group(function () {
+    Route::middleware('role:administrador,encargadoalmacen,cliente,clientevip')->group(function () {
         Route::post('/articulo/guardar', [ArticuloController::class, 'articuloNuevo']);
-
+        
         Route::post('/secciones/guardar', [SeccionController::class, 'guardar']);
         Route::put('/secciones/actualizar/{id_seccion}', [SeccionController::class, 'actualizar']);
 
@@ -82,16 +100,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:administrador,comercial')->group(function () {
         Route::get('/clientes', [ClienteController::class, 'mostrar']);
         Route::get('/clientes/{id_cliente}', [ClienteController::class, 'mostrarCliente']);
-        Route::put('/clientes/actualizar/{id_cliente}', [ClienteController::class, 'actualizar']);
+        // La ruta PUT de clientes está arriba
 
         Route::get('/clientesVip', [ClienteVipController::class, 'mostrar']);
         Route::get('/clientesVip/{id_clientevip}', [ClienteVipController::class, 'mostrarClienteVip']);
         Route::post('/clientesVip/guardar', [ClienteVipController::class, 'guardar']);
-        Route::put('/clientesVip/actualizar/{id_clientevip}', [ClienteVipController::class, 'actualizar']);
+        // La ruta PUT de clientesVIP está arriba
 
         Route::get('/comerciales', [ComercialController::class, 'mostrar']);
         Route::get('/comerciales/{id_comercial}', [ComercialController::class, 'mostrarComercial']);
-        Route::put('/comerciales/actualizar/{id_comercial}', [ComercialController::class, 'actualizar']);
+        Route::put('/comerciales/actualizar/{id_comercial}', [ComercialController::class, 'actualizar']); // El comercial sí está en este grupo, funciona bien
     });
 
 
@@ -104,7 +122,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/encargadoAlmacen', [EncargadoAlmacenController::class, 'mostrar']);
         Route::get('/encargadoAlmacen/{id_cliente}', [EncargadoAlmacenController::class, 'mostrarEncargadoAlmacen']);
         Route::post('/encargadoAlmacen/guardar', [EncargadoAlmacenController::class, 'encargadoAlmacenNuevo']);
-        Route::put('/encargadoAlmacen/actualizar/{id_encargado}', [EncargadoAlmacenController::class, 'encargadoAlmacenActualizar']);
+        // La ruta PUT de encargadoAlmacen está arriba
 
         Route::post('/comerciales/guardar', [ComercialController::class, 'guardar']);
 
