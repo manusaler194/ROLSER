@@ -8,7 +8,7 @@ import Bolso from "./imgCatalogo/bolsoRolser.jpg"
 import Carro from "./imgCatalogo/carroRolser.jpg";
 import Escalera from "./imgCatalogo/escaleraRolser.jpg";
 import Plancha from "./imgCatalogo/planchaRolser.jpg";
-
+import Taburete from "./imgCatalogo/Taburete.png"
 const VerCatalogoCliente = () => {
   const [catalogos, setCatalogos] = useState([]);
   const [articulos, setArticulos] = useState([]);
@@ -18,7 +18,8 @@ const VerCatalogoCliente = () => {
     Bolso: Bolso,
     Carro: Carro,
     Escalera: Escalera,
-    Plancha: Plancha
+    Plancha: Plancha,
+    Taburete: Taburete
   };
 
   // Cargar catálogos y artículos
