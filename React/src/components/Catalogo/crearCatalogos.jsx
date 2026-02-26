@@ -43,34 +43,30 @@ const crearCatalogo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensaje("");
-
     const idAdministrador = e.target.administrador.value;
-
+    
     try {
       const catalogo = await apiFetch("http://localhost/api/catalogo/guardar", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nombre_catalogo: nombreCatalogo,
           anyo: anyo,
           id_administrador: idAdministrador,
         }),
-    });
-
-    const dataCatalogo = await catalogo.json();
-
+      });
+      
+      
     if (!catalogo.ok) {
-      setMensaje(dataCatalogo.error || "Error al crear el catálogo");
+      setMensaje( "Error al crear el catálogo");
       return;
     }
-
     if (articulosSeleccionados.length > 0) {
-      await Promise.all(articulosSeleccionados.map(idArticulo => apiFetch("http://localhost/api/articulo_catalogo/guardar", {
+      console.log(articulosSeleccionados);
+      await Promise.all(articulosSeleccionados.map(articulo => apiFetch("http://localhost/api/articulo_catalogo/guardar", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
-              id_catalogo: dataCatalogo.idCatalogo,
-              id_articulo: idArticulo,
+              id_catalogo: 4,
+              id_articulo: articulo.id_articulo,
             }),
           })
         )
@@ -142,7 +138,7 @@ const crearCatalogo = () => {
                   onChange={(e) => {
                     const seleccionado = e.target.checked; // Coge la opcion seleccionada
                     if (seleccionado) { // Si "seleccionado" es true entonces mete el artiuclo al array de "seleccionado"
-                      setArticulosSeleccionados([...articulosSeleccionados, Number(articulo.id_articulo)]);
+                      setArticulosSeleccionados([...articulosSeleccionados, articulo]);
                     } else { // Si "seleccionado" es false entonces quita el artiuclo del array de "seleccionado"
                       setArticulosSeleccionados(articulosSeleccionados.filter(a => a !== Number(articulo.id_articulo)));
                     }
