@@ -1,4 +1,8 @@
+
 export const BASE_URL = "http://100.25.154.102/api";
+
+//export const BASE_URL = "http://localhost/api";
+
 export const apiFetch = async (url, options = {}) => {
   const token = localStorage.getItem("token");
 
@@ -85,6 +89,7 @@ export const updateEncargado = (id, data) =>
   });
 export const deleteEncargado = (id) =>
   apiFetch(`${BASE_URL}/encargadoAlmacen/borrar/${id}`, { method: "DELETE" });
+
 
 export const createAlmacen = (data) =>
   apiFetch(`${BASE_URL}/almacenes/guardar`, {
