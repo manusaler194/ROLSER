@@ -33,7 +33,7 @@ const MostrarPerfil = () => {
 
   console.log("Datos Listos -> Rol:", rolNormalizado, "| ID:", userId);
 
-  const urlIframe = `http://54.221.244.244/mostrar/perfil/${rolNormalizado}/${userId}`;
+  const urlIframe = `http://100.25.154.102/mostrar/perfil/${rolNormalizado}/${userId}`;
 
   return (
     <div className="w-full h-screen flex items-center justify-center p-6 bg-gray-100">

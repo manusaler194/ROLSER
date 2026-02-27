@@ -26,7 +26,7 @@ const GestionarPedido = () => {
 
     const obtenerPedidos = async () => {
         try {
-            const response = await apiFetch('http://54.221.244.244/api/pedidos');
+            const response = await apiFetch('http://100.25.154.102/api/pedidos');
             const data = await response.json();
             let pedidos = data.pedidos;
 

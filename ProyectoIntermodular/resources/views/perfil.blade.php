@@ -91,7 +91,7 @@
             @endif
 
             <div class="pt-6 sm:pt-8 md:pt-10 flex justify-center">
-                <a href="http://44.219.74.203:5173/modificar-perfil" target="_parent"
+                <a href="http://35.172.83.64:5173/modificar-perfil" target="_parent"
                    style="background-color: #bd0026;"
                    class="w-full text-white font-bold py-3 sm:py-4 md:py-5 px-6 sm:px-8 md:px-10 rounded-full shadow-lg transition-all duration-300 hover:brightness-110 active:scale-95 text-base sm:text-lg md:text-xl tracking-wide text-center block">
                     Modificar mis datos

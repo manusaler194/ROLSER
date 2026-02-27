@@ -100,7 +100,7 @@ const ModificarPerfil = () => {
                 datosAEnviar.password = perfil.password;
             }
 
-            const url = `http://54.221.244.244/api/${endpoint}/actualizar/${userId}`;
+            const url = `http://100.25.154.102/api/${endpoint}/actualizar/${userId}`;
             
             const response = await apiFetch(url, {
                 method: 'PUT',

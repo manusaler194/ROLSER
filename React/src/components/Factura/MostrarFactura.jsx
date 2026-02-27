@@ -11,7 +11,7 @@ const MostrarFactura = () => {
     <div className="w-full h-screen  flex items-center justify-center p-4">
       
       <div className="w-full max-w-2xl h-[90vh] shadow-2xl rounded-xl overflow-hidden">
-        <iframe src={`http://54.221.244.244/render-factura/${id}`} title={`Factura ${id}`}className="w-full h-full border-none"style={{ display: 'block' }}allowFullScreen/>
+        <iframe src={`http://100.25.154.102/render-factura/${id}`} title={`Factura ${id}`}className="w-full h-full border-none"style={{ display: 'block' }}allowFullScreen/>
       </div>
     </div>
   );
