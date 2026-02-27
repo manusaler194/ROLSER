@@ -74,6 +74,12 @@ const GestionarPedido = () => {
     }, [filtroEstado, busquedaCliente]);
 
     const modificarEstadoPedido = async (pedido, nuevoEstado) => {
+        // MODIFICADO: Evita que la función se ejecute si ya está entregado
+        if (pedido.estado === 'Entregado') {
+            console.warn("No se puede cambiar el estado de un pedido entregado.");
+            return;
+        }
+
         try {
             const respuesta = await apiFetch(
                 `http://100.25.154.102/api/pedidos/actualizar/${pedido.id_pedido}`,
@@ -164,7 +170,8 @@ const GestionarPedido = () => {
 
             <td className="px-6 py-1 md:py-4 md:table-cell flex justify-between items-center relative">
                 <span className="md:hidden text-xl font-black text-gray-400 uppercase">Estado</span>
-                {esPrivilegiado ? (
+                {/* MODIFICADO: Si el estado es 'Entregado', no mostramos el menú de cambio incluso para privilegiados */}
+                {esPrivilegiado && pedido.estado !== 'Entregado' ? (
                     <div className="relative inline-block text-left">
                         <button 
                             onClick={() => setMenuCambioEstadoAbierto(menuCambioEstadoAbierto === pedido.id_pedido ? null : pedido.id_pedido)}
@@ -187,11 +194,13 @@ const GestionarPedido = () => {
                                     ))}
                                 </div>
                             </div>
-
                         )}
                     </div>
                 ) : (
-                    <span className="px-3 py-1.5 rounded-full border text-xl bg-gray-50 text-gray-600 inline-block whitespace-nowrap text-center">{pedido.estado}</span>
+                    /* MODIFICADO: Aplicamos un estilo visual diferente si está Entregado (opcional) */
+                    <span className={`px-3 py-1.5 rounded-full border text-xl inline-block whitespace-nowrap text-center ${pedido.estado === 'Entregado' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-50 text-gray-600'}`}>
+                        {pedido.estado}
+                    </span>
                 )}
             </td>
 
